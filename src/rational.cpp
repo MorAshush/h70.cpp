@@ -54,261 +54,181 @@ int Rational::get_numerator() const
     return this-> m_numerator;
 }
 
-int Rational::get_denumerator() const
+int Rational::get_denumerator() const 
 {
     return this-> m_denumerator;
 }
 
-Rational Rational::add(Rational a_rational) const
+bool Rational::is_positive() const
 {
-    int numer1 = this->m_numerator;
-    int denom1 = this-> m_denumerator;
+    if (m_numerator > 0 && m_denumerator > 0)
+    {
+        return 1;
+    }
 
+    return 0;
+}
+
+void Rational::add(Rational a_rational) 
+{
     int numer2 = a_rational.m_numerator;
     int denom2 = a_rational.m_denumerator;
 
-    if( denom1 == denom2 )
+    if( this-> m_denumerator == denom2 )
     {
-        numer1 += numer2;
+        this->m_numerator += numer2;
     }
-    else if( denom1 < denom2 )
+    else if( this-> m_denumerator < denom2 )
     {
-        if( !(denom2 % denom1) )
+        if( !(denom2 % this-> m_denumerator) )
         {
-            int factor = denom2 / denom1;
+            int factor = denom2 / this-> m_denumerator;
 
-            denom1 = denom2;
+            this-> m_denumerator = denom2;
 
-            numer1 *= factor;
-            numer1 += numer2;
+            this->m_numerator *= factor;
+            this->m_numerator += numer2;
         }
         else
         {
-            int newDenumerator = denom1 * denom2;
+            int newDenumerator = this-> m_denumerator * denom2;
 
-            numer1 *= denom2;
-            numer2 *=  denom1;
+            this->m_numerator *= denom2;
+            numer2 *=  this-> m_denumerator;
 
-            numer1 += numer2;
-            denom1 = newDenumerator;
+            this->m_numerator += numer2;
+            this-> m_denumerator = newDenumerator;
         }
     }
     else 
     {
-        if( !(denom1 % denom2) )
+        if( !(this-> m_denumerator % denom2) )
         {
-            int factor = denom1 / denom2;
+            int factor = this-> m_denumerator / denom2;
 
             numer2 *= factor;
-            numer1 += numer2;
+            this->m_numerator += numer2;
         }
         else
         {
-            int newDenumerator = denom1 * denom2;
+            int newDenumerator = this-> m_denumerator * denom2;
 
-            numer1 *= denom2;
-            numer2 *=  denom1;
+            this->m_numerator *= denom2;
+            numer2 *=  this-> m_denumerator;
 
-            numer1 += numer2;
-            denom1 = newDenumerator;
+            this->m_numerator += numer2;
+            this-> m_denumerator = newDenumerator;
         }
     }
-
-    Rational sum(numer1, denom1);
-
-    return  sum;  
 }
 
-Rational Rational::add(int a_num) const
+void Rational::add(int a_num) 
 {
-    int numer1 = this->m_numerator;
-    int denom1 = this-> m_denumerator;
-
     if(!a_num)
     {
-        Rational sum(numer1, denom1);
-
-        return sum;
-    }
-    else if(a_num < 0)
-    {
-        numer1 -= (a_num * denom1);
-    }
-    else
-    {
-        numer1 += (a_num * denom1);
+        return;
     }
 
-    Rational sum(numer1, denom1);
-
-    return sum;
-
+    this->m_numerator += (a_num * this-> m_denumerator);
 }
 
-Rational Rational::substruct(Rational a_rational) 
+void Rational::substruct(Rational a_rational)  
 {
-    int numer1 = this->m_numerator;
-    int denom1 = this-> m_denumerator;
-
     int numer2 = a_rational.m_numerator;
     int denom2 = a_rational.m_denumerator;
 
-    if( denom1 == denom2 )
+    if( this-> m_denumerator == denom2 )
     {
-        numer1 -= numer2;
+        this->m_numerator -= numer2;
     }
-    else if( denom1 > denom2 )
+    else if( this-> m_denumerator > denom2 )
     {
-        if( !(denom1 % denom2) )
+        if( !(this-> m_denumerator % denom2) )
         {
-            int factor = denom1 / denom2;
+            int factor = this-> m_denumerator / denom2;
 
             numer2 *= factor;
-            numer1 -= numer2;
+            this->m_numerator -= numer2;
         }
         else
         {
-            int newDenumerator = denom1 * denom2;
+            int newDenumerator = this-> m_denumerator * denom2;
 
-            numer1 *= denom2;
-            numer2 *=  denom1;
+            this->m_numerator *= denom2;
+            numer2 *=  this-> m_denumerator;
 
-            numer1 -= numer2;
-            denom1 = newDenumerator;           
+            this->m_numerator -= numer2;
+            this-> m_denumerator = newDenumerator;           
         }
     }
     else 
     {
-        if( !(denom2 % denom1) )
+        if( !(denom2 % this-> m_denumerator) )
         {
-            int factor = denom2 / denom1;
+            int factor = denom2 / this-> m_denumerator;
 
-            denom1 = denom2;
+            this-> m_denumerator = denom2;
 
-            numer1 *= factor;
-            numer1 -= numer2;
+            this->m_numerator *= factor;
+            this->m_numerator -= numer2;
         }
         else
         {
-            int newDenumerator = denom1 * denom2;
+            int newDenumerator = this-> m_denumerator * denom2;
 
-            numer1 *= denom2;
-            numer2 *=  denom1;
+            this->m_numerator *= denom2;
+            numer2 *=  this-> m_denumerator;
 
-            numer1 -= numer2;
-            denom1 = newDenumerator;
+            this->m_numerator -= numer2;
+            this-> m_denumerator = newDenumerator;
         }
     }
-
-    Rational result(numer1, denom1);
-
-    return result;
 }
 
-Rational Rational::substruct(int a_num) const
+void Rational::substruct(int a_num)
 {
-    int numer1 = this->m_numerator;
-    int denom1 = this-> m_denumerator;
-
     if(!a_num)
     {
-        Rational sum(numer1, denom1);
-
-        return sum;
-    }
-    else if(a_num < 0)
-    {
-        numer1 += (a_num * denom1);
-    }
-    else
-    {
-        numer1 -= (a_num * denom1);
-    }
-
-    Rational sum(numer1, denom1);
-
-    return sum;
-
-}
-
-Rational Rational::multiply(Rational a_rational) 
-{
-    int numer1 = this->m_numerator;
-    int denom1 = this-> m_denumerator;
-
-    int numer2 = a_rational.m_numerator;
-    int denom2 = a_rational.m_denumerator;
-
-    numer1 *= numer2;
-    denom1 *= denom2;
-
-    Rational result(numer1, denom1);
-
-    return result;
-}
-
-Rational Rational::multiply(int a_num) const
-{
-    int numer1 = this->m_numerator;
-    int denom1 = this-> m_denumerator;
-
-    if(!a_num)
-    {
-        Rational result(a_num, denom1);
-
-        return result;
+        return;
     }
     
-    numer1 *= a_num;
-
-    if(numer1 < 0 && denom1 < 0)
-    {
-        Rational result(-numer1, -denom1);
-
-        return result;
-    }
-
-    Rational result(numer1, denom1);
-
-    return result;
-
+    this->m_numerator -= (a_num * this-> m_denumerator);
 }
 
-Rational Rational::divide(Rational a_rational) 
+void Rational::multiply(Rational a_rational) 
 {
-    int numer1 = this->m_numerator;
-    int denom1 = this-> m_denumerator;
+    int numer2 = a_rational.m_numerator;
+    int denom2 = a_rational.m_denumerator;
 
+    this->m_numerator *= numer2;
+    this-> m_denumerator *= denom2;
+}
+/*************************************************************************************/
+void Rational::multiply(int a_num) 
+{
+    this->m_numerator *= a_num;
+}
+
+void Rational::divide(Rational a_rational) 
+{
     int numer2 = a_rational.m_numerator;
 
     assert(numer2 != 0 && "cannot be divided by zero"); 
 
     int denom2 = a_rational.m_denumerator;
 
-    numer1 *= denom2;
-    denom1 *= numer2;
-
-    Rational result(numer1, denom1);
-
-    return result;
+    this->m_numerator *= denom2;
+    this-> m_denumerator *= numer2;
 }
 
-Rational Rational::divide(int a_num) const
+void Rational::divide(int a_num)
 {
-    int numer1 = this->m_numerator;
-    int denom1 = this-> m_denumerator;
-
     assert(a_num != 0 && "cannot be divided by zero");
 
-    denom1 *= a_num ;
-
-    Rational result(numer1, denom1);
-
-    return result;
-
+    this-> m_denumerator *= a_num ;
 }
 
-Rational Rational::reduce() const
+void Rational::reduce()
 {
     int numer = this->m_numerator;
     int denom = this-> m_denumerator;
@@ -348,10 +268,8 @@ Rational Rational::reduce() const
         denom = 1;
     }
 
-    Rational result(numer, denom);
-
-    return result;
-
+    this->m_numerator = numer;
+    this->m_denumerator = denom;
 }
 /*
 Rational add_two_rationals(Rational const a_rational1, Rational const a_rational2)

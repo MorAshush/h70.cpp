@@ -2,6 +2,7 @@
 #define RATIONAL_H
 
 
+
 class Rational 
 {    
     public:
@@ -11,6 +12,36 @@ class Rational
         void scale(int a_s);
         int get_numerator() const;
         int get_denumerator() const;
+        bool is_positive() const;
+        void add(Rational a_rational);
+        void add(int a_num);
+        void substruct(Rational a_rational);
+        void substruct(int a_num);
+        void multiply(Rational a_rational);
+        void multiply(int a_num);
+        void divide(Rational a_rational);
+        void divide(int a_num);
+        void reduce(); 
+
+    private:
+        void display(const char* fmt) const;
+        
+    private:    
+        int m_numerator;
+        int m_denumerator;
+};
+
+/*
+class Rational 
+{    
+    public:
+        Rational(int a_num);
+        Rational(int a_num, int a_denumerator);
+        void print() const;
+        void scale(int a_s);
+        int get_numerator() const;
+        int get_denumerator() const;
+        bool is_positive() const;
         Rational add(Rational a_rational) const;
         Rational add(int a_num) const;
         Rational substruct(Rational a_rational);
@@ -27,7 +58,7 @@ class Rational
     private:    
         int m_numerator;
         int m_denumerator;
-};
+};*/
 
 /**
  * @brief returns the sum of two rationals as a Rational
