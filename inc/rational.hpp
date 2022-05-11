@@ -66,7 +66,7 @@ class Rational
  * @param a_rational1 and a_rational2 to sum together
  * @return a class Rational variable with the sum result
  */
-Rational add_two_rationals(Rational const a_rational1, Rational const a_rational2);
+Rational add_two_rationals(Rational a_rational1, Rational a_rational2);
 
 /**
  * @brief check if two rationals are equal, returns true or false

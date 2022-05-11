@@ -12,6 +12,8 @@ Rational::Rational(int a_num, int a_denom)
     assert(m_denumerator != 0 && "denom can't be zero");    
     // this->m_numerator = a_num;
     // m_denumerator = a_denom;
+
+    //TODO: place the sign of the rational on the numerator if one of them is negative.
 }
 
 Rational::Rational(int a_num)
@@ -271,19 +273,15 @@ void Rational::reduce()
     this->m_numerator = numer;
     this->m_denumerator = denom;
 }
-/*
-Rational add_two_rationals(Rational const a_rational1, Rational const a_rational2)
+
+Rational add_two_rationals(Rational a_rational1, Rational a_rational2)
 {
-    int numer1 = a_rational1.get_m_numerator();
-    int denom1 = a_rational1.get_m_denumerator();
+    Rational result = a_rational1;
+    result.add(a_rational2);
 
-    int numer2 = a_rational2.get_m_numerator();
-    int denom2 = a_rational2.get_m_denumerator();
-
-
-
+    return result;
 }
-
+/*
 bool is_rationals_equal(Rational const a_rational1, Rational const a_rational2)
 {
 
