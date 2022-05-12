@@ -19,14 +19,14 @@ INC_DIR = ../../inc
 SRC_DIR = ../../src
 
 TARGET = utest
-OBJS = utest.o $(SRC_DIR)/quadratic.o
+OBJS = utest.o $(SRC_DIR)/quadratic.o $(SRC_DIR)/rational.o
 
 all: $(TARGET)
 
 check: $(TARGET)
 	./$(TARGET) -v
 
-utest : utest.cpp $(SRC_DIR)/quadratic.cpp $(INC_DIR)/quadratic.hpp $(INC_DIR)/rational.hpp
+utest : utest.cpp $(SRC_DIR)/quadratic.cpp $(INC_DIR)/quadratic.hpp $(SRC_DIR)/rational.cpp $(INC_DIR)/rational.hpp
 
 clean:
 	@$(RM) $(TARGET) $(OBJS)
