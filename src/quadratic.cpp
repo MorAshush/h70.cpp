@@ -18,7 +18,7 @@ Quadratic::Quadratic(Rational a_a, Rational a_b, Rational a_c)
 
 }
 
-
+/*
 void Quadratic::print() const  
 { 
 	m_a.print();
@@ -43,8 +43,52 @@ void Quadratic::print() const
 
 	printf("\n");
 }
+*/
+void Quadratic::print() const  
+{ 
+	if(!(m_a.is_positive()))
+	{
+		printf("-");
+		Rational t = m_a * -1;
+		t.print();
+		printf("X^2");
+	}
+	else
+	{
+		m_a.print();
+		printf("X^2");
+	}
+
+	if(!(m_b.is_positive()))
+	{
+		printf("-");
+		Rational t = m_b * -1;
+		t.print();
+		printf("X");
+	}
+	else
+	{
+		printf("+");
+		m_b.print();
+		printf("X");
+	}
+
+	if(!(m_c.is_positive()))
+	{
+		printf("-");
+		Rational t = m_c * -1;
+		t.print();
+	}
+	else
+	{
+		printf("+");
+		m_c.print();
+	}
+
+	printf("\n");
+}
 /*
-roots Quadratic::roots() const
+roots Quadratic::calc_polinum_roots() const
 {
 	Rational a = m_a;
 	Rational b = m_b;
@@ -108,19 +152,80 @@ Rational Quadratic::calc_pol_root_on_minus(Rational a_a, Rational a_b, Rational 
 	a_roots->m_second = root2;
 }*/
 
-void Quadratic::multiply(int a_num)
+
+/**
+ * @brief class function to get the first quadratic coefficient. 
+ 
+ * @param self quadratic.
+ * @return a rational of the coefficient.
+ */
+Rational Quadratic::get_first_cofefficient() const
 {
-	m_a.multiply(a_num);
-	m_b.multiply(a_num);
-	m_c.multiply(a_num);
+	return this->m_a;
 }
 
-void Quadratic::multiply(Rational a_rational)
+
+/**
+ * @brief class function to get the second quadratic coefficient. 
+ 
+ * @param self quadratic.
+ * @return a rational of the coefficient.
+ */
+Rational Quadratic::get_second_cofefficient() const
 {
-	m_a.multiply(a_rational);
-	m_b.multiply(a_rational);
-	m_c.multiply(a_rational);
+	return this->m_b;
 }
+
+
+/**
+ * @brief class function to get the third quadratic coefficient. 
+ 
+ * @param self quadratic.
+ * @return a rational of the coefficient.
+ */
+Rational Quadratic::get_third_cofefficient() const
+{
+	return this->m_c;
+}
+
+
+Quadratic multiply(Quadratic a_quadratic, int a_num)
+{
+	Rational a = a_quadratic.get_first_cofefficient();
+	Rational b = a_quadratic.get_second_cofefficient();
+	Rational c = a_quadratic.get_third_cofefficient();
+
+	Quadratic result(a * a_num, b * a_num, c * a_num);
+
+	return result;
+}
+
+Quadratic multiply(Quadratic a_quadratic, Rational a_rational)
+{
+	Rational a = a_quadratic.get_first_cofefficient();
+	Rational b = a_quadratic.get_second_cofefficient();
+	Rational c = a_quadratic.get_third_cofefficient();
+
+	Quadratic result(a * a_rational , b * a_rational , c * a_rational);
+
+	return result;
+}
+
+Quadratic add_two_quadratics(Quadratic a_first, Quadratic a_second)
+{
+	Rational a1 = a_first.get_first_cofefficient();
+	Rational b1 = a_first.get_second_cofefficient();
+	Rational c1 = a_first.get_third_cofefficient();
+
+	Rational a2 = a_second.get_first_cofefficient();
+	Rational b2 = a_second.get_second_cofefficient();
+	Rational c2 = a_second.get_third_cofefficient();
+
+	Quadratic result(a1 + a2, b1 + b2, c1 + c2);
+
+	return result;
+}
+
 
 }//namespace algebra
 
