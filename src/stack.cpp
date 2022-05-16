@@ -2,35 +2,68 @@
 #include <cassert>
 #include <cmath>
 #include <cstddef>
+#include <algorithm>
 
 #include "stack.hpp"
 
-#define DEFAULT_SIZE 16
 
 namespace adt
 {
 	Stack::Stack(size_t a_size)
+	:m_capacity(a_size)
+	,m_size(0)
+	,m_array(static_cast<int*>(::malloc(sizeof(int) * m_capacity)))
 	{
-		assert(a_size > 0 && "stack size can't be zero");
-		int* array = static_cast<int*>(malloc(sizeof(int) * a_size));
-
-		assert(array && "array allocation failed");
-
-		m_array = array;
-		m_size = a_size;
-		m_num_of_items = 0;
+/*		assert(m_capacity > 0 && "stack size can't be zero");*/
+		assert(m_array && "array allocation failed");
 	}
 
 
 	Stack::Stack()
+	:m_capacity(m_DEFAULT_SIZE)
+	,m_size(0)
+	,m_array(static_cast<int*>(::malloc(sizeof(int) * m_capacity)))
 	{
-		int* array = static_cast<int*>(malloc(sizeof(int) * DEFAULT_SIZE));
+/*		assert(m_capacity > 0 && "stack size can't be zero");*/
+		assert(m_array && "array allocation failed");
+	}
 
-		assert(array && "array allocation failed");
-		
-		m_array = array;
-		m_size = DEFAULT_SIZE;
-		m_num_of_items = 0;
+
+	Stack::Stack(const Stack& a_stack) 
+	:m_capacity(a_stack.m_capacity)
+	,m_size(a_stack.m_size)
+	,m_array(static_cast<int*>(::malloc(sizeof(int) * m_capacity)))
+	{
+		assert(m_array && "array allocation failed");
+
+		for(size_t i = 0; i < m_size; ++i)
+		{
+			m_array[i] = a_stack.m_array[i];
+		}
+	}
+
+
+	Stack& Stack::operator=(const Stack& a_stack)
+	{
+		::free(m_array);
+
+		m_capacity = a_stack.m_capacity;
+		m_size = a_stack.m_size;
+		m_array = static_cast<int*>(::malloc(sizeof(int) * m_capacity));
+		assert(m_array && "array allocation failed");
+
+		for(size_t i = 0; i < m_size; ++i)
+		{
+			m_array[i] = a_stack.m_array[i];
+		}
+
+		return *this;
+	}
+
+
+	Stack::~Stack()
+	{
+		::free(m_array);
 	}
 
 
@@ -38,13 +71,13 @@ namespace adt
 	{
 		printf("[");
 
-		if(m_num_of_items)
+		if(m_size)
 		{
-			for(size_t i = 0; i < m_size ; ++i)
+			for(size_t i = 0; i < m_capacity ; ++i)
 			{
 				printf("%d", m_array[i]);
 
-				if(i == m_size - 1)
+				if(i == m_capacity - 1)
 				{
 					break;
 				}
@@ -59,90 +92,78 @@ namespace adt
 
 void Stack::push(int a_num)
 {
-	assert(m_num_of_items < m_size && "stack array is full");
+	assert(m_size < m_capacity && "stack array is full");
 	
-	m_array[m_num_of_items] = a_num;
-	++m_num_of_items;
+	m_array[m_size] = a_num;
+	++m_size;
 }
 
 
 void Stack::clear()
 {
-	m_num_of_items = 0;
+	m_size = 0;
 }
 
 
 int Stack::pop()
 {
-	assert(m_num_of_items > 0 && "stack is empty");
+	int t = top();
+	--m_size;
 
-	int last = m_array[m_num_of_items - 1];
-	--m_num_of_items;
-
-	return last;
+	return t;
 }
 
 
 int& Stack::top() const
 {
-	assert(m_num_of_items > 0 && "stack is empty");
+	assert(m_size > 0 && "stack is empty");
 
-	int& last = m_array[m_num_of_items - 1];
-
-	return last;
+	return m_array[m_size - 1];
 }
 
 
-size_t Stack::get_size() const
+size_t Stack::capacity() const
+{
+	return m_capacity;
+}
+
+
+size_t Stack::size() const
 {
 	return m_size;
 }
 
-
-size_t Stack::get_num_of_items() const
-{
-	return m_num_of_items;
-}
-
-int* Stack::get_stack_array() const
+int* Stack::stack_array() const
 {
 	return m_array;
 }
 
-void Stack::operator+=(const Stack a_stack)
+void Stack::operator+=(Stack a_stack)
 {
-	if(!a_stack.get_size() || !a_stack.get_num_of_items())
-	{
-		return;
-	}
+	*this << a_stack;
+}
 
-	int* addedArray = a_stack.get_stack_array();
-	size_t addedNumOfItems = a_stack.get_num_of_items();
 
-	assert(addedArray && "stack array can't be null");
-	assert(((addedNumOfItems + this->m_num_of_items) <= this->m_size) && "stack size is non sufficient");
+Stack& Stack::operator<<(Stack& a_stack)
+{
+	size_t needToDrain = a_stack.size();
+	size_t canTake = this->capacity() - this->size();
+	size_t take = std::min(needToDrain, canTake);
 	
-	size_t i = 0;
-
-	while (i < addedNumOfItems)
+	while (take-- > 0)
 	{
-		this->push(addedArray[i]);
-		++i;
+		this->push(a_stack.pop());
 	}
+
+	return *this;
 }
 
 
-void Stack::operator<<(Stack& a_stack)
+Stack& Stack::operator>>(Stack& a_stack)
 {
-	*this += a_stack;
-	a_stack.clear();
-}
+	a_stack << *this;
 
-
-void Stack::operator>>(Stack& a_stack)
-{
-	a_stack += *this;
-	this->clear();
+	return *this;
 }
 
 }//namespace adt

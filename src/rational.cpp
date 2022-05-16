@@ -418,13 +418,7 @@ bool equal(Rational const a_first, Rational const a_second)
 
 bool not_equal(Rational const a_first, Rational const a_second)
 {
-    int numer1 = a_first.get_numerator();
-    int denom1 = a_first.get_denumerator();
-
-    int numer2 = a_second.get_numerator();
-    int denom2 = a_second.get_denumerator();
-
-    return !(numer1 * denom2 == numer2 * denom1);
+    return !equal(a_first, a_second);
 }
 
 void Rational::operator*=(const Rational a_rational)
@@ -491,7 +485,13 @@ bool operator<(const Rational a_first, const Rational a_second)
     return !(substruct_two_rationals(a_first, a_second)).is_positive(); 
 }
 
+/*
+bool operator<=(const Rational a_first, const Rational a_second)
+{
+    
 
+}
+*/
 bool operator>(const Rational a_first, const Rational a_second)
 {
     if(a_first.is_positive() && !a_second.is_positive())
@@ -506,6 +506,10 @@ bool operator>(const Rational a_first, const Rational a_second)
     return (substruct_two_rationals(a_first, a_second)).is_positive();
 }
 
+bool operator>=(const Rational a_first, const Rational a_second)
+{
+    return !(a_first < a_second);
+}
 
 bool operator==(const Rational a_first, const Rational a_second)
 {

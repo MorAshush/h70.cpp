@@ -9,8 +9,13 @@ namespace adt
 	{
 		public:
 
-			Stack(size_t a_size);
 			Stack();
+			explicit Stack(size_t a_size);
+
+			Stack(const Stack& a_stack);  //copy constructor
+			Stack& operator=(const Stack& a_stack); //copy assignment operator
+ 
+			~Stack();
 
 			void print() const;
 
@@ -22,20 +27,22 @@ namespace adt
 
 			int& top() const;
 
-			size_t get_size() const;
-			size_t get_num_of_items() const;
-			int* get_stack_array() const;
+			size_t capacity() const;
+			size_t size() const;
+			int* stack_array() const;
 
-			void operator+=(const Stack a_stack);
+			void operator+=(Stack a_stack);
 
-			void operator<<(Stack& a_stack);
-			void operator>>(Stack& a_stack);
+			Stack& operator<<(Stack& a_stack);
+			Stack& operator>>(Stack& a_stack);
 
 		private:
 
-			int* m_array;
+			const static size_t m_DEFAULT_SIZE = 1024 * 4 * 10;
+			size_t m_capacity;
 			size_t m_size;
-			size_t m_num_of_items;
+			int* m_array;
+/*			FILE* m_file;*/
 	};
 }
 

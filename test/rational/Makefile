@@ -19,20 +19,16 @@ INC_DIR = ../../inc
 SRC_DIR = ../../src
 
 TARGET = utest
-OBJS = utest.o $(SRC_DIR)/stack.o
+OBJS = utest.o $(SRC_DIR)/rational.o
 
 all: $(TARGET)
 
 check: $(TARGET)
 	./$(TARGET) -v
 
-utest : utest.cpp $(SRC_DIR)/stack.cpp $(INC_DIR)/stack.hpp
-
-vala: $(TARGET)
-	valgrind ./$(TARGET) 
-
+utest : utest.cpp $(SRC_DIR)/rational.cpp $(INC_DIR)/rational.hpp
 
 clean:
 	@$(RM) $(TARGET) $(OBJS)
 
-.PHONY: all check clean vala
+.PHONY: all check clean

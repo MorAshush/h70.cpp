@@ -7,22 +7,33 @@
 BEGIN_TEST(stack_constructor_test1)	
 
 	adt::Stack s(100);
-	size_t size = s.get_size();
+	size_t capacity = s.capacity();
 
-	ASSERT_THAT(size == 100);
-	ASSERT_THAT(s.get_num_of_items() == 0);
-	ASSERT_THAT(s.get_stack_array());
+	ASSERT_THAT(capacity == 100);
+	ASSERT_THAT(s.size() == 0);
+	ASSERT_THAT(s.stack_array());
 
 END_TEST
 
 BEGIN_TEST(stack_constructor_test2)	
 
 	adt::Stack s;
-	size_t size = s.get_size();
+	size_t capacity = s.capacity();
 
-	ASSERT_THAT(size == 16);
-	ASSERT_THAT(s.get_num_of_items() == 0);
-	ASSERT_THAT(s.get_stack_array());
+	ASSERT_THAT(capacity == 40960);
+	ASSERT_THAT(s.size() == 0);
+	ASSERT_THAT(s.stack_array());
+
+END_TEST
+
+BEGIN_TEST(stack_constructor_with_very_big_stack_size)	
+
+	adt::Stack s(100000000);
+	size_t capacity = s.capacity();
+
+	ASSERT_THAT(capacity == 100000000);
+	ASSERT_THAT(s.size() == 0);
+	ASSERT_THAT(s.stack_array());
 
 END_TEST
 
@@ -42,10 +53,10 @@ BEGIN_TEST(stack_push_when_able_to_push)
 	adt::Stack s(5);
 	s.push(2);
 
-	size_t size = s.get_size();
+	size_t size = s.capacity();
 
 	ASSERT_THAT(size == 5);
-	ASSERT_THAT(s.get_num_of_items() == 1);	
+	ASSERT_THAT(s.size() == 1);	
 
 
 END_TEST
@@ -57,7 +68,7 @@ BEGIN_TEST(stack_push_when_overflow)
 	s.push(9);
 	s.push(15);
 
-	size_t size = s.get_size();
+	size_t size = s.capacity();
 
 	printf("%ld\n", size);
 	ASSERT_PASS();
@@ -74,10 +85,10 @@ BEGIN_TEST(stack_push_multiple_pushes)
 	s.push(9);
 	s.push(15);
 
-	size_t size = s.get_size();
+	size_t size = s.capacity();
 
 	ASSERT_THAT(size == 10);
-	ASSERT_THAT(s.get_num_of_items() == 6);	
+	ASSERT_THAT(s.size() == 6);	
 
 END_TEST
 
@@ -100,10 +111,10 @@ BEGIN_TEST(stack_pop_when_stack_is_not_empty)
 	s.push(9);
 
 	int popped = s.pop();
-	size_t size = s.get_size();
+	size_t size = s.capacity();
 
 	ASSERT_THAT(size == 10);
-	ASSERT_THAT(s.get_num_of_items() == 1);	
+	ASSERT_THAT(s.size() == 1);	
 	ASSERT_EQUAL(popped, 9);
 
 END_TEST
@@ -122,10 +133,10 @@ BEGIN_TEST(stack_pop_multiple_pops)
 	int popped2 = s.pop();
 	int popped3 = s.pop();
 
-	size_t size = s.get_size();
+	size_t size = s.capacity();
 
 	ASSERT_THAT(size == 10);
-	ASSERT_THAT(s.get_num_of_items() == 3);	
+	ASSERT_THAT(s.size() == 3);	
 	ASSERT_EQUAL(popped1, 15);
 	ASSERT_EQUAL(popped2, 9);
 	ASSERT_EQUAL(popped3, 2);
@@ -143,8 +154,8 @@ BEGIN_TEST(stack_clear_a_full_stack)
 
 	s.clear();
 
-	ASSERT_THAT(s.get_size() == 10);
-	ASSERT_THAT(s.get_num_of_items() == 0);	
+	ASSERT_THAT(s.capacity() == 10);
+	ASSERT_THAT(s.size() == 0);	
 
 END_TEST
 
@@ -169,8 +180,8 @@ BEGIN_TEST(stack_top_when_stack_is_not_empty)
 
 	int top = s.top();
 
-	ASSERT_THAT(s.get_size() == 20);
-	ASSERT_THAT(s.get_num_of_items() == 3);	
+	ASSERT_THAT(s.capacity() == 20);
+	ASSERT_THAT(s.size() == 3);	
 	ASSERT_EQUAL(top, 34);	
 
 END_TEST
@@ -184,10 +195,10 @@ BEGIN_TEST(stack_get_array_when_stack_is_not_empty)
 	s.push(52);
 	s.push(34);
 
-	int* array = s.get_stack_array();
+	int* array = s.stack_array();
 
-	ASSERT_THAT(s.get_size() == 20);
-	ASSERT_THAT(s.get_num_of_items() == 3);	
+	ASSERT_THAT(s.capacity() == 20);
+	ASSERT_THAT(s.size() == 3);	
 	ASSERT_THAT(array);
 	ASSERT_THAT(array[0] == 12);
 
@@ -216,12 +227,12 @@ BEGIN_TEST(stack_operator_add_when_both_stack_arent_empty)
 	second.push(40);
 
 	first += second;
-	int* array = first.get_stack_array();
+	int* array = first.stack_array();
 
-	ASSERT_THAT(first.get_size() == 20);
-	ASSERT_THAT(first.get_num_of_items() == 6);	
-	ASSERT_THAT(second.get_num_of_items() == 3);	
-	ASSERT_THAT(array[3] == 20);	
+	ASSERT_THAT(first.capacity() == 20);
+	ASSERT_THAT(first.size() == 6);	
+	ASSERT_THAT(second.size() == 3);	
+	ASSERT_THAT(array[3] == 40);	
 
 END_TEST
 
@@ -232,8 +243,8 @@ BEGIN_TEST(stack_operator_add_when_both_stack_are_empty)
 
 	first += second;
 
-	ASSERT_THAT(first.get_size() == 20);
-	ASSERT_THAT(first.get_num_of_items() == 0);	
+	ASSERT_THAT(first.capacity() == 20);
+	ASSERT_THAT(first.size() == 0);	
 
 END_TEST
 
@@ -248,9 +259,9 @@ BEGIN_TEST(stack_operator_add_when_one_stack_is_empty)
 
 	first += second;
 
-	ASSERT_THAT(first.get_size() == 20);
-	ASSERT_THAT(first.get_num_of_items() == 3);
-	ASSERT_THAT(second.get_num_of_items() == 3);	
+	ASSERT_THAT(first.capacity() == 20);
+	ASSERT_THAT(first.size() == 3);
+	ASSERT_THAT(second.size() == 3);	
 
 END_TEST
 
@@ -265,9 +276,9 @@ BEGIN_TEST(stack_operator_add_when_one_stack_is_empty2)
 
 	first += second;
 
-	ASSERT_THAT(first.get_size() == 20);
-	ASSERT_THAT(first.get_num_of_items() == 3);
-	ASSERT_THAT(second.get_num_of_items() == 0);
+	ASSERT_THAT(first.capacity() == 20);
+	ASSERT_THAT(first.size() == 3);
+	ASSERT_THAT(second.size() == 0);
 END_TEST
 
 
@@ -287,7 +298,9 @@ BEGIN_TEST(stack_operator_add_when_overflow)
 
 	first += second;
 
-	ASSERT_PASS();		
+	ASSERT_THAT(first.capacity() == 5);
+	ASSERT_THAT(first.size() == 5);
+	ASSERT_THAT(second.size() == 3);		
 
 END_TEST
 
@@ -309,9 +322,9 @@ BEGIN_TEST(class_operator_move_a_stack_into_self_1)
 	adt::Stack& secondR = second;
 	first << secondR;
 
-	ASSERT_THAT(first.get_size() == 7);
-	ASSERT_THAT(first.get_num_of_items() == 6);
-	ASSERT_THAT(second.get_num_of_items() == 0);
+	ASSERT_THAT(first.capacity() == 7);
+	ASSERT_THAT(first.size() == 6);
+	ASSERT_THAT(second.size() == 0);
 
 END_TEST
 
@@ -326,9 +339,9 @@ BEGIN_TEST(class_operator_move_a_stack_into_self_2)
 
 	first << second;
 
-	ASSERT_THAT(first.get_size() == 7);
-	ASSERT_THAT(first.get_num_of_items() == 3);
-	ASSERT_THAT(second.get_num_of_items() == 0);
+	ASSERT_THAT(first.capacity() == 7);
+	ASSERT_THAT(first.size() == 3);
+	ASSERT_THAT(second.size() == 0);
 
 END_TEST
 
@@ -344,9 +357,31 @@ BEGIN_TEST(class_operator_move_a_stack_into_self_3)
 
 	first << second;
 
-	ASSERT_THAT(first.get_size() == 7);
-	ASSERT_THAT(first.get_num_of_items() == 3);
-	ASSERT_THAT(second.get_num_of_items() == 0);
+	ASSERT_THAT(first.capacity() == 7);
+	ASSERT_THAT(first.size() == 3);
+	ASSERT_THAT(second.size() == 0);
+
+END_TEST
+
+BEGIN_TEST(class_operator_move_a_stack_into_self_overflow)
+
+	adt::Stack first(5);
+
+	first.push(12);
+	first.push(52);
+	first.push(34);
+
+	adt::Stack second(10);
+
+	second.push(12);
+	second.push(52);
+	second.push(34);
+
+	first << second;
+
+	ASSERT_THAT(first.capacity() == 5);
+	ASSERT_THAT(first.size() == 5);
+	ASSERT_THAT(second.size() == 1);
 
 END_TEST
 
@@ -368,9 +403,9 @@ BEGIN_TEST(class_operator_move_self_into_stack_1)
 
 	first >> second;
 
-	ASSERT_THAT(second.get_size() == 10);
-	ASSERT_THAT(second.get_num_of_items() == 6);
-	ASSERT_THAT(first.get_num_of_items() == 0);
+	ASSERT_THAT(second.capacity() == 10);
+	ASSERT_THAT(second.size() == 6);
+	ASSERT_THAT(first.size() == 0);
 
 END_TEST
 
@@ -385,9 +420,9 @@ BEGIN_TEST(class_operator_move_self_into_stack_2)
 
 	first >> second;
 
-	ASSERT_THAT(second.get_size() == 10);
-	ASSERT_THAT(second.get_num_of_items() == 3);
-	ASSERT_THAT(first.get_num_of_items() == 0);	
+	ASSERT_THAT(second.capacity() == 10);
+	ASSERT_THAT(second.size() == 3);
+	ASSERT_THAT(first.size() == 0);	
 
 END_TEST
 
@@ -403,13 +438,34 @@ BEGIN_TEST(class_operator_move_self_into_stack_3)
 
 	first >> second;
 
-	ASSERT_THAT(second.get_size() == 10);
-	ASSERT_THAT(second.get_num_of_items() == 3);
-	ASSERT_THAT(first.get_num_of_items() == 0);	
-
+	ASSERT_THAT(second.capacity() == 10);
+	ASSERT_THAT(second.size() == 3);
+	ASSERT_THAT(first.size() == 0);	
 
 END_TEST
 
+BEGIN_TEST(class_operator_move_self_into_stack_overflow)
+
+	adt::Stack first(5);
+
+	first.push(12);
+	first.push(52);
+	first.push(34);
+
+	adt::Stack second(5);
+
+	second.push(12);
+	second.push(52);
+	second.push(34);
+
+	first >> second;
+
+	ASSERT_THAT(second.capacity() == 5);
+	ASSERT_THAT(second.size() == 5);	
+	ASSERT_THAT(first.size() == 1);
+	ASSERT_EQUAL(first.top(), 12);
+
+END_TEST
 
 BEGIN_TEST(print_stack_when_empty)	
 
@@ -441,6 +497,7 @@ BEGIN_SUITE(stamstam)
 
 	TEST(stack_constructor_test1)
 	TEST(stack_constructor_test2)
+	TEST(stack_constructor_with_very_big_stack_size)
 
 	TEST(stack_push_when_size_is_zero)
 	TEST(stack_push_when_able_to_push)
@@ -467,10 +524,12 @@ BEGIN_SUITE(stamstam)
 	TEST(class_operator_move_a_stack_into_self_1)
 	TEST(class_operator_move_a_stack_into_self_2)
 	TEST(class_operator_move_a_stack_into_self_3)
+	TEST(class_operator_move_a_stack_into_self_overflow)
 
 	TEST(class_operator_move_self_into_stack_1)
 	TEST(class_operator_move_self_into_stack_2)
 	TEST(class_operator_move_self_into_stack_3)
+	TEST(class_operator_move_self_into_stack_overflow)
 
 	TEST(print_stack_when_empty)
 	TEST(print_stack_when_not_empty)

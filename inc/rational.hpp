@@ -148,6 +148,9 @@ Rational operator/(const Rational a_first, const Rational a_second);
 bool operator<(const Rational a_first, const Rational a_second);
 
 
+bool operator<=(const Rational a_first, const Rational a_second);
+
+
 /**
  * @brief an operator overloading function to check if two rationals are equal, returns true or false
  
@@ -164,6 +167,9 @@ bool operator==(const Rational a_first, const Rational a_second);
  * @return int true(1) if a_first is bigger, or false(0) if otherwise
  */
 bool operator>(const Rational a_first, const Rational a_second);
+
+
+bool operator>=(const Rational a_first, const Rational a_second);
 
 
 /**
