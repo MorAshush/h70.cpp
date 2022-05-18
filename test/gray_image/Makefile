@@ -29,7 +29,7 @@ check: $(TARGET)
 utest : utest.cpp $(SRC_DIR)/gray_image.cpp $(INC_DIR)/gray_image.hpp
 
 vala: $(TARGET)
-	valgrind ./$(TARGET) 
+	valgrind --leak-check=full --track-origins=yes ./$(TARGET) 
 
 
 clean:
