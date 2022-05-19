@@ -7,6 +7,9 @@
 
 namespace gfx
 {
+
+typedef int (*operation_func)(int a_first, int a_second);
+
 class GrayImage
 {
 	public:
@@ -38,9 +41,6 @@ class GrayImage
 		void operator|=(const GrayImage a_img);
 		void operator^=(const GrayImage a_img);
 		bool operator==(const GrayImage a_img) const;
-
-	private:
-		GrayImage& operate_on_img(const GrayImage a_first, const GrayImage a_second, char a_operant);
 
 	private:
 		const static size_t DEFAULT_DEPTH = 15;

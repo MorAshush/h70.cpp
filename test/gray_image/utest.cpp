@@ -547,9 +547,10 @@ END_TEST
 BEGIN_TEST(is_equal_operator_when_true)	
 
 	char fileName[] = "tiger.pgm";
-	gfx::GrayImage img = gfx::load_img(fileName);
+	gfx::GrayImage img1 = gfx::load_img(fileName);
+	gfx::GrayImage img2 = gfx::load_img(fileName);
 
-	int result = img == img;
+	int result = img1 == img2;
 	
 	ASSERT_EQUAL(result, 1);	
 
@@ -565,6 +566,42 @@ BEGIN_TEST(is_equal_operator_when_false)
 	int result = img1 == img2;
 	
 	ASSERT_EQUAL(result, 0);
+	ASSERT_NOT_EQUAL(img1.size(), img2.size());
+	ASSERT_NOT_EQUAL(img1.width(), img2.width());
+	ASSERT_NOT_EQUAL(img1.height(), img2.height());
+
+END_TEST
+
+//global operator function !=:
+
+BEGIN_TEST(not_equal_test_when_true)	
+
+	char fileName[] = "tiger.pgm";
+	gfx::GrayImage img1 = gfx::load_img(fileName);
+	gfx::GrayImage img2(200, 100, 30);
+
+	int result = img1 != img2;
+	
+	ASSERT_EQUAL(result, 1);
+	ASSERT_NOT_EQUAL(img1.size(), img2.size());
+	ASSERT_NOT_EQUAL(img1.width(), img2.width());
+	ASSERT_NOT_EQUAL(img1.height(), img2.height());	
+
+END_TEST
+
+BEGIN_TEST(not_equal_test_when_false)	
+
+	char fileName[] = "tiger.pgm";
+	gfx::GrayImage img1 = gfx::load_img(fileName);
+	gfx::GrayImage img2 = gfx::load_img(fileName);
+
+	int result = img1 != img2;
+	
+	ASSERT_EQUAL(result, 0);
+	ASSERT_EQUAL(img1.size(), img2.size());
+	ASSERT_EQUAL(img1.width(), img2.width());
+	ASSERT_EQUAL(img1.height(), img2.height());
+	ASSERT_EQUAL(img1.depth(), img2.depth());	
 
 END_TEST
 /*
@@ -604,13 +641,6 @@ BEGIN_TEST()
 
 END_TEST
 
-//global operator function !=:
-
-BEGIN_TEST()	
-
-	ASSERT_PASS();	
-
-END_TEST
 
 BEGIN_TEST()	
 
@@ -626,9 +656,9 @@ END_TEST
 BEGIN_SUITE(GrayImage tests run)
 
 	TEST(constructor1_test_size_in_limits_with_depth)
-	TEST(constructor1_test_size_not_in_limits)
+//	TEST(constructor1_test_size_not_in_limits)
 	TEST(constructor2_test_size_in_limits_default_depth)
-	TEST(constructor2_test_size_not_in_limits_default_depth)
+//	TEST(constructor2_test_size_not_in_limits_default_depth)
 
 	TEST(copy_operator_assignment_test_with_self_assignment)
 	TEST(copy_operator_assignment_test_not_self_assignment)
@@ -679,11 +709,10 @@ BEGIN_SUITE(GrayImage tests run)
 
 	TEST(is_equal_operator_when_true)
 	TEST(is_equal_operator_when_false)
+
+	TEST(not_equal_test_when_true)
+	TEST(not_equal_test_when_false)
 /*	
-	
-	
-	TEST()
-	TEST()
 	TEST()
 	TEST()
 	TEST()

@@ -37,6 +37,34 @@ static double calc_incline(size_t a_firstX, size_t a_firstY, size_t a_secondX, s
 
 	return incline;
 }
+
+
+static void general_operator(GrayImage& a_first, const GrayImage a_second, int (*operation_func)(int a_first, int a_second))
+{
+	for(size_t i = 0; i < a_first.height() ; ++i)
+	{
+		for(size_t j = 0; j < a_first.width() ; ++j)
+		{
+			a_first(i, j) = operation_func(a_first.get_pixel(i, j), a_second.get_pixel(i, j));
+		}
+	}
+}
+
+static int operator_and(int a_first, int a_second)
+{
+	return a_first & a_second;
+}
+
+static int operator_xor(int a_first, int a_second)
+{
+	return a_first ^ a_second;
+}
+
+static int operator_or(int a_first, int a_second)
+{
+	return a_first | a_second;
+}
+
 }//namespace implementation_details
 
 
@@ -230,41 +258,23 @@ void GrayImage::operator&=(const GrayImage a_img)
 {
 	assert(m_width == a_img.m_width && m_height == a_img.m_height && "images are not equal to operate & on");
 
-	for(size_t i = 0; i < m_height; ++i)
-	{
-		for(size_t j = 0; j < m_width; ++j)
-		{
-			m_image[i * m_width + j] &= a_img.m_image[i * m_width + j];
-		}			
-	}
+	implementation_details::general_operator(this, a_img, implementation_details::operator_and);
 }
 
 
 void GrayImage::operator|=(const GrayImage a_img)
 {
-	assert(m_width == a_img.m_width && m_height == a_img.m_height && m_depth == a_img.m_depth && "images are not equal to operate & on");
+	assert(m_width == a_img.m_width && m_height == a_img.m_height && m_depth == a_img.m_depth && "images are not equal to operate | on");
 
-	for(size_t i = 0; i < m_height; ++i)
-	{
-		for(size_t j = 0; j < m_width; ++j)
-		{
-			m_image[i * m_width + j] |= a_img.m_image[i * m_width + j];
-		}			
-	}
+	implementation_details::general_operator(this, a_img, implementation_details::operator_or);
 }
 
 
 void GrayImage::operator^=(const GrayImage a_img)
 {
-	assert(m_width == a_img.m_width && m_height == a_img.m_height && m_depth == a_img.m_depth && "images are not equal to operate & on");
+	assert(m_width == a_img.m_width && m_height == a_img.m_height && m_depth == a_img.m_depth && "images are not equal to operate ^ on");
 
-	for(size_t i = 0; i < m_height; ++i)
-	{
-		for(size_t j = 0; j < m_width; ++j)
-		{
-			m_image[i * m_width + j] ^= a_img.m_image[i * m_width + j];
-		}			
-	}
+	implementation_details::general_operator(this, a_img, implementation_details::operator_xor);
 }
 
 
@@ -301,7 +311,7 @@ GrayImage operator&(const GrayImage a_first, const GrayImage a_second)
 {
 	GrayImage copy = a_first;
 
-	copy &= a_second;
+	copy &= a_second;;
 
 	return copy; 
 }
@@ -311,7 +321,7 @@ GrayImage operator|(const GrayImage a_first, const GrayImage a_second)
 {
 	GrayImage copy = a_first;
 
-	copy |= a_second;
+	copy |= a_second;;
 	
 	return copy; 
 }
@@ -321,7 +331,7 @@ GrayImage operator^(const GrayImage a_first, const GrayImage a_second)
 {
 	GrayImage copy = a_first;
 
-	copy ^= a_second;
+	copy ^= a_second;;
 	
 	return copy; 
 }
