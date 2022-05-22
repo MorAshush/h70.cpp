@@ -137,10 +137,10 @@ public:
 	~SingleLinkedList();
 
 	void append(T a_v);  //adds to the front
-	void append(SingleLinkedList<T> a_list);
+	void append(SingleLinkedList<T>& a_list);
 
 	void prepend(T a_v);  //adds to the back
-	void prepend(SingleLinkedList<T> a_list);
+	void prepend(SingleLinkedList<T>& a_list);
 
 	Node<T>* front() const;
 	Node<T>* back() const;
@@ -207,39 +207,53 @@ SingleLinkedList<T>::~SingleLinkedList()
 template<typename T>
 void SingleLinkedList<T>::append(T a_v)
 {
+	Node<T>* newNode = new Node<T>(a_v, 0);
+	assert(newNode && "allocation failed");
+
 	if(m_size == 0)
 	{
-		Node<T>* newNode = new Node<T>(a_v, 0);
-		assert(newNode && "allocation failed");
-
 		m_headSentinal = new Node<T>(0, newNode);
 		assert(m_headSentinal && "allocation failed");
 
-		m_lastNode = newNode;
+		*(m_headSentinal->next()) = *newNode;
 	}
 	else
 	{
-		Node<T>* newNode = new Node<T>(a_v, m_lastNode->next());
-
-		*(m_headSentinal->next()) = *newNode;
+		*(m_lastNode->next()) = *newNode;
 	}
 
+	m_lastNode = newNode;
 	++m_size;
 }
 
-/*
+
 template<typename T>
-void SingleLinkedList<T>::append(SingleLinkedList<T> a_list)
+void SingleLinkedList<T>::append(SingleLinkedList<T>& a_list)
 {
-	newNode->data() = a_v;
-	newNode->next() = m_headSentinal->next();
+	if(!a_list.size())
+	{
+		return;
+	}
 
-	m_headSentinal->next() = newNode;
-	m_endSentinal->next() = newNode;
+	Node<T>* currentAddedNode = a_list.front();
 
-	++m_size;
-}
+	while(a_list.size())
+	{
+		this->append(a_list.remove_front());
+		m_size += a_list.size();
+	}	
+	
+/* OR:
+	while(currentAddedNode)
+	{
+		this->append(currentAddedNode.data());
+		Node<T>* currentAddedNode = currentAddedNode->next();
+	}
 */
+	m_size += a_list.size();
+	//~SingleLinkedList(a_list)?
+}
+
 
 template<typename T>
 void SingleLinkedList<T>::prepend(T a_v)
@@ -265,22 +279,22 @@ void SingleLinkedList<T>::prepend(T a_v)
 	++m_size;
 }
 
-/*
+
 template<typename T>
-void SingleLinkedList<T>::prepend(SingleLinkedList<T> a_list)
+void SingleLinkedList<T>::prepend(SingleLinkedList<T>& a_list)
 {
-	Node<T> lastNode = this->m_endSentinal->next();
-	Node<T>* newNode = new Node<T>(sizeof(Node<T>));
+	if(!a_list.size())
+	{
+		return;
+	}
+	
+	while(a_list.size())
+	{
+		this->prepend(a_list.remove_back());
+	}
 
-	newNode->data() = a_v;
-	newNode->next() = lastNode->next();
-
-	lastNode->next() = newNode;
-	m_endSentinal->next() = newNode;
-
-	++m_size;
+	m_size += a_list.size();
 }
-*/
 
 
 template<typename T>
