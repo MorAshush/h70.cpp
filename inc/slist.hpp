@@ -24,292 +24,207 @@ private:
 };
 
 
-template<typename T>
-Holder<T>::Holder()
-: m_data()
-, m_have(false)
-{}
-
-
-template<typename T>
-Holder<T>::Holder(T v)
-: m_data(v)
-, m_have(true)
-{}
-
-
-template<typename T>
-bool Holder<T>::have() const
-{
-	return m_have;
-}
-
-
-template<typename T>
-T Holder<T>::value() const
-{
-	assert(have());
-	return m_data;
-}
-
-
-template<typename T>
-class Node{
-public:    
-//	Node();
-	Node(T a_v, Node<T>* a_next);
-//	Node(const Node<T>& a_node); //copy constructor
-
-	Node<T>* operator=(Node<T>* a_node);
-//	~Node();
-
-	Node<T>* next();
-	T data() const;
-	bool operator==(const Node<T>& a_node) const;
-
-
-private:
-	T m_data;
-	Node<T>* m_next;
-};
-
-/*
-template<typename T>
-Node<T>::Node()
-: m_data()
-, m_next(*this)
-{}
-*/
-
-template<typename T>
-Node<T>::Node(T a_v, Node<T>* a_next)
-: m_data(a_v)
-, m_next(a_next)
-{}
-
-
-template<typename T>
-Node<T>* Node<T>::next()
-{
-	return m_next;
-}
-
-
-template<typename T>
-T Node<T>::data() const
-{
-	return m_data;
-}
-
-
-template<typename T>
-Node<T>* Node<T>::operator=(Node<T>* a_node)
-{
-	if(&a_node == this)
-	{
-		return this;
-	}
-
-	m_data = a_node.m_data;
-	m_next = a_node.m_next;
-
-	return this;
-}
-
-
-template<typename T>
-bool Node<T>::operator==(const Node<T>& a_node) const
-{
-	return this == &a_node;
-}
-
-
 template <typename T>
 class SingleLinkedList
 {
 public:
 	SingleLinkedList();
 
-	//SingleLinkedList(const SingleLinkedList& a_list); ??? is this a valid copy constructor?
-	//SingleLinkedList(const SingleLinkedList(T a_v)); ??? or this?
-	//SingleLinkedList& operator=(const SingleLinkedList(T a_v)); 
+	SingleLinkedList(const SingleLinkedList& a_list); //copy constructor
+	SingleLinkedList& operator=(const SingleLinkedList& a_list); //copy assignment operator
+//	~SingleLinkedList();
 
-	~SingleLinkedList();
+	SingleLinkedList<T>& append(T const& a_v);  //adds to the back
+	SingleLinkedList<T>& append(SingleLinkedList<T> const& a_list);
 
-	void append(T a_v);  //adds to the front
-	void append(SingleLinkedList<T>& a_list);
+	SingleLinkedList<T>& prepend(T const& a_v);  //adds to the front
+	SingleLinkedList<T>& prepend(SingleLinkedList<T>& a_list);
 
-	void prepend(T a_v);  //adds to the back
-	void prepend(SingleLinkedList<T>& a_list);
+	T& front();
+	T const & front() const;
 
-	Node<T>* front() const;
-	Node<T>* back() const;
+	T& back();
+	T const & back() const;
 
 	size_t size() const;
 
 	T remove_front();
 	T remove_back();
 
-	Holder<T> optional_next(Node<T>& a_node) const;
-	Holder<T> optional_next(SingleLinkedList<T> a_list) const; //global?
-
+//	Holder<T> optional_next(Node<T>& a_node) const;
+//	Holder<T> optional_next(SingleLinkedList<T> a_list) const; //global?
+	
+	bool operator==(SingleLinkedList<T>const& a_list);
+	bool operator<(SingleLinkedList<T>const& a_list);
+	
 	SingleLinkedList& operator<<(T a_v);
 	SingleLinkedList& operator<<(SingleLinkedList<T> a_list);
-
-	bool operator==(SingleLinkedList<T> a_list);
-	bool operator!=(SingleLinkedList<T> a_list);
-	bool operator>(SingleLinkedList<T> a_list);
-	bool operator<(SingleLinkedList<T> a_list);
-	bool operator>=(SingleLinkedList<T> a_list);
-	bool operator<=(SingleLinkedList<T> a_list);
 
 	SingleLinkedList<T> reverse();
 	//Node& for_each();
 
+	bool is_empty() const;
+
 private:
-	Node<T>* m_headSentinal;
-	Node<T>* m_lastNode;
+	class Node
+	{
+	public:    
+		Node(T a_v, Node* a_next);
+	
+		Node(const Node* a_node); //copy constructor
+		Node* operator=(Node* a_node);
+//		~Node();
+
+		Node* next();
+		void set_next(Node* a_next);
+
+		T& data();
+		T const& data() const;
+//		bool operator==(const Node& a_node) const;
+
+	private:
+		T m_data;
+		Node* m_next;
+	};//class node
+
+private:
+	Node* get_head() const;
+	Node* get_tail() const;
+	Node* get_end() const;
+//	Node* get_next(Node* a_current);
+	Node* get_front();
+//	void set_front();
+	Node* get_back();
+//	void set_back();
+
+private:
+	Node* m_head;
+	Node* m_tail;
+	Node* m_end;
 	size_t m_size;
 };
+/*
+bool operator!=(SingleLinkedList<T> a_list);
+bool operator>(SingleLinkedList<T> a_list);
+bool operator>=(SingleLinkedList<T> a_list);
+bool operator<=(SingleLinkedList<T> a_list);
+*/
+template<typename T>
+SingleLinkedList<T>::Node::Node(T a_v, Node* a_next)
+: m_data(a_v)
+, m_next(a_next)
+{}
+
+/*
+template<typename T>
+SingleLinkedList<T>::Node::~Node()
+{
+	if(m_next != &m_end)
+	{
+		delete[] m_next;
+	}
+}
+*/
+
+template<typename T>
+typename SingleLinkedList<T>::Node* SingleLinkedList<T>::Node::next()
+{
+	return m_next;
+}
+
+
+template<typename T>
+void SingleLinkedList<T>::Node::set_next(Node* a_next)
+{
+	m_next = a_next;
+}
+
+
+template<typename T>
+T& SingleLinkedList<T>::Node::data()
+{
+	return m_data;
+}
+
+
+template<typename T>
+T const& SingleLinkedList<T>::Node::data() const
+{
+	return m_data;
+}
+
+
+template<typename T>
+typename SingleLinkedList<T>::Node* SingleLinkedList<T>::Node::operator=(Node* a_node)
+{
+	if(&a_node == this)
+	{
+		return this;
+	}
+
+	m_data = a_node->m_data;
+	m_next = a_node->m_next;
+
+	return this;
+}
 
 
 template<typename T>
 SingleLinkedList<T>::SingleLinkedList()
-: m_headSentinal(0)
-, m_lastNode(0)
+: m_head(0)
+, m_tail(0)
+, m_end(0)
 , m_size(0)
 {
-/*	assert(m_headSentinal && m_endSentinal && "Node allocation failed");
 
-	m_headSentinal.next() = m_endSentinal;
-	m_endSentinal.next() = m_headSentinal;*/
 }
 
-
+/*
 template<typename T>
 SingleLinkedList<T>::~SingleLinkedList()
 {
-	if(!m_size)
+	if(!is_empty())
 	{
-		return;
-	}
-
-	Node<T>* currentNode = m_headSentinal->next();
-	
-	while(currentNode)
-	{
-		Node<T>* nextNode = currentNode->next();
-		delete[] currentNode;
-		currentNode = nextNode;
-	}
-}
-
-template<typename T>
-void SingleLinkedList<T>::append(T a_v)
-{
-	Node<T>* newNode = new Node<T>(a_v, 0);
-	assert(newNode && "allocation failed");
-
-	if(m_size == 0)
-	{
-		m_headSentinal = new Node<T>(0, newNode);
-		assert(m_headSentinal && "allocation failed");
-
-		*(m_headSentinal->next()) = *newNode;
-	}
-	else
-	{
-		*(m_lastNode->next()) = *newNode;
-	}
-
-	m_lastNode = newNode;
-	++m_size;
-}
-
-
-template<typename T>
-void SingleLinkedList<T>::append(SingleLinkedList<T>& a_list)
-{
-	if(!a_list.size())
-	{
-		return;
-	}
-
-	Node<T>* currentAddedNode = a_list.front();
-
-	while(a_list.size())
-	{
-		this->append(a_list.remove_front());
-		m_size += a_list.size();
+		Node* curNode = m_head;
+		while(curNode != 0)
+		{
+			Node* nextNode = curNode->next();
+			delete [] curNode;
+			curNode = nextNode;
+		}
 	}	
-	
-/* OR:
-	while(currentAddedNode)
-	{
-		this->append(currentAddedNode.data());
-		Node<T>* currentAddedNode = currentAddedNode->next();
-	}
+}
 */
-	m_size += a_list.size();
-	//~SingleLinkedList(a_list)?
-}
-
 
 template<typename T>
-void SingleLinkedList<T>::prepend(T a_v)
-{
-	if(m_size == 0)
-	{
-		Node<T>* newNode = new Node<T>(a_v, 0);
-		assert(newNode && "allocation failed");
-
-		m_headSentinal = new Node<T>(0, newNode);
-		assert(m_headSentinal && "allocation failed");
-
-		m_lastNode = newNode;
-	}
-	else
-	{
-		Node<T>* newNode = new Node<T>(a_v, m_headSentinal->next());
-		assert(newNode && "allocation failed");
-
-		*(m_headSentinal->next()) = *newNode;	
-	}
-
-	++m_size;
-}
-
-
-template<typename T>
-void SingleLinkedList<T>::prepend(SingleLinkedList<T>& a_list)
-{
-	if(!a_list.size())
-	{
-		return;
-	}
-	
-	while(a_list.size())
-	{
-		this->prepend(a_list.remove_back());
-	}
-
-	m_size += a_list.size();
-}
-
-
-template<typename T>
-Node<T>* SingleLinkedList<T>::front() const
+T& SingleLinkedList<T>::front()
 {
 	assert(m_size && "list is empty");
-	return m_headSentinal->next();
+	return m_head->data();
 }
 
 
 template<typename T>
-Node<T>* SingleLinkedList<T>::back() const
+T& SingleLinkedList<T>::back()
 {
 	assert(m_size && "list is empty");
-	return m_lastNode;
+	return m_tail->data();
+}
+
+
+template<typename T>
+T const& SingleLinkedList<T>::front() const
+{
+	assert(m_size && "list is empty");
+	return m_head->data();
+}
+
+
+template<typename T>
+T const& SingleLinkedList<T>::back() const
+{
+	assert(m_size && "list is empty");
+	return m_tail->data();
 }
  
 
@@ -321,55 +236,250 @@ size_t SingleLinkedList<T>::size() const
 
 
 template<typename T>
+typename SingleLinkedList<T>::Node* SingleLinkedList<T>::get_head() const
+{
+	assert(!is_empty() && "list is empty");
+	return m_head;
+}
+
+
+template<typename T>
+typename SingleLinkedList<T>::Node* SingleLinkedList<T>::get_tail() const
+{
+	assert(!is_empty() && "list is empty");
+	return m_tail;
+}
+
+
+template<typename T>
+typename SingleLinkedList<T>::Node* SingleLinkedList<T>::get_end() const
+{
+	assert(!is_empty() && "list is empty");
+	return m_end;
+}
+
+
+template<typename T>
+SingleLinkedList<T>& SingleLinkedList<T>::append(T const& a_v)
+{
+	Node* newNode = new Node(a_v, 0);
+	assert(newNode && "allocation failed");
+
+	if(is_empty())
+	{		
+		m_end = new Node(0, 0);
+		assert(m_end && "sentinal allocation failed");
+
+		newNode->set_next(m_end);
+		m_head = newNode;
+	}
+	else
+	{
+		newNode->set_next(m_end);
+		m_tail->set_next(newNode);
+	}
+
+	m_tail = newNode;
+	++m_size;
+
+	return *this;
+}
+
+template<typename T>
+SingleLinkedList<T>& SingleLinkedList<T>::append(SingleLinkedList<T> const& a_list)
+{
+	if(a_list.is_empty())
+	{
+		return *this;
+	}
+
+	Node* currentAddedNode = a_list.get_head();
+
+	while(currentAddedNode != a_list.get_end())
+	{
+		this->append(currentAddedNode->data());
+		currentAddedNode = currentAddedNode->next();
+	}	
+	
+	return *this;
+}
+
+
+template<typename T>
+SingleLinkedList<T>& SingleLinkedList<T>::prepend(T const& a_v)
+{
+	Node* newNode = new Node(a_v, 0);
+	assert(newNode && "allocation failed");
+
+	if(is_empty())
+	{
+		m_end = new Node(0, 0);
+		assert(m_end && "sentinal allocation failed");
+
+		newNode->set_next(m_end);
+		m_tail = newNode;
+	}
+	else
+	{
+		newNode->set_next(m_head->next());	
+	}
+
+	m_head = newNode;
+	++m_size;
+
+	return *this;
+}
+
+
+template<typename T>
+SingleLinkedList<T>& SingleLinkedList<T>::prepend(SingleLinkedList<T>& a_list)
+{
+	if(a_list.is_empty())
+	{
+		return *this;
+	}
+
+	SingleLinkedList<T> copyList;
+
+	copyList.append(a_list);
+
+	copyList.get_tail()->set_next(m_head);
+	m_head = copyList.get_head();
+	m_size += copyList.size();
+
+	delete [] copyList.get_end();
+	
+	return *this;
+}
+
+/*
+template<typename T>
 T SingleLinkedList<T>::remove_front()
 {
-	assert(m_size && "can't remove nodes, list is empty");
+	assert(m_size && "list is empty");
 
-	adt::Node<T>& temp;
+	Node* temp = m_head->next()->next();
 
-	temp = m_headSentinal.next().next();
-	T removedData = front().data();
+	T removedData = front();
 
-	delete front();
+	delete [] m_head->next();
 
-	front() = temp;
+	m_head->set_next(temp);
+
+	--m_size;
+
+	return removedData;
+}
+*/
+
+template<typename T>
+T SingleLinkedList<T>::remove_back()
+{
+	assert(!is_empty() && "list is empty");
+
+	Node* currentNode = get_head();
+
+	for(size_t i = m_size; i > 2; --i)
+	{
+		currentNode = currentNode->next();
+	}
+
+	T removedData = back();
+
+	delete m_tail;
+	
+	currentNode->set_next(m_end);
 
 	--m_size;
 
 	return removedData;
 }
 
-/*
+
 template<typename T>
-T SingleLinkedList<T>::remove_back()
+bool SingleLinkedList<T>::is_empty() const
 {
-	assert(m_size && "can't remove nodes, list is empty");
+	return m_size == 0;
+}
 
-	if(m_size == 1)
+
+template<typename T>
+bool SingleLinkedList<T>::operator==(SingleLinkedList<T>const& a_list)
+{
+	if(a_list.is_empty() && this->is_empty())
 	{
-		T removedData = m_endSentinal->next().data();
-
-		m_headSentinal->next() = m_endSentinal;
-
-		delete m_endSentinal->next();
-
-		m_endSentinal->next() = m_headSentinal;
+		return true;
+	}
+	else if(this->size() != a_list.size())
+	{
+		return false;
 	}
 
+	Node* currentOther = a_list.get_head();
+	Node* currentSelf = this->get_head();
 
-	return removedData;
+	while(currentOther != a_list.get_end())
+	{
+		if(currentOther->data() != currentSelf->data())
+		{
+			return false;
+		}
+	}	
+	
+	return true;
 }
-*/
-/*
+
+
 template<typename T>
-void SingleLinkedList<T>::
+bool SingleLinkedList<T>::operator<(SingleLinkedList<T>const& a_list)
 {
+	if(a_list.is_empty() && this->is_empty())
+	{
+		return false;
+	}
 
+	Node* currentOther = a_list.get_head();
+	Node* currentSelf = this->get_head();
+
+	if(a_list.size() <= this->size())
+	{
+		while(currentOther != a_list.get_end())
+		{
+			if(currentSelf->data() > currentOther->data())
+			{
+				return false;
+			}
+
+			currentSelf = currentSelf->next();
+			currentOther = currentOther->next();
+		}
+
+		return false;	
+	}
+	else
+	{
+		while(currentSelf != this->get_end())
+		{
+			if(currentSelf->data() > currentOther->data())
+			{
+				return false;
+			}
+
+			currentSelf = currentSelf->next();
+			currentOther = currentOther->next();
+		}
+
+		return true;
+	}
+
+	
+	
+	return true;
 }
-*/
 
 
 }//namespace adt
+
 
 
 
