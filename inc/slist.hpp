@@ -27,148 +27,141 @@ private:
 template <typename T>
 class SingleLinkedList
 {
+
+public:
+	class ListItr;
+	class ConstListItr;
+
 public:
 	SingleLinkedList();
 
-	SingleLinkedList(const SingleLinkedList& a_list); //copy constructor
-	SingleLinkedList& operator=(const SingleLinkedList& a_list); //copy assignment operator
-//	~SingleLinkedList();
+	SingleLinkedList(const SingleLinkedList& a_list); 
+	SingleLinkedList& operator=(const SingleLinkedList& a_list); 
+	~SingleLinkedList();
 
-	SingleLinkedList<T>& append(T const& a_v);  //adds to the back
-	SingleLinkedList<T>& append(SingleLinkedList<T> const& a_list);
+	SingleLinkedList& append(T const& a_v); 
+	SingleLinkedList& append(SingleLinkedList const& a_list);
 
-	SingleLinkedList<T>& prepend(T const& a_v);  //adds to the front
-	SingleLinkedList<T>& prepend(SingleLinkedList<T>& a_list);
+	SingleLinkedList& prepend(T const& a_v); 
+//	SingleLinkedList& prepend(SingleLinkedList const& a_list);
 
 	T& front();
 	T const & front() const;
-
 	T& back();
 	T const & back() const;
+
+	ListItr begin();
+	ConstListItr cbegin() const;
+	ListItr end();
+	ConstListItr cend() const;
 
 	size_t size() const;
 
 	T remove_front();
 	T remove_back();
 
-//	Holder<T> optional_next(Node<T>& a_node) const;
-//	Holder<T> optional_next(SingleLinkedList<T> a_list) const; //global?
+//	Holder optional_next(Node& a_node) const;
+//	Holder optional_next(SingleLinkedList a_list) const; //global?
 	
-	bool operator==(SingleLinkedList<T>const& a_list);
-	bool operator<(SingleLinkedList<T>const& a_list);
+	bool operator==(SingleLinkedList const& a_list) const;
+	bool operator<(SingleLinkedList const& a_list) const;
 	
-	SingleLinkedList<T>& operator<<(T a_v);
-	SingleLinkedList<T>& operator<<(SingleLinkedList<T> a_list);
+	SingleLinkedList& operator<<(T a_v);
+	SingleLinkedList& operator<<(SingleLinkedList a_list);
 
-	SingleLinkedList<T>& reverse_list(SingleLinkedList<T>& a_list);
-	//Node& for_each();
+	SingleLinkedList& reverse();
+//	Node& for_each();
 
 	bool is_empty() const;
+	void print() const;
 
 private:
-	class Node
-	{
-	public:    
-		Node(T a_v, Node* a_next);
-	
-		Node(const Node* a_node); //copy constructor
-		Node* operator=(Node* a_node);
-//		~Node();
-
-		Node* next();
-		void set_next(Node* a_next);
-
-		T& data();
-		T const& data() const;
-//		bool operator==(const Node& a_node) const;
-
-	private:
-		T m_data;
-		Node* m_next;
-	};//class node
+	class Node;
 
 private:
 	Node* get_head() const;
 	void set_head(Node* a_node);
+
 	Node* get_tail() const;
+	void set_tail(Node* a_node);
+
 	Node* get_end() const;
-//	Node* get_next(Node* a_current);
-	Node* get_front();
-//	void set_front();
-	Node* get_back();
-//	void set_back();
-	Node* reverse_rec(SingleLinkedList<T>& a_list, Node* a_node);
+
+	Node* reverse(Node* a_node);
+
+	Node* one_before_last();
 
 private:
 	Node* m_head;
 	Node* m_tail;
 	Node* m_end;
 	size_t m_size;
-};
-/*
-bool operator!=(SingleLinkedList<T> a_list);
-bool operator>(SingleLinkedList<T> a_list);
-bool operator>=(SingleLinkedList<T> a_list);
-bool operator<=(SingleLinkedList<T> a_list);
-*/
-template<typename T>
-SingleLinkedList<T>::Node::Node(T a_v, Node* a_next)
-: m_data(a_v)
-, m_next(a_next)
-{}
 
-/*
+};//class SingleLinkedList
+
+
 template<typename T>
-SingleLinkedList<T>::Node::~Node()
+class SingleLinkedList<T>::ListItr
 {
-	if(m_next != &m_end)
-	{
-		delete[] m_next;
-	}
-}
-*/
+public:
+    ListItr(Node* a_current);
 
-template<typename T>
-typename SingleLinkedList<T>::Node* SingleLinkedList<T>::Node::next()
-{
-	return m_next;
-}
+    ListItr operator++() ;
+    T& operator*() ;
+    const T& operator*() const;
+    bool operator==(ListItr const& a_itr) const;
 
-
-template<typename T>
-void SingleLinkedList<T>::Node::set_next(Node* a_next)
-{
-	m_next = a_next;
-}
+private:
+	Node* m_currentNode;
+}; //class ListItr
 
 
 template<typename T>
-T& SingleLinkedList<T>::Node::data()
+class SingleLinkedList<T>::ConstListItr
 {
-	return m_data;
-}
+public:
+    ConstListItr(const Node* a_current);
+    ConstListItr operator++() ;
+    const T& operator*() const;
+
+private:
+	const Node* m_currentNode;
+}; //class ConstListItr
 
 
 template<typename T>
-T const& SingleLinkedList<T>::Node::data() const
+class SingleLinkedList<T>::Node	
 {
-	return m_data;
-}
+public:    
+	Node(T a_v, Node* a_next);
+
+	Node* next();
+	void set_next(Node* a_next);
+
+	T& data();
+	T const& data() const;
+	bool operator==(const Node& a_node) const;
+	bool operator!=(const Node& a_node) const;
+
+private:
+	T m_data;
+	Node* m_next;
+
+};//class node
 
 
 template<typename T>
-typename SingleLinkedList<T>::Node* SingleLinkedList<T>::Node::operator=(Node* a_node)
-{
-	if(&a_node == this)
-	{
-		return this;
-	}
+bool operator!=(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second);
 
-	m_data = a_node->m_data;
-	m_next = a_node->m_next;
+template<typename T>
+bool operator>(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second);
 
-	return this;
-}
+template<typename T>
+bool operator>=(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second);
+
+template<typename T>
+bool operator<=(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second);
+
 
 
 template<typename T>
@@ -181,22 +174,19 @@ SingleLinkedList<T>::SingleLinkedList()
 
 }
 
-/*
+
 template<typename T>
 SingleLinkedList<T>::~SingleLinkedList()
 {
-	if(!is_empty())
+	Node* curNode = m_head;
+	while(curNode != 0)
 	{
-		Node* curNode = m_head;
-		while(curNode != 0)
-		{
-			Node* nextNode = curNode->next();
-			delete [] curNode;
-			curNode = nextNode;
-		}
-	}	
+		Node* nextNode = curNode->next();
+		delete curNode;
+		curNode = nextNode;
+	}
 }
-*/
+
 
 template<typename T>
 T& SingleLinkedList<T>::front()
@@ -228,7 +218,51 @@ T const& SingleLinkedList<T>::back() const
 	assert(m_size && "list is empty");
 	return m_tail->data();
 }
- 
+
+
+template<typename T>
+typename SingleLinkedList<T>::ListItr SingleLinkedList<T>::begin() 
+{
+	assert(!is_empty() && "list is empty");
+
+	ListItr itr(m_head);
+
+	return itr;
+}
+
+
+template<typename T>
+typename SingleLinkedList<T>::ConstListItr SingleLinkedList<T>::cbegin() const 
+{
+	assert(!is_empty() && "list is empty");
+
+	ConstListItr itr(m_head);
+
+	return itr;
+}
+
+
+template<typename T>
+typename SingleLinkedList<T>::ListItr SingleLinkedList<T>::end() 
+{
+	assert(!is_empty() && "list is empty");
+
+	ListItr itr(m_tail);
+
+	return itr;
+}
+
+
+template<typename T>
+typename SingleLinkedList<T>::ConstListItr SingleLinkedList<T>::cend() const
+{
+	assert(!is_empty() && "list is empty");
+
+	ConstListItr itr(m_tail);
+
+	return itr;
+}
+
 
 template<typename T>
 size_t SingleLinkedList<T>::size() const
@@ -253,6 +287,13 @@ void SingleLinkedList<T>::set_head(typename SingleLinkedList<T>::Node* a_node)
 
 
 template<typename T>
+void SingleLinkedList<T>::set_tail(typename SingleLinkedList<T>::Node* a_node)
+{
+	m_tail = a_node;
+}
+
+
+template<typename T>
 typename SingleLinkedList<T>::Node* SingleLinkedList<T>::get_tail() const
 {
 	assert(!is_empty() && "list is empty");
@@ -263,7 +304,7 @@ typename SingleLinkedList<T>::Node* SingleLinkedList<T>::get_tail() const
 template<typename T>
 typename SingleLinkedList<T>::Node* SingleLinkedList<T>::get_end() const
 {
-	assert(!is_empty() && "list is empty");
+	assert(m_end && "list is empty");
 	return m_end;
 }
 
@@ -272,12 +313,10 @@ template<typename T>
 SingleLinkedList<T>& SingleLinkedList<T>::append(T const& a_v)
 {
 	Node* newNode = new Node(a_v, 0);
-	assert(newNode && "allocation failed");
 
 	if(is_empty())
 	{		
 		m_end = new Node(0, 0);
-		assert(m_end && "sentinal allocation failed");
 
 		newNode->set_next(m_end);
 		m_head = newNode;
@@ -318,30 +357,28 @@ template<typename T>
 SingleLinkedList<T>& SingleLinkedList<T>::prepend(T const& a_v)
 {
 	Node* newNode = new Node(a_v, 0);
-	assert(newNode && "allocation failed");
 
 	if(is_empty())
 	{
 		m_end = new Node(0, 0);
-		assert(m_end && "sentinal allocation failed");
 
 		newNode->set_next(m_end);
 		m_tail = newNode;
 	}
 	else
 	{
-		newNode->set_next(m_head->next());	
+		newNode->set_next(get_head());	
 	}
 
-	m_head = newNode;
+	set_head(newNode);
 	++m_size;
 
 	return *this;
 }
 
-
+/*
 template<typename T>
-SingleLinkedList<T>& SingleLinkedList<T>::prepend(SingleLinkedList<T>& a_list)
+SingleLinkedList<T>& SingleLinkedList<T>::prepend(SingleLinkedList<T> const& a_list)
 {
 	if(a_list.is_empty())
 	{
@@ -352,26 +389,35 @@ SingleLinkedList<T>& SingleLinkedList<T>::prepend(SingleLinkedList<T>& a_list)
 
 	copyList.append(a_list);
 
-	copyList.get_tail()->set_next(m_head);
-	m_head = copyList.get_head();
-	m_size += copyList.size();
+	while(copyList.size())
+	{
+		printf("list size: %ld\n", copyList.size());
+		T data = copyList.remove_back();
+		this->prepend(data);
+	}
 
-	delete [] copyList.get_end();
-	
+	Node* keeper = get_head();
+	set_head(copyList.get_head());
+
+	Node* lastInCopy = copyList.get_tail(); 
+	lastInCopy->set_next(keeper);
+
+	a_list.set_head(a_list.get_end());
+
 	return *this;
 }
-
+*/
 
 template<typename T>
 T SingleLinkedList<T>::remove_front()
 {
 	assert(m_size && "list is empty");
 
-	Node* temp = m_head->next()->next();
+	Node* temp = m_head->next();
 
 	T removedData = front();
 
-	delete [] get_head();
+	delete get_head();
 
 	set_head(temp);
 
@@ -382,22 +428,44 @@ T SingleLinkedList<T>::remove_front()
 
 
 template<typename T>
-T SingleLinkedList<T>::remove_back()
+typename SingleLinkedList<T>::Node* SingleLinkedList<T>::one_before_last()
 {
-	assert(!is_empty() && "list is empty");
+	assert(size() >= 2 && "num of items must be at least two");
 
 	Node* currentNode = get_head();
 
-	for(size_t i = m_size; i > 2; --i)
+	while(currentNode->next()->next() != get_end())
 	{
 		currentNode = currentNode->next();
 	}
 
+	return currentNode;
+}
+
+
+
+template<typename T>
+T SingleLinkedList<T>::remove_back()
+{
+	assert(!is_empty() && "list is empty");
+
 	T removedData = back();
 
-	delete m_tail;
+	if(size() == 1)
+	{
+		delete get_tail();
+		set_tail(0);
+		set_head(0);
+	}
+	else
+	{
+		Node* oneBeforeLast = one_before_last();
 	
-	currentNode->set_next(m_end);
+		oneBeforeLast->set_next(m_end);
+
+		delete get_tail();
+		set_tail(oneBeforeLast);
+	}
 
 	--m_size;
 
@@ -413,11 +481,19 @@ bool SingleLinkedList<T>::is_empty() const
 
 
 template<typename T>
-bool SingleLinkedList<T>::operator==(SingleLinkedList<T>const& a_list)
+bool SingleLinkedList<T>::operator==(SingleLinkedList<T>const& a_list) const
 {
 	if(a_list.is_empty() && this->is_empty())
 	{
 		return true;
+	}
+	else if(!a_list.is_empty() && this->is_empty())
+	{
+		return true;
+	}
+	else if(a_list.is_empty() && !(this->is_empty()))
+	{
+		return false;
 	}
 	else if(this->size() != a_list.size())
 	{
@@ -427,20 +503,41 @@ bool SingleLinkedList<T>::operator==(SingleLinkedList<T>const& a_list)
 	Node* currentOther = a_list.get_head();
 	Node* currentSelf = this->get_head();
 
-	while(currentOther != a_list.get_end())
+	if(a_list.size() <= this->size())
 	{
-		if(currentOther->data() != currentSelf->data())
+		while(currentOther != a_list.get_end())
 		{
-			return false;
-		}
-	}	
+			if(currentOther->data() != currentSelf->data())
+			{
+				return false;
+			}
+
+			currentSelf = currentSelf->next();
+			currentOther = currentOther->next();
+		}	
+	}
+	else
+	{
+		while(currentSelf != this->get_end())
+		{
+			if(currentSelf->data() != currentOther->data())
+			{
+				return false;
+			}
+
+			currentSelf = currentSelf->next();
+			currentOther = currentOther->next();
+		}	
+	}
+	
+	
 	
 	return true;
 }
 
 
 template<typename T>
-bool SingleLinkedList<T>::operator<(SingleLinkedList<T>const& a_list)
+bool SingleLinkedList<T>::operator<(SingleLinkedList<T>const& a_list) const
 {
 	if(a_list.is_empty() && this->is_empty())
 	{
@@ -454,7 +551,11 @@ bool SingleLinkedList<T>::operator<(SingleLinkedList<T>const& a_list)
 	{
 		while(currentOther != a_list.get_end())
 		{
-			if(currentSelf->data() > currentOther->data())
+			if(currentSelf->data() < currentOther->data())
+			{
+				return true;
+			}
+			else if(currentSelf->data() > currentOther->data())
 			{
 				return false;
 			}
@@ -462,18 +563,18 @@ bool SingleLinkedList<T>::operator<(SingleLinkedList<T>const& a_list)
 			currentSelf = currentSelf->next();
 			currentOther = currentOther->next();
 		}
-		if(a_list.size() < this->size())
-		{
-			return false;
-		}
 
-		return true;	
+		return false;	
 	}
 	else
 	{
 		while(currentSelf != this->get_end())
 		{
-			if(currentSelf->data() > currentOther->data())
+			if(currentSelf->data() < currentOther->data())
+			{
+				return true;
+			}
+			else if(currentSelf->data() > currentOther->data())
 			{
 				return false;
 			}
@@ -484,38 +585,249 @@ bool SingleLinkedList<T>::operator<(SingleLinkedList<T>const& a_list)
 
 		return true;
 	}
-	
+}
+
+
+template<typename T>
+bool operator<=(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second)
+{
+	if(a_first == a_second)
+	{
+		return true;
+	}
+	if(a_first < a_second)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+template<typename T>
+bool operator>(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second)
+{
+	if(a_first == a_second)
+	{
+		return false;
+	}
+	if(a_first < a_second)
+	{
+		return false;
+	}
+
 	return true;
 }
 
-/*
-template<typename data_type>        
-typename SingleLinkedList<T>::Node* SingleLinkedList<T>::reverse_rec(SingleLinkedList<T>& a_list, typename SingleLinkedList<T>::Node* a_current)
+
+template<typename T>
+bool operator>=(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second)
 {
-	if(a_current->get_next()->get_next() == m_end)
+	return !(a_first < a_second);
+}
+
+
+template<typename T>
+bool operator!=(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second)
+{
+	return !(a_first == a_second);
+}
+
+
+template<typename T>        
+typename SingleLinkedList<T>::Node* SingleLinkedList<T>::reverse(typename SingleLinkedList<T>::Node* a_current)
+{
+	if(a_current->next() == m_end)
 	{
-		m_head = a_current;
-		return a_current;
+		return a_current; 
 	}
 
-	Node* returned = reverse_rec(a_list, a_current->next());
+	Node* returned = reverse(a_current->next());
 
-	returned->get_next()->set_next(a_current);
+	returned->set_next(a_current);
 
 	return a_current;
 }
 
 
-template<typename data_type>        
-SingleLinkedList<T>& SingleLinkedList<T>::reverse_list(SingleLinkedList<T>& a_list)
+template<typename T>        
+SingleLinkedList<T>& SingleLinkedList<T>::reverse()
 {
-	reverse_rec(a_list, a_list.get_head());
-	a_list.get_tail()->set_next(a_list.get_head()->next());
-	a_list.get_head() = a_list.get_tail(); //??
+	Node* oldTail = get_tail();
+	Node* newTail = reverse(m_head);
 
-	return a_list;
+	set_tail(newTail);
+	newTail->set_next(m_end);
+
+	set_head(oldTail);
+
+	return *this;
+}
+
+
+template<typename T>        
+void SingleLinkedList<T>::print() const
+{
+	Node* currentNode = get_head();
+
+	std::cout << "[";
+
+	while(currentNode)
+	{
+		Node* nextNode = currentNode->next();
+		std::cout << currentNode->data();
+
+		if(currentNode == get_tail())
+		{
+			break;
+		}
+
+		std::cout << ",";
+		currentNode = nextNode;
+	}
+
+	std::cout << "]";
+}
+
+
+template<typename T>
+SingleLinkedList<T>::Node::Node(T a_v, Node* a_next)
+: m_data(a_v)
+, m_next(a_next)
+{}
+
+template<typename T>
+typename SingleLinkedList<T>::Node* SingleLinkedList<T>::Node::next()
+{
+	return m_next;
+}
+
+
+template<typename T>
+void SingleLinkedList<T>::Node::set_next(Node* a_next)
+{
+	m_next = a_next;
+}
+
+
+template<typename T>
+T& SingleLinkedList<T>::Node::data()
+{
+	return m_data;
+}
+
+
+template<typename T>
+T const& SingleLinkedList<T>::Node::data() const
+{
+	return m_data;
+}
+
+
+template<typename T>
+bool SingleLinkedList<T>::Node::operator==(const Node& a_node) const
+{
+	return this->data() == a_node.data();
+}
+
+
+template<typename T>
+bool SingleLinkedList<T>::Node::operator!=(const Node& a_node) const
+{
+	return !(this->data() == a_node.data());
+}
+/*
+template<typename T>
+typename SingleLinkedList<T>::Node* SingleLinkedList<T>::Node::operator=(Node* a_node)
+{
+	if(&a_node == this)
+	{
+		return this;
+	}
+
+	m_data = a_node->m_data;
+	m_next = a_node->m_next;
+
+	return this;
 }
 */
+
+
+template<typename T>
+SingleLinkedList<T>::ListItr::ListItr(Node* a_current)
+: m_currentNode(0)
+{
+	assert(a_current && "node pointer is null");
+	m_currentNode = a_current;
+}
+
+
+template<typename T>
+typename SingleLinkedList<T>::ListItr SingleLinkedList<T>::ListItr::operator++()
+{
+	if(m_currentNode->next() == 0) //if end?
+	{
+		return *this;
+	}
+
+	return m_currentNode->next();
+}
+
+
+template<typename T>
+T& SingleLinkedList<T>::ListItr::operator*()
+{
+	return m_currentNode->data();
+}
+
+
+template<typename T>
+T const& SingleLinkedList<T>::ListItr::operator*() const
+{
+	return m_currentNode->data();
+}
+
+
+template<typename T>
+bool SingleLinkedList<T>::ListItr::operator==(ListItr const& a_itr) const
+{
+	return m_currentNode == a_itr.m_currentNode;;
+}
+
+
+
+/*
+template<typename T>
+typename SingleLinkedList<T>::ListItr::ConstListItr(const Node* a_current)
+: m_currentNode(a_current)
+{}
+
+
+template<typename T>
+typename SingleLinkedList<T>::ConstListItr SingleLinkedList<T>::ConstListItr::operator++()
+{
+	if(m_currentNode->next() == 0)
+	{
+		return *this;
+	}
+
+	return m_currentNode->next();
+}
+
+
+template<typename T>
+T const& SingleLinkedList<T>::ConstListItr::operator*() const
+{
+	return m_currentNode->data();
+}
+
+*/
+
+
+
+
+
+
 
 }//namespace adt
 
