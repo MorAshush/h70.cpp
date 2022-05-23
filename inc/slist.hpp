@@ -57,10 +57,10 @@ public:
 	bool operator==(SingleLinkedList<T>const& a_list);
 	bool operator<(SingleLinkedList<T>const& a_list);
 	
-	SingleLinkedList& operator<<(T a_v);
-	SingleLinkedList& operator<<(SingleLinkedList<T> a_list);
+	SingleLinkedList<T>& operator<<(T a_v);
+	SingleLinkedList<T>& operator<<(SingleLinkedList<T> a_list);
 
-	SingleLinkedList<T> reverse();
+	SingleLinkedList<T>& reverse_list(SingleLinkedList<T>& a_list);
 	//Node& for_each();
 
 	bool is_empty() const;
@@ -89,6 +89,7 @@ private:
 
 private:
 	Node* get_head() const;
+	void set_head(Node* a_node);
 	Node* get_tail() const;
 	Node* get_end() const;
 //	Node* get_next(Node* a_current);
@@ -96,6 +97,7 @@ private:
 //	void set_front();
 	Node* get_back();
 //	void set_back();
+	Node* reverse_rec(SingleLinkedList<T>& a_list, Node* a_node);
 
 private:
 	Node* m_head;
@@ -244,6 +246,13 @@ typename SingleLinkedList<T>::Node* SingleLinkedList<T>::get_head() const
 
 
 template<typename T>
+void SingleLinkedList<T>::set_head(typename SingleLinkedList<T>::Node* a_node)
+{
+	m_head = a_node;
+}
+
+
+template<typename T>
 typename SingleLinkedList<T>::Node* SingleLinkedList<T>::get_tail() const
 {
 	assert(!is_empty() && "list is empty");
@@ -352,7 +361,7 @@ SingleLinkedList<T>& SingleLinkedList<T>::prepend(SingleLinkedList<T>& a_list)
 	return *this;
 }
 
-/*
+
 template<typename T>
 T SingleLinkedList<T>::remove_front()
 {
@@ -362,15 +371,15 @@ T SingleLinkedList<T>::remove_front()
 
 	T removedData = front();
 
-	delete [] m_head->next();
+	delete [] get_head();
 
-	m_head->set_next(temp);
+	set_head(temp);
 
 	--m_size;
 
 	return removedData;
 }
-*/
+
 
 template<typename T>
 T SingleLinkedList<T>::remove_back()
@@ -453,8 +462,12 @@ bool SingleLinkedList<T>::operator<(SingleLinkedList<T>const& a_list)
 			currentSelf = currentSelf->next();
 			currentOther = currentOther->next();
 		}
+		if(a_list.size() < this->size())
+		{
+			return false;
+		}
 
-		return false;	
+		return true;	
 	}
 	else
 	{
@@ -471,12 +484,38 @@ bool SingleLinkedList<T>::operator<(SingleLinkedList<T>const& a_list)
 
 		return true;
 	}
-
-	
 	
 	return true;
 }
 
+/*
+template<typename data_type>        
+typename SingleLinkedList<T>::Node* SingleLinkedList<T>::reverse_rec(SingleLinkedList<T>& a_list, typename SingleLinkedList<T>::Node* a_current)
+{
+	if(a_current->get_next()->get_next() == m_end)
+	{
+		m_head = a_current;
+		return a_current;
+	}
+
+	Node* returned = reverse_rec(a_list, a_current->next());
+
+	returned->get_next()->set_next(a_current);
+
+	return a_current;
+}
+
+
+template<typename data_type>        
+SingleLinkedList<T>& SingleLinkedList<T>::reverse_list(SingleLinkedList<T>& a_list)
+{
+	reverse_rec(a_list, a_list.get_head());
+	a_list.get_tail()->set_next(a_list.get_head()->next());
+	a_list.get_head() = a_list.get_tail(); //??
+
+	return a_list;
+}
+*/
 
 }//namespace adt
 

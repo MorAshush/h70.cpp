@@ -83,6 +83,23 @@ BEGIN_TEST(list_to_list_prepend_test)
 
 END_TEST
 
+BEGIN_TEST(remove_front_test)	
+
+	adt::SingleLinkedList<int> list;
+	list.append(10);
+	list.append(20);
+	list.append(30);
+	list.append(40);
+	list.append(50);
+	list.append(60);
+
+	int data = list.remove_front();
+
+	ASSERT_THAT(data == 10);
+	ASSERT_EQUAL(list.size(), 5);
+
+END_TEST
+
 BEGIN_TEST(remove_back_test)	
 
 	adt::SingleLinkedList<int> list;
@@ -100,6 +117,62 @@ BEGIN_TEST(remove_back_test)
 
 END_TEST
 
+BEGIN_TEST(operator_smaller_than__test1)	
+
+	adt::SingleLinkedList<int> list1;
+	list1.append(10);
+	list1.append(20);
+	list1.append(30);
+
+	adt::SingleLinkedList<int> list2;
+	list2.append(40);
+	list2.append(50);
+	list2.append(60);
+
+	int result = list1 < list2;
+
+	ASSERT_EQUAL(result, 1);
+
+END_TEST
+
+BEGIN_TEST(operator_smaller_than__test2)	
+
+	adt::SingleLinkedList<int> list1;
+	list1.append(10);
+	list1.append(20);
+	list1.append(30);
+	list1.append(40);
+
+	adt::SingleLinkedList<int> list2;
+	list2.append(40);
+	list2.append(50);
+	list2.append(60);
+
+	int result = list1 < list2;
+
+	ASSERT_EQUAL(result, 0);
+
+END_TEST
+
+BEGIN_TEST(operator_smaller_than__test3)	
+
+	adt::SingleLinkedList<int> list1;
+	list1.append(40);
+	list1.append(50);
+	list1.append(60);
+
+	adt::SingleLinkedList<int> list2;
+	list2.append(10);
+	list2.append(20);
+	list2.append(30);
+	list2.append(40);
+
+	int result = list1 < list2;
+
+	ASSERT_EQUAL(result, 0);
+
+END_TEST
+
 
 BEGIN_SUITE(node_default_structor_test tests)
 
@@ -108,15 +181,23 @@ BEGIN_SUITE(node_default_structor_test tests)
 	TEST(list_prepend_test)
 	TEST(list_to_list_append_test)
 	TEST(list_to_list_prepend_test)
+	TEST(remove_front_test)
 	TEST(remove_back_test)
+	TEST(operator_smaller_than__test1)
+	TEST(operator_smaller_than__test2)
+	TEST(operator_smaller_than__test3)
 
 
 
 /*	
-	
-	TEST(list_append_with_variable)
-	TEST(list_append_with_variable)
-	TEST(list_prepend_with_variable)
-	TEST()TEST()
+	TEST()
+	TEST()
+	TEST()
+	TEST()
+	TEST()
+	TEST()
+	TEST()
+	TEST()
+	TEST()
 */
 END_SUITE
