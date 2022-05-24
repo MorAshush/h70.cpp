@@ -44,7 +44,7 @@ public:
 	SingleLinkedList& append(SingleLinkedList const& a_list);
 
 	SingleLinkedList& prepend(T const& a_v); 
-//	SingleLinkedList& prepend(SingleLinkedList const& a_list);
+	SingleLinkedList& prepend(SingleLinkedList const& a_list);
 
 	T& front();
 	T const & front() const;
@@ -339,7 +339,7 @@ SingleLinkedList<T>& SingleLinkedList<T>::prepend(T const& a_v)
 	return *this;
 }
 
-/*
+
 template<typename T>
 SingleLinkedList<T>& SingleLinkedList<T>::prepend(SingleLinkedList<T> const& a_list)
 {
@@ -354,22 +354,16 @@ SingleLinkedList<T>& SingleLinkedList<T>::prepend(SingleLinkedList<T> const& a_l
 
 	while(copyList.size())
 	{
-		printf("list size: %ld\n", copyList.size());
 		T data = copyList.remove_back();
 		this->prepend(data);
 	}
 
-	Node* keeper = get_head();
-	set_head(copyList.get_head());
-
-	Node* lastInCopy = copyList.get_tail(); 
-	lastInCopy->set_next(keeper);
-
-	a_list.set_head(a_list.get_end());
+	copyList.set_head(0);
+	delete copyList.get_end();
 
 	return *this;
 }
-*/
+
 
 template<typename T>
 T SingleLinkedList<T>::remove_front()
@@ -594,6 +588,32 @@ template<typename T>
 bool operator!=(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second)
 {
 	return !(a_first == a_second);
+}
+
+
+template<typename T>
+SingleLinkedList<T>& SingleLinkedList<T>::operator<<(T a_v)
+{
+	append(a_v);
+	return *this;
+}
+
+
+template<typename T>
+SingleLinkedList<T>& SingleLinkedList<T>::operator<<(SingleLinkedList a_list)
+{
+	Node* currentNode = a_list.get_head();
+
+	while(a_list.size())
+	{
+		T removedData = a_list.remove_front();
+		append(removedData);
+	}
+
+	a_list.set_head(0);
+	delete a_list.get_end();
+
+	return *this;
 }
 
 

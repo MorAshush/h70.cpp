@@ -68,7 +68,7 @@ BEGIN_TEST(list_prepend_test)
 	ASSERT_THAT(list.back() == 10);
 
 END_TEST
-/*
+
 BEGIN_TEST(list_to_list_prepend_test)	
 
 	adt::SingleLinkedList<int> list1;
@@ -88,7 +88,7 @@ BEGIN_TEST(list_to_list_prepend_test)
 	ASSERT_THAT(list1.back() == 30);
 
 END_TEST
-*/
+
 BEGIN_TEST(remove_front_test)	
 
 	adt::SingleLinkedList<int> list;
@@ -291,7 +291,7 @@ BEGIN_SUITE(node_default_structor_test tests)
 	TEST(list_append_test)
 	TEST(list_prepend_test)
 	TEST(list_to_list_append_test)
-//	TEST(list_to_list_prepend_test)
+	TEST(list_to_list_prepend_test)
 	TEST(remove_front_test)
 	TEST(remove_back_test)
 	TEST(operator_smaller_than__test1)
