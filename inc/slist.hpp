@@ -31,6 +31,7 @@ class SingleLinkedList
 public:
 	class ListItr;
 	class ConstListItr;
+//	typedef T (*action_func)(T const& a_data, void* a_context); 
 
 public:
 	SingleLinkedList();
@@ -70,7 +71,7 @@ public:
 	SingleLinkedList& operator<<(SingleLinkedList a_list);
 
 	SingleLinkedList& reverse();
-//	Node& for_each();
+//	void for_each(T (*action_func)(T const& a_data, void* a_context), void* a_context);
 
 	bool is_empty() const;
 	void print() const;
@@ -106,6 +107,9 @@ class SingleLinkedList<T>::ListItr
 public:
     ListItr(Node* a_current);
 
+    T& get_data();
+    void set_data(T& a_data);
+
     ListItr operator++() ;
     T& operator*() ;
     const T& operator*() const;
@@ -121,8 +125,11 @@ class SingleLinkedList<T>::ConstListItr
 {
 public:
     ConstListItr(const Node* a_current);
+
+    T const& get_data() const;
+
     ConstListItr operator++() ;
-    const T& operator*() const;
+    T const& operator*() const;
 
 private:
 	const Node* m_currentNode;
@@ -217,50 +224,6 @@ T const& SingleLinkedList<T>::back() const
 {
 	assert(m_size && "list is empty");
 	return m_tail->data();
-}
-
-
-template<typename T>
-typename SingleLinkedList<T>::ListItr SingleLinkedList<T>::begin() 
-{
-	assert(!is_empty() && "list is empty");
-
-	ListItr itr(m_head);
-
-	return itr;
-}
-
-
-template<typename T>
-typename SingleLinkedList<T>::ConstListItr SingleLinkedList<T>::cbegin() const 
-{
-	assert(!is_empty() && "list is empty");
-
-	ConstListItr itr(m_head);
-
-	return itr;
-}
-
-
-template<typename T>
-typename SingleLinkedList<T>::ListItr SingleLinkedList<T>::end() 
-{
-	assert(!is_empty() && "list is empty");
-
-	ListItr itr(m_tail);
-
-	return itr;
-}
-
-
-template<typename T>
-typename SingleLinkedList<T>::ConstListItr SingleLinkedList<T>::cend() const
-{
-	assert(!is_empty() && "list is empty");
-
-	ConstListItr itr(m_tail);
-
-	return itr;
 }
 
 
@@ -691,6 +654,50 @@ void SingleLinkedList<T>::print() const
 
 
 template<typename T>
+typename SingleLinkedList<T>::ListItr SingleLinkedList<T>::begin() 
+{
+	assert(!is_empty() && "list is empty");
+
+	ListItr itr(m_head);
+
+	return itr;
+}
+
+
+template<typename T>
+typename SingleLinkedList<T>::ConstListItr SingleLinkedList<T>::cbegin() const 
+{
+	assert(!is_empty() && "list is empty");
+
+	ConstListItr itr(m_head);
+
+	return itr;
+}
+
+
+template<typename T>
+typename SingleLinkedList<T>::ListItr SingleLinkedList<T>::end() 
+{
+	assert(!is_empty() && "list is empty");
+
+	ListItr itr(m_tail);
+
+	return itr;
+}
+
+
+template<typename T>
+typename SingleLinkedList<T>::ConstListItr SingleLinkedList<T>::cend() const
+{
+	assert(!is_empty() && "list is empty");
+
+	ConstListItr itr(m_tail);
+
+	return itr;
+}
+
+
+template<typename T>
 SingleLinkedList<T>::Node::Node(T a_v, Node* a_next)
 : m_data(a_v)
 , m_next(a_next)
@@ -759,6 +766,20 @@ SingleLinkedList<T>::ListItr::ListItr(Node* a_current)
 {
 	assert(a_current && "node pointer is null");
 	m_currentNode = a_current;
+}
+
+
+template<typename T>
+T& SingleLinkedList<T>::ListItr::get_data()
+{
+	return m_currentNode->data();
+}
+
+
+template<typename T>
+void SingleLinkedList<T>::ListItr::set_data(T& a_data)
+{
+	m_currentNode->data() = a_data;
 }
 
 

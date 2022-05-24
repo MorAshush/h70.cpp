@@ -310,5 +310,13 @@ BEGIN_SUITE(node_default_structor_test tests)
 	TEST()
 	TEST()
 	TEST()
+	TEST()
+	TEST()
+	TEST()
+	TEST()
+	TEST()
+	TEST()
+	TEST()
+	TEST()
 */
 END_SUITE
