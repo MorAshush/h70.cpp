@@ -1,8 +1,8 @@
-#include <vector>
-#include <iterator>
+//#include <vector>
+//#include <iterator>
 #include <cstddef>
-#include <cassert>
-#include <cstring>
+//#include <cassert>
+//#include <cstring>
 #include <fstream>
 #include <cstdio>
 #include <iostream>
@@ -16,7 +16,7 @@ namespace game
 Game::Game(const char* a_fileName)
 : m_board() 
 {
-	char name;
+	std::string name;
 	size_t length;
 	int orientation;
 	Coordinates location;
@@ -47,7 +47,7 @@ Game::Game(const char* a_fileName)
 
 void Game::start()
 {
-	char input[2] = {0};
+	std::string input;
 
 	std::cout << "Let's play RushHour!\n";
 	std::cout << "type in the car's letter and first letter of direction(d-down, u-up, l-left. r-right)\n e.g. \"Yu\" for Yellow, Up\n ";
@@ -56,7 +56,7 @@ void Game::start()
 	m_board.print();
 
 	std::cout << "choose your move:\n";
-	scanf("%s", input);
+	std::cin >> input;
 
 	while(!m_board.is_victory())
 	{
@@ -66,9 +66,9 @@ void Game::start()
 			return;
 		}
 
-		if(implementation_details::is_name_valid(input[0]) && implementation_details::is_direction_valid(input[1]))
+		if(implementation_details::is_name_valid(input) && implementation_details::is_direction_valid(input[1]))
 		{
-			bool result = m_board.move_car(input[0], input[1]);
+			bool result = m_board.move_car(input, input[1]);
 			if(!result)
 			{
 				std::cout << "your move is not possible, think again";
@@ -87,7 +87,7 @@ void Game::start()
 		m_board.print();
 
 		std::cout << "choose your move:\n";
-		scanf("%s", input);
+		std::cin >> input;
 	} 
 
 	std::cout << "Level completed. Good job!\n";
@@ -95,54 +95,10 @@ void Game::start()
 	return;
 }
 
-/*
-void Game::start()
+
+bool implementation_details::is_name_valid(std::string a_name)
 {
-	char input[2] = {0};
-
-	std::cout << "Let's play RushHour!\n";
-	std::cout << "type in the car's letter and first letter of direction(d-down, u-up, l-left. r-right)\n e.g. \"Yu\" ";
-	std::cout << "type in '!' if you wish to quit game.\n";
-	
-	m_board.print();
-
-	std::cout << "choose your move:\n";
-	scanf("%s", input);
-
-	while(input[0] != '!')
-	{
-		if(implementation_details::is_name_valid(input[0]) && implementation_details::is_direction_valid(input[1]))
-		{
-			bool result = m_board.move_car(input[0], input[1]);
-			if(!result)
-			{
-				std::cout << "your move is not possible, think again";
-			}
-		}
-		else
-		{
-			std::cout << "input is invalid, try again.\nCar's letter must be exisiting on board, direction can only be d, u, l, r.\n";
-		}
-
-		if(m_board.is_victory())
-		{
-			std::cout << "Level completed. Good job!\n";
-			break;
-		}
-		
-		m_board.print();
-
-		std::cout << "choose your move:\n";
-		scanf("%s", input);
-	} 
-
-	return;
-}
-*/
-
-bool implementation_details::is_name_valid(char a_name)
-{
-	if((a_name == 'Y' || a_name == 'O' || a_name == 'R' || a_name == 'G' || a_name == 'B' || a_name == 'W'))
+	if((a_name[0] == 'Y' || a_name[0] == 'O' || a_name[0] == 'R' || a_name[0] == 'G' || a_name[0] == 'B' || a_name[0] == 'W'))
 	{
 		return true;
 	}

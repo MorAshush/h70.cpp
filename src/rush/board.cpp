@@ -2,7 +2,7 @@
 #include <iterator>
 #include <map>
 #include <cstddef>
-#include <cassert>
+//#include <cassert>
 #include <cstring>
 #include <iostream>
 
@@ -30,7 +30,7 @@ Board::Board(size_t a_width, size_t a_height)
 	
 }
 
-bool Board::place_car(char a_name, size_t a_length, bool a_orientation, struct Coordinates a_location)
+bool Board::place_car(std::string a_name, size_t a_length, bool a_orientation, struct Coordinates a_location)
 {
 	if(a_orientation) 
 	{
@@ -41,7 +41,7 @@ bool Board::place_car(char a_name, size_t a_length, bool a_orientation, struct C
 
 			for(size_t i = 0; i < a_length; ++i)
 			{
-				m_board[row * m_width + column + i] = a_name;
+				m_board[row * m_width + column + i] = a_name[0];
 			}
 		}
 		else
@@ -58,7 +58,7 @@ bool Board::place_car(char a_name, size_t a_length, bool a_orientation, struct C
 
 			for(size_t i = 0; i < a_length; ++i)
 			{
-				m_board[(row + i) * m_width + column] = a_name;
+				m_board[(row + i) * m_width + column] = a_name[0];
 			}
 		}
 		else
@@ -68,12 +68,12 @@ bool Board::place_car(char a_name, size_t a_length, bool a_orientation, struct C
 	}
 	
 	Car newCar(a_name, a_length, a_orientation, a_location);
-	m_cars.insert(std::pair<char, Car>(a_name, newCar));
+	m_cars.insert(std::pair<char, Car>(a_name[0], newCar));
 
 	return 1;
 }
 
-bool Board::move_car(char a_name, char a_direction)
+bool Board::move_car(std::string a_name, char a_direction)
 {
 	bool result = check_direction_vailidity(a_name, a_direction);
 	if(result)
@@ -190,9 +190,9 @@ bool Board::check_vertical_vailidity(size_t a_length, struct Coordinates a_locat
 	return false;
 }
 
-bool Board::check_direction_vailidity(char a_name, char a_direction)
+bool Board::check_direction_vailidity(std::string a_name, char a_direction)
 {
-	bool orientation = m_cars.at(a_name).m_orientation;
+	bool orientation = m_cars.at(a_name[0]).m_orientation;
 	if(orientation && (a_direction == 'l' || a_direction == 'r'))
 	{
 		return true;
@@ -219,10 +219,10 @@ bool Board::check_victory(size_t a_length, struct Coordinates a_location)
 	return false;
 }
 
-Coordinates Board::get_new_location(char a_name, char a_direction)
+Coordinates Board::get_new_location(std::string a_name, char a_direction)
 {
 
-	Coordinates newLocation = m_cars.at(a_name).m_location;
+	Coordinates newLocation = m_cars.at(a_name[0]).m_location;
 	if(a_direction == 'd')
 	{
 		++newLocation.m_row;
@@ -243,31 +243,31 @@ Coordinates Board::get_new_location(char a_name, char a_direction)
 	return newLocation;
 }
 
-void Board::set_car_location(char a_name, struct Coordinates newLocation)
+void Board::set_car_location(std::string a_name, struct Coordinates newLocation)
 {
-	m_cars.at(a_name).m_location.m_row = newLocation.m_row;
-	m_cars.at(a_name).m_location.m_column = newLocation.m_column;
+	m_cars.at(a_name[0]).m_location.m_row = newLocation.m_row;
+	m_cars.at(a_name[0]).m_location.m_column = newLocation.m_column;
 }
 
 
-void Board::change_location_on_board(char a_name, char a_direction)
+void Board::change_location_on_board(std::string a_name, char a_direction)
 {
-	bool orientation = m_cars.at(a_name).m_orientation;
-	size_t row = m_cars.at(a_name).m_location.m_row;
-	size_t column = m_cars.at(a_name).m_location.m_column;
-	size_t length = m_cars.at(a_name).m_length;
+	bool orientation = m_cars.at(a_name[0]).m_orientation;
+	size_t row = m_cars.at(a_name[0]).m_location.m_row;
+	size_t column = m_cars.at(a_name[0]).m_location.m_column;
+	size_t length = m_cars.at(a_name[0]).m_length;
 
 	if(orientation) 
 	{
 		if(a_direction == 'l')
 		{
 			m_board[row * m_width + (column + length - 1)] = ' ';
-			m_board[row * m_width + column - 1] = a_name;
+			m_board[row * m_width + column - 1] = a_name[0];
 		}
 		if(a_direction == 'r')
 		{
 			m_board[row * m_width + column] = ' ';
-			m_board[row * m_width + column + length] = a_name;
+			m_board[row * m_width + column + length] = a_name[0];
 		}
 	}
 	else
@@ -275,12 +275,12 @@ void Board::change_location_on_board(char a_name, char a_direction)
 		if(a_direction == 'd')
 		{
 			m_board[row * m_width + column] = ' ';
-			m_board[(row + length) * m_width + column] = a_name;
+			m_board[(row + length) * m_width + column] = a_name[0];
 		}
 		if(a_direction == 'u')
 		{
 			m_board[(row + length -1) * m_width + column] = ' ';
-			m_board[(row - 1) * m_width + column] = a_name;
+			m_board[(row - 1) * m_width + column] = a_name[0];
 		}	
 	}
 }

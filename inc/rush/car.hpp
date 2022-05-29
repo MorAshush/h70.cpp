@@ -2,7 +2,7 @@
 #define CAR_HPP
 
 #include <cstddef>
-
+#include <string>
 
 namespace game
 {
@@ -18,9 +18,9 @@ class Car
 	friend class Board;
 
 public:
-	Car(char a_name, size_t a_length, bool a_orientation, struct Coordinates a_location);
+	Car(std::string a_name, size_t a_length, bool a_orientation, struct Coordinates a_location);
 
-	char name();
+	std::string name();
 	char length();
 	bool orientation();
 
@@ -30,7 +30,7 @@ private:
 	bool check_object_features(char* a_name, char a_length, struct Coordinates a_location, bool a_orientation);
 
 private:
-	const char m_name;
+	std::string m_name;
 	const size_t m_length;
 	const int m_orientation;
 	struct Coordinates m_location;

@@ -1,7 +1,7 @@
 #include <cstddef>
 #include <cassert>
-#include <cstring>
-#include <iostream>
+//#include <cstring>
+//#include <iostream>
 
 #include "car.hpp"
 
@@ -9,7 +9,7 @@ namespace game
 {
 
 
-Car::Car(char a_name, size_t a_length, bool a_orientation, struct Coordinates a_loctaion)
+Car::Car(std::string  a_name, size_t a_length, bool a_orientation, struct Coordinates a_loctaion)
 : m_name(a_name)
 , m_length(a_length)
 , m_orientation(a_orientation)
