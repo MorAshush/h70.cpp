@@ -18,17 +18,20 @@ Car::Car(std::string  a_name, size_t a_length, bool a_orientation, struct Coordi
 	assert((m_orientation == 1 || m_orientation == 0) && ("orientation is invalid"));
 }
 
-char Car::length()
+size_t Car::length() const
 {
 	return m_length;
 }
 
-bool Car::orientation()
+bool Car::orientation() const
 {
 	return m_orientation;
 }
 
-
+Coordinates Car::location() const
+{
+	return m_location;
+}
 
 
 

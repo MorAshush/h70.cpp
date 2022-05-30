@@ -36,7 +36,7 @@ Game::Game(const char* a_fileName)
 			if(implementation_details::is_name_valid(name) && implementation_details::is_length_valid(length) 
 													&& implementation_details::is_orientation_valid(orientation))
 			{
-				m_board.place_car(name, length, orientation, location);
+				m_board.place_object(name, length, orientation, location);
 			}
 		}
 	}
@@ -47,18 +47,17 @@ Game::Game(const char* a_fileName)
 
 void Game::start()
 {
-	std::string input;
-
 	std::cout << "Let's play RushHour!\n";
 	std::cout << "type in the car's letter and first letter of direction(d-down, u-up, l-left. r-right)\n e.g. \"Yu\" for Yellow, Up\n ";
 	std::cout << "type in '!' if you wish to quit game.\n";
 	
 	m_board.print();
 
+	std::string input;
 	std::cout << "choose your move:\n";
 	std::cin >> input;
 
-	while(!m_board.is_victory())
+	while(true/*!m_board.is_victory()*/)
 	{
 		if(input[0] == '!')
 		{
@@ -68,7 +67,7 @@ void Game::start()
 
 		if(implementation_details::is_name_valid(input) && implementation_details::is_direction_valid(input[1]))
 		{
-			bool result = m_board.move_car(input, input[1]);
+			bool result = m_board.move_object(input, input[1]);
 			if(!result)
 			{
 				std::cout << "your move is not possible, think again";

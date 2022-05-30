@@ -20,11 +20,11 @@ class Car
 public:
 	Car(std::string a_name, size_t a_length, bool a_orientation, struct Coordinates a_location);
 
-	std::string name();
-	char length();
-	bool orientation();
+	size_t length() const;
+	bool orientation() const;
+	Coordinates location() const;
 
-	void set_location(struct Coordinates a_location);
+//	void set_location(struct Coordinates a_location);
 
 private:
 	bool check_object_features(char* a_name, char a_length, struct Coordinates a_location, bool a_orientation);

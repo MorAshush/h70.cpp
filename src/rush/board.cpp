@@ -2,7 +2,6 @@
 #include <iterator>
 #include <map>
 #include <cstddef>
-//#include <cassert>
 #include <cstring>
 #include <iostream>
 
@@ -30,7 +29,7 @@ Board::Board(size_t a_width, size_t a_height)
 	
 }
 
-bool Board::place_car(std::string a_name, size_t a_length, bool a_orientation, struct Coordinates a_location)
+bool Board::place_object(std::string a_name, size_t a_length, bool a_orientation, struct Coordinates a_location)
 {
 	if(a_orientation) 
 	{
@@ -73,7 +72,7 @@ bool Board::place_car(std::string a_name, size_t a_length, bool a_orientation, s
 	return 1;
 }
 
-bool Board::move_car(std::string a_name, char a_direction)
+bool Board::move_object(std::string a_name, char a_direction)
 {
 	bool result = check_direction_vailidity(a_name, a_direction);
 	if(result)
@@ -82,7 +81,7 @@ bool Board::move_car(std::string a_name, char a_direction)
 		if(newLocation.m_row <= m_height && newLocation.m_column <= m_width)
 		{
 			change_location_on_board(a_name, a_direction);
-			set_car_location(a_name, newLocation);
+			set_object_location(a_name, newLocation);
 
 			return 1;
 		}
@@ -91,7 +90,7 @@ bool Board::move_car(std::string a_name, char a_direction)
 	return 0;
 }
 
-bool Board::is_victory()
+bool Board::is_victory() const
 {
 	char carsNames[] = {'Y', 'R', 'G', 'O', 'B', 'W'};
 
@@ -99,7 +98,7 @@ bool Board::is_victory()
 	{
 		if(m_cars.at(carsNames[i]).m_orientation)
 		{
-			bool result = check_victory(m_cars.at(carsNames[i]).m_length, m_cars.at(carsNames[i]).m_location);
+			bool result = check_victory(m_cars.at(carsNames[i]).length(), m_cars.at(carsNames[i]).location());
 			if(result)
 			{
 				return true;
@@ -110,12 +109,12 @@ bool Board::is_victory()
 	return false;
 }
 
-size_t Board::width()
+size_t Board::width() const
 {
 	return m_width;
 }
 
-size_t Board::height()
+size_t Board::height() const
 {
 	return m_height;
 }
@@ -152,7 +151,7 @@ void Board::print()
 	std::cout << "--\n";
 }
 
-bool Board::check_horizontal_vailidity(size_t a_length, struct Coordinates a_location)
+bool Board::check_horizontal_vailidity(size_t a_length, struct Coordinates a_location) const
 {
 	size_t row = a_location.m_row;
 	size_t column = a_location.m_column;
@@ -171,7 +170,7 @@ bool Board::check_horizontal_vailidity(size_t a_length, struct Coordinates a_loc
 	return false;
 }
 
-bool Board::check_vertical_vailidity(size_t a_length, struct Coordinates a_location)
+bool Board::check_vertical_vailidity(size_t a_length, struct Coordinates a_location) const
 {
 	size_t row = a_location.m_row;
 	size_t column = a_location.m_column;
@@ -190,7 +189,7 @@ bool Board::check_vertical_vailidity(size_t a_length, struct Coordinates a_locat
 	return false;
 }
 
-bool Board::check_direction_vailidity(std::string a_name, char a_direction)
+bool Board::check_direction_vailidity(std::string a_name, char a_direction) const
 {
 	bool orientation = m_cars.at(a_name[0]).m_orientation;
 	if(orientation && (a_direction == 'l' || a_direction == 'r'))
@@ -206,7 +205,7 @@ bool Board::check_direction_vailidity(std::string a_name, char a_direction)
 	
 }
 
-bool Board::check_victory(size_t a_length, struct Coordinates a_location)
+bool Board::check_victory(size_t a_length, struct Coordinates a_location) const
 {
 	size_t row = a_location.m_row;
 	size_t column = a_location.m_column;
@@ -243,7 +242,7 @@ Coordinates Board::get_new_location(std::string a_name, char a_direction)
 	return newLocation;
 }
 
-void Board::set_car_location(std::string a_name, struct Coordinates newLocation)
+void Board::set_object_location(std::string a_name, struct Coordinates newLocation)
 {
 	m_cars.at(a_name[0]).m_location.m_row = newLocation.m_row;
 	m_cars.at(a_name[0]).m_location.m_column = newLocation.m_column;

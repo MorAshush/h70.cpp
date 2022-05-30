@@ -20,8 +20,6 @@ namespace implementation_details
 
 }
 
-//struct Coordinates;
-
 class Game
 {
 

@@ -20,28 +20,26 @@ public:
 	Board();
 	Board(size_t a_width, size_t a_height);
 
-	bool place_car(std::string a_name, size_t a_length, bool a_orientation, struct Coordinates a_loctaion);
-	bool move_car(std::string a_name, char a_direction);
-	bool is_victory();
+	bool place_object(std::string a_name, size_t a_length, bool a_orientation, struct Coordinates a_loctaion);
+	bool move_object(std::string a_name, char a_direction);
+	bool is_victory() const;
 
 	void print();
 
 private:
-	size_t width();
-	size_t height();
-//	std::vector<char> const& board();
-//	void operator[](size_t a_row);
-	bool check_horizontal_vailidity(size_t a_length, struct Coordinates a_loctaion);
-	bool check_vertical_vailidity(size_t a_length, struct Coordinates a_loctaion);
-	bool check_victory(size_t a_length, struct Coordinates a_loctaion);
-	bool check_direction_vailidity(std::string a_name, char a_direction);
+	size_t width() const;
+	size_t height() const;
+	bool check_horizontal_vailidity(size_t a_length, struct Coordinates a_loctaion) const;
+	bool check_vertical_vailidity(size_t a_length, struct Coordinates a_loctaion) const;
+	bool check_victory(size_t a_length, struct Coordinates a_loctaion) const;
+	bool check_direction_vailidity(std::string a_name, char a_direction) const;
 	Coordinates get_new_location(std::string a_name, char a_direction);
-	void set_car_location(std::string a_name, struct Coordinates newLocation);
+	void set_object_location(std::string a_name, struct Coordinates newLocation);
 	void change_location_on_board(std::string a_name, char a_direction);
 
 private:
 
-	size_t m_width; //a_width+1
+	size_t m_width; 
 	size_t m_height;
 	std::vector<char> m_board;
 	std::map<char, Car> m_cars;
