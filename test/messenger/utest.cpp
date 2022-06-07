@@ -88,6 +88,17 @@ void recieve_text(in::TextInput* pf)
 	std::cout << pf->recieve();
 }
 
+BEGIN_TEST(file_input_test)
+
+	char fileName[] = "read_file.txt";
+	in::FileInput f(fileName);
+
+	recieve_text(&f);
+
+	ASSERT_PASS();
+
+END_TEST
+
 BEGIN_TEST(keyboard_input_test)
 
 	in::Keyboard k;
@@ -138,12 +149,13 @@ BEGIN_SUITE(tests)
 
 	TEST(censoring_test)
 
+	TEST(file_input_test)
+
 	TEST(keyboard_input_test)
 
 	TEST(file_output_test)
 
 /*	
-	TEST()
 	TEST()
 	TEST()
 	TEST()
