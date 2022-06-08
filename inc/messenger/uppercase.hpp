@@ -2,6 +2,7 @@
 #define UPPERCASE_HPP
 
 #include <string>
+#include <locale>
 
 #include "text_transformer.hpp"
 
@@ -17,7 +18,9 @@ public:
     
     virtual std::string transform(std::string& a_string);
 
-//    virtual ~UpperCase();  
+//    virtual ~UpperCase(); 
+private:
+std::locale m_locale; 
 };
 
 }//namespace text

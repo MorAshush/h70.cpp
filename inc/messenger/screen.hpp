@@ -15,7 +15,7 @@ public:
     
     virtual void send(std::string const& a_text);
 
-//    virtual ~Screen(); 
+//    virtual ~Screen(); //compiler will do
 
 };
 

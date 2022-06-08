@@ -15,10 +15,10 @@ namespace text
 // Censor is-a TextTransformer
 class Censor: public TextTransformer {
 public:
-    Censor(std::list<std::string> a_badWords);
+    Censor();
     virtual std::string transform(std::string& a_string);
 
-//    ~Censor();
+//    ~Censor(); compiler will do
 private:
     std::map<std::string, bool> m_badWords;  
 };

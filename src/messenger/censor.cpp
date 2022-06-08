@@ -1,27 +1,23 @@
-#include <string>
 #include <iostream>
 #include <cstddef>
-#include <list>
 #include <iterator>
-#include <map>
 
 #include "censor.hpp"
-#include "text_transformer.hpp"
 
 namespace text
 {
 
-Censor::Censor(std::list<std::string>  a_badWords)
+Censor::Censor()
 : TextTransformer()
 {
-	std::list<std::string>::iterator it = a_badWords.begin();
-	std::list<std::string>::iterator end = a_badWords.end();
+	m_badWords.insert(std::pair<std::string, bool>("fat", 0));
+	m_badWords.insert(std::pair<std::string, bool>("FAT", 0));
+	m_badWords.insert(std::pair<std::string, bool>("ugly", 0));
+	m_badWords.insert(std::pair<std::string, bool>("UGLY", 0));
+	m_badWords.insert(std::pair<std::string, bool>("stupid", 0));
+	m_badWords.insert(std::pair<std::string, bool>("STUPID", 0));
 
-	while(it != end)
-	{
-		m_badWords.insert(std::pair<std::string, bool>(*it, 0));
-		++it;
-	}
+//	m_badWords.insert(std::pair<std::string, bool>(*it, 0));
 }
 
 
@@ -30,8 +26,8 @@ std::string Censor::transform(std::string& a_string)
 	std::string word = "";
 
 	size_t len = a_string.length();
-
-	for(size_t i = 0; i <= len; ++i)
+	size_t i = 0;
+	for(i = 0; i < len - 1; ++i)
 	{
 		if(a_string[i] != ' ' && a_string[i] != ',' && a_string[i] != '.' && a_string[i] != '!' && a_string[i] != '\0')
 		{
@@ -53,6 +49,18 @@ std::string Censor::transform(std::string& a_string)
 			word = "";
 		}
 	}
+
+	if(m_badWords.find(word) != m_badWords.end())
+			{
+				size_t j = i;
+				j -= word.length();
+				for(size_t f = 0; f < word.length(); ++f)
+				{
+					a_string[j] = '*';
+					++j;
+				}
+			}
+
 
 	return a_string; 
 }

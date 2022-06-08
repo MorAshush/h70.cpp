@@ -1,4 +1,131 @@
-#include <list>
+#include <string>
+#include <cstddef>
+#include <cstring>
+#include <ctype.h>
+#include <sstream>
+#include <cstdio>
+
+#include "messenger.hpp"
+#include "text_transformer.hpp"
+#include "text_input.hpp"
+#include "text_output.hpp"
+#include "uppercase.hpp"
+#include "lowercase.hpp"
+#include "rot13.hpp"
+#include "censor.hpp"
+#include "file_input.hpp"
+#include "keyboard.hpp"
+#include "udp_socket_input.hpp"
+#include "file_output.hpp"
+#include "screen.hpp"
+#include "udp_socket_output.hpp"
+#include "multi_transformer.hpp"
+
+
+
+in::TextInput* get_inputer(std::string a_string)
+{
+	if(a_string == "stdin")
+	{
+		return new in::Keyboard;
+	}
+	else if(isalpha(a_string[0]))
+	{
+		char* cstr = new char[a_string.length() + 1];
+
+		strcpy(cstr, a_string.c_str());
+
+		return new in::FileInput(cstr);
+	}
+
+	std::string ipString;
+	std::string portString;
+	size_t i = a_string.find(':', 0);
+	ipString = a_string.substr(0, i);
+	portString = a_string.substr(i + 1);
+
+	char* ip = new char[ipString.length() + 1];
+	strcpy(ip, ipString.c_str());
+
+	char* port = new char[portString.length() + 1];
+	strcpy(port, portString.c_str());
+
+	return new in::InputUDPsocket(ip, port);
+
+}
+
+text::TextTransformer* get_transformer(std::string const& a_string)
+{
+	if(a_string.find('+') != std::string::npos)
+	{
+		return new text::MultiTransformer(a_string);
+	}
+	else if(a_string == "censor")
+	{
+		return new text::Censor;
+	}
+	else if(a_string == "rot13")
+	{
+		return new text::RotThirteen();
+	}
+	else if(a_string == "uppercase")
+	{
+		return new text::UpperCase();
+	}
+
+	return new text::LowerCase();	
+}
+
+out::TextOutput* get_outputer(std::string const& a_string)
+{
+	if(a_string == "stdout")
+	{
+		return new out::Screen;
+	}
+	else if(isalpha(a_string[0]))
+	{
+		char* cstr = new char[a_string.length() + 1];
+		
+		strcpy(cstr, a_string.c_str());
+
+		return new out::FileOutput(cstr);
+	}
+	else
+	{
+		std::string ipString;
+		std::string portString;
+		size_t i = a_string.find(':', 0);
+		ipString = a_string.substr(0, i);
+		portString = a_string.substr(i + 1);
+
+		char* ip = new char[ipString.length() + 1];
+		strcpy(ip, ipString.c_str());
+		
+		char* port = new char[portString.length() + 1];
+		strcpy(port, portString.c_str());
+		
+		return new out::OutputUDPsocket(ip, port);
+	}
+}
+
+
+int main(int argc, char* argv[])
+{
+
+	in::TextInput* i = get_inputer(argv[1]);
+	text::TextTransformer* t = get_transformer(argv[2]);
+	out::TextOutput* o = get_outputer(argv[3]);
+
+
+	Messenger m(*i, *t, *o);
+	m.execute();
+
+	return 0;
+}
+
+
+
+/*#include <list>
 
 #include "mu_test.h"
 
@@ -13,6 +140,7 @@
 #include "keyboard.hpp"
 #include "file_output.hpp"
 #include "screen.hpp"
+#include "messenger.hpp"
 
 
 void transform_text(text::TextTransformer* pf, std::string& a_string)
@@ -66,16 +194,9 @@ END_TEST
 
 BEGIN_TEST(censoring_test)	
 
-	std::list<std::string> badWords;
-	badWords.push_back("fat");
-	badWords.push_back("ugly");
-	badWords.push_back("stupid");
-	badWords.push_back("retard");
-
 	std::string s("Hello, fat you are fat");
-	text::Censor c(badWords);
+	text::Censor c;
 
-//	std::cout << "got this far\n";
 	transform_text(&c, s);
 
 	ASSERT_PASS();
@@ -125,10 +246,10 @@ BEGIN_TEST(file_output_test)
 	ASSERT_PASS();
 
 END_TEST
-/*
+
 BEGIN_TEST(screen_output_test)
 
-	std::string text("this is me writing to a file");
+	std::string text("this is me writing to the screen");
 	out::Screen s;
 
 	send_text(&s, text);
@@ -136,7 +257,7 @@ BEGIN_TEST(screen_output_test)
 	ASSERT_PASS();
 
 END_TEST
-*/
+
 
 BEGIN_SUITE(tests)
 
@@ -155,7 +276,10 @@ BEGIN_SUITE(tests)
 
 	TEST(file_output_test)
 
-/*	
+	TEST(screen_output_test)
+
+	
+	
 	TEST()
 	TEST()
 	TEST()
@@ -167,6 +291,6 @@ BEGIN_SUITE(tests)
 	TEST()
 	TEST()
 	TEST()
-	TEST()
-*/
+
 END_SUITE
+*/

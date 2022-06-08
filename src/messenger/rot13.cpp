@@ -17,23 +17,28 @@ RotThirteen::RotThirteen()
 
 std::string RotThirteen::transform(std::string& a_string)
 {
-	for(size_t i = 0; i <= a_string.length(); ++i)
+	size_t len = a_string.length();
+	
+	for(size_t i = 0; i <= len; ++i)
 	{
-		if(isupper(a_string[i]) && (a_string[i] + 13 <= 90))
+		if(isalpha(a_string[i]))
 		{
-			a_string[i] = a_string[i] + 13;
-		}
-		else if(isupper(a_string[i]) && (a_string[i] + 13 > 90))
-		{
-			a_string[i] = 64 + (a_string[i] + 13) % 90;
-		}
-		else if(islower(a_string[i]) && (a_string[i] + 13 <= 122))
-		{
-			a_string[i] = a_string[i] + 13;
-		}
-		else if(islower(a_string[i]) && (a_string[i] + 13 > 122))
-		{
-			a_string[i] = 96 + (a_string[i] + 13) % 122;
+			if(isupper(a_string[i]) && (a_string[i] + 13 <= 90))
+			{
+				a_string[i] = a_string[i] + 13;
+			}
+			else if(isupper(a_string[i]) && (a_string[i] + 13 > 90))
+			{
+				a_string[i] = 64 + (a_string[i] + 13) % 90;
+			}
+			else if(islower(a_string[i]) && (a_string[i] + 13 <= 122))
+			{
+				a_string[i] = a_string[i] + 13;
+			}
+			else if(islower(a_string[i]) && (a_string[i] + 13 > 122))
+			{
+				a_string[i] = 96 + (a_string[i] + 13) % 122;
+			}
 		}
 	}
 

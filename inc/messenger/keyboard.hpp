@@ -1,6 +1,8 @@
 #ifndef KEYBOARD_HPP
 #define KEYBOARD_HPP
 
+#include <string>
+
 #include "text_input.hpp"
 
 namespace in
