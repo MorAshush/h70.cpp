@@ -14,7 +14,7 @@ namespace text
 // MultiTransformer is-a TextTransformer
 class MultiTransformer: public TextTransformer {
 public:
-    MultiTransformer(std::string const& a_transformers);
+    MultiTransformer(std::vector<TextTransformer*> const& a_transformers);
     virtual std::string transform(std::string& a_string);
 
 //    ~MultiTransformer(); compiler will do
