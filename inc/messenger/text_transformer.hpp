@@ -9,10 +9,11 @@ namespace text
 //abstract pure class
 class TextTransformer{
 public:
-    // pure (no impl) virtual function == we got a pointer
+    virtual ~TextTransformer(); 
+
     virtual std::string transform(std::string& a_string) = 0;
+
 //    virtual std::string retransform(std::string& a_string) = 0;
-//  virtual ~TextTransformer() = 0;  
 };
 
 
