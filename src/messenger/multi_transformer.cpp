@@ -17,6 +17,15 @@ MultiTransformer::MultiTransformer(std::vector<TextTransformer*> const& a_transf
 
 }
 
+MultiTransformer::~MultiTransformer()
+{
+	size_t size = m_transformers.size();
+	for(size_t i = 0; i < size; ++i)
+	{
+		delete m_transformers[i];
+	}
+}
+
 
 std::string MultiTransformer::transform(std::string& a_string)
 {
