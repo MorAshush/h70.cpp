@@ -11,17 +11,20 @@ namespace mng
 class Memory
 {
 public:
-    Memory(size_t a_memorySize, std::vector<act::Instruction*> const& m_instructionSegment);
-
+    Memory(size_t a_memorySize);
+    ~Memory();
+    
     size_t size() const;
-    long* data_segment_ptr() const;
 
-    const act::Instruction* get_instruction(size_t a_address) const;
-    act::Instruction* get_instruction(size_t a_address);
+    void set_instructions(std::vector<act::Instruction*> const& a_instructions);
 
-    long get_data(size_t a_address) const;
-    void set_data(size_t a_address, long a_data);
+    const act::Instruction* instruction_ptr(size_t a_address) const;
+    act::Instruction* instruction_ptr(size_t a_address);
 
+    unsigned long get_data(size_t a_address) const;
+    void set_data(size_t a_address, unsigned long a_data);
+
+private:
     bool is_instruction_address_valid(size_t a_address) const;
     bool is_data_address_valid(size_t a_address) const;
 

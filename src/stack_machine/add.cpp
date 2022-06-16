@@ -4,27 +4,31 @@
 namespace act
 {
 
-Add::Add(container::Stack* a_stack/*, Controller* a_controller*/)
+const std::string Add::NAME = "ADD";
+
+Add::Add(container::Stack* a_stack, mng::Controller* a_controller)
 : m_stack(a_stack)
-//, m_controller(a_controller)
-, m_opCode("ADD")
+, m_controller(a_controller)
 {
-
 }
 
-std::string const& Add::op_code() const
+Add::~Add()
 {
-	return m_opCode;
 }
 
-int Add::execute()
+void Add::execute()
 {
 	long first = m_stack->pop();
 	long second = m_stack->pop();
 
 	m_stack->push(first + second);
 
-	return 1;
+	++m_controller;
+}
+
+Instruction* create_add(container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory)
+{
+	return new Add(a_stack, a_controller);
 }
 
 }//namespace act

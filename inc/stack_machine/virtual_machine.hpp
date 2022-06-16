@@ -18,20 +18,15 @@ namespace mng
 class VirtualMachine
 {
 public:
-	VirtualMachine(size_t a_memorySize, std::vector<act::Instruction*> a_instructions);
+	VirtualMachine(container::Stack* a_stack, Memory* a_memory, Controller* a_controller);
 	~VirtualMachine();
-
-	char recieve_input();
-	int send_output(char a_char);
 
 	void run();
 
 private:
 	container::Stack* m_stack;
-	Memory* m_block;
-	Controller m_controller;
-//	StdIn* m_inputer;
-//	StdOut* m_outputer;
+	Memory* m_memory;
+	Controller* m_controller;
 };
 
 }//namespace mng

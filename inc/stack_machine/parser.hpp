@@ -4,22 +4,19 @@
 #include <string>
 #include <list>
 
-
-namespace act
-{
-
+#include "grammar.hpp"
 
 class Parser
 {
 public:
-    Parser();
-    std::list<std::string> const& parse(std::string& a_string, char a_delimeter);
+
+    Parser(Grammar a_grammar);
+
+    std::list<std::string> const& parse(std::string const& a_string, char a_delimeter);
 
 private:
-    std::list<std::string> m_words;
+    std::list<std::string> m_instructionsList;
 };
-
-}//namespace act
 
 
 

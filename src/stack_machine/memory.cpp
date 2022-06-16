@@ -6,11 +6,21 @@
 namespace mng
 {
 
-Memory::Memory(size_t a_memorySize, std::vector<act::Instruction*> const& a_instructions)
+Memory::Memory(size_t a_memorySize)
 : m_size(a_memorySize)
-, m_instructionSegment(a_instructions)
-, m_dataSegment(new long[a_memorySize - a_instructions.size()])
+, m_instructionSegment()
+, m_dataSegment(new long[a_memorySize])
 {
+}
+
+Memory::~Memory()
+{
+    size_t numOfInstructions = m_instructionSegment.size();
+
+    for(size_t i = 0; i < numOfInstructions; ++i)
+    {
+        delete m_instructionSegment[i];
+    }
 }
 
 size_t Memory::size() const
@@ -18,29 +28,49 @@ size_t Memory::size() const
     return m_size;
 }
 
-long* Memory::data_segment_ptr() const
+void Memory::set_instructions(std::vector<act::Instruction*> const& a_instructions)
 {
-    return m_dataSegment;
+    m_instructionSegment = a_instructions;
 }
 
-const act::Instruction* Memory::get_instruction(size_t a_address) const
+const act::Instruction* Memory::instruction_ptr(size_t a_address) const
 {
+    if(a_address >= m_instructionSegment.size())
+    {
+        //throw "invalid access to memory"-segmentation fault exception
+    }
+
     return m_instructionSegment[a_address];
 }
 
-act::Instruction* Memory::get_instruction(size_t a_address)
+act::Instruction* Memory::instruction_ptr(size_t a_address)
 {
+    if(a_address >= m_instructionSegment.size())
+    {
+        //throw "invalid access to memory"-segmentation fault exception
+    }
+
     return m_instructionSegment[a_address];
 }
 
-long Memory::get_data(size_t a_index) const
+unsigned long Memory::get_data(size_t a_address) const
 {
-    return m_dataSegment[a_index];
+    if(a_address >= m_instructionSegment.size())
+    {
+        //throw "invalid access to memory"-segmentation fault exception
+    }
+    
+    return m_dataSegment[a_address];
 }
 
-void Memory::set_data(size_t a_index, long a_data)
+void Memory::set_data(size_t a_address, unsigned long a_data)
 {
-    m_dataSegment[a_index] = a_data;
+    if(a_address >= m_instructionSegment.size())
+    {
+        //throw "invalid access to memory"-segmentation fault exception
+    }
+    
+    m_dataSegment[a_address] = a_data;
 }
 
 }//namespace mng

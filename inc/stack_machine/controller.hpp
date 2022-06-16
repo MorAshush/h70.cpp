@@ -5,7 +5,7 @@
 
 #include "memory.hpp"
 #include "instruction_base.hpp"
-#include "instruction_pointer.hpp"
+//#include "instruction_pointer.hpp"
 
 namespace mng
 {
@@ -13,14 +13,18 @@ namespace mng
 class Controller
 {
 public:
-	Controller(act::Instruction* a_ptr, size_t a_ptrIndex);
+	Controller();
 
-	act::Instruction* inc_ptr();
-	act::Instruction* dec_ptr();
-	act::Instruction* jump_to(size_t a_address);
+	void operator++();
+	void operator--();
+	void jump_to(size_t a_address);
+
+	size_t ip();
+
+	void execute_instruction(act::Instruction* a_instruction);
 
 private:
-	InstructionPtr m_ip;
+	size_t m_ip;
 };
 
 

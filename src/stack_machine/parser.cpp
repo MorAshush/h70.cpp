@@ -1,16 +1,36 @@
 #include "parser.hpp"
 
-namespace act
-{
 
-Parser::Parser()
+Parser::Parser(Grammar a_grammar)
 {
-
 }
 
-std::list<std::string> const& Parser::parse(std::string& a_string, char a_delimeter)
+std::list<std::string> const& Parser::parse(std::string const& a_string, char a_delimeter)
 {
 	std::string word;
+
+	size_t stringLen = a_string.length();
+
+	for(size_t i = 0; i < stringLen; ++i)
+	{
+		if(a_string[i] != a_delimeter && a_string[i] != '\n')
+		{
+			word += a_string[i];
+		}
+		else if(a_string[i] == a_delimeter || a_string[i] == '\n')
+		{
+			m_instructionsList.push_back(word);
+			word = "";
+		}
+	}
+	m_instructionsList.push_back(word);
+
+	return m_instructionsList;
+}
+
+
+/*
+std::string word;
 
 	size_t stringLen = a_string.length();
 
@@ -22,15 +42,29 @@ std::list<std::string> const& Parser::parse(std::string& a_string, char a_delime
         }
 		else if(a_string[i] == a_delimeter || a_string[i] == '\n')
 		{
-			m_words.push_back(word);
+			if(m_grammar.creator_func(word)) //if returned funcPtr != NULL
+			{
+				m_words.push_back(word);
+			}
+			else //if NULL
+			{
+				m_words.push_back("NOP");
+			}
+			
 			word = "";
 		}
 	}
+
+//last word
+	if(m_grammar.creator_func(word)) //if returned funcPtr != NULL
+	{
+		m_words.push_back(word);
+	}
+	else //if NULL
+	{
+		m_words.push_back("NOP");
+	}
     
-	m_words.push_back(word);
-
 	return m_words;
-}
+	*/
 
-
-}//namespace act

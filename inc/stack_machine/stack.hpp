@@ -1,7 +1,8 @@
 #ifndef STACK_HPP
 #define STACK_HPP
 
-#include <stack>
+#include <vector>
+#include <cstddef>
 
 namespace container
 {
@@ -9,13 +10,16 @@ namespace container
 class Stack
 {
 public:
-	Stack();
+	Stack(size_t a_size);
 
 	void push(long a_num);
 	long pop();
 
+	void print() const;
 private:
-	std::stack<long> m_stack;
+	size_t m_capacity;
+	size_t m_size;
+	std::vector<unsigned long> m_stack;
 };
 
 
