@@ -11,9 +11,9 @@ Hlt::Hlt()
 {
 }
 
-void Hlt::execute()
+int Hlt::execute(Bus& a_bus)
 {
-	exit(0);
+	return 0;
 }
 
 Instruction* create_hlt(container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory)

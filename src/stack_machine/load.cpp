@@ -7,10 +7,7 @@ namespace act
 
 const std::string Load::NAME = "LOAD";
 
-Load::Load(container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory)
-: m_stack(a_stack)
-, m_controller(a_controller)
-, m_memory(a_memory)
+Load::Load()
 {
 }
 
@@ -18,18 +15,23 @@ Load::~Load()
 {
 }
 
-void Load::execute()
+int Load::execute(Bus& a_bus)
 {
-	unsigned long top = m_stack->pop();
+	container::Stack<unsigned long>* s = a_bus.numbers_stack();
 
-	m_stack->push(m_memory->get_data(top));
+	unsigned long top = s->pop();
+	unsigned long data = s->get_data(top);
 
-	++m_controller;
+	s->push(data);
+
+	++*m_controller;
+		
+	return 1;
 }
 
-Instruction* create_load(container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory)
+Instruction* create_load()
 {
-	return new Load(a_stack, a_controller, a_memory);
+	return new Load;
 }
 
 }//namespace act

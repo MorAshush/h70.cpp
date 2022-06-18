@@ -15,7 +15,7 @@ class Factory
 {
 
 public:
-	Factory(Grammar a_grammar);
+	Factory(Grammar const& a_grammar);
 
 	std::vector<act::Instruction*> create(std::list<std::string> const& a_instructionsList,
 											container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory);

@@ -13,9 +13,9 @@ namespace act
 class Arg: public Instruction
 {
 public:
-	Arg(container::Stack* a_stack, mng::Controller* a_controller);
+	Arg();
 
-	virtual void execute();
+	virtual int execute(Bus& a_bus);
 	void set_arg(std::string const& a_arg);
 
 public:
@@ -23,11 +23,9 @@ public:
 
 private:
 	unsigned long m_arg;
-	container::Stack* m_stack;
-	mng::Controller* m_controller;
 };
 
-Arg* create_arg(container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory);
+Arg* create_arg();
 
 }//namespace act
 

@@ -18,28 +18,20 @@ namespace mng
 class VirtualMachine
 {
 public:
-	VirtualMachine(container::Stack* a_stack, Memory* a_memory, Controller* a_controller);
+	VirtualMachine(Stack<unsigned long>* a_numStack, 
+					Stack<act::Instruction*>* m_ptrStack, Memory* a_memory, Controller* a_controller);
 	~VirtualMachine();
 
 	void run();
 
 private:
-	container::Stack* m_stack;
+	Stack<unsigned long>* m_numStack;
+	Stack<act::Instruction*>* m_ptrStack;
 	Memory* m_memory;
 	Controller* m_controller;
 };
 
 }//namespace mng
-
-
-
-
-
-
-
-
-
-
 
 
 #endif//VIRTUAL_MACHINE_HPP

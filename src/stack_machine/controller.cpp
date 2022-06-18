@@ -1,5 +1,5 @@
 #include "controller.hpp"
-
+#include "bus.hpp"
 
 namespace mng
 {
@@ -13,12 +13,12 @@ void Controller::operator++()
 {
 	++m_ip;
 }
-
+/*
 void Controller::operator--()
 {
 	--m_ip;
-}
-
+*}
+*/
 void Controller::jump_to(size_t a_address)
 {
 	m_ip = a_address;
@@ -30,9 +30,9 @@ size_t Controller::ip()
 }
 
 
-void Controller::execute_instruction(act::Instruction* a_instruction)
+int Controller::execute_instruction(act::Instruction* a_instruction)
 {
-	a_instruction->execute();
+	return a_instruction->execute();
 }
 
 }//namspace mng

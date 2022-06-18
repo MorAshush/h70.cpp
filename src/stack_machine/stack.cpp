@@ -2,8 +2,8 @@
 #include <iostream>
 
 #include "stack.hpp"
-//#include "some_exception.hpp"
-//#include "StackUnderFlowExeption.hpp"
+#include "stack_overflow.hpp"
+#include "stack_underflow.hpp"
 
 namespace container
 {
@@ -15,25 +15,25 @@ Stack::Stack(size_t a_size)
 {
 }
 
-void Stack::push(long a_num)
+void Stack::push(unsigned long a_num)
 {
 	if(! (m_size < m_capacity))
 	{
-//		throw StackOverFlowExeption;
+		throw expt::OverFlowErr("Stack::push", "overflow error: stack is overflowed");
 	}
 
 	m_stack.push_back(a_num);
 	++m_size;
 }
 
-long Stack::pop()
+unsigned long Stack::pop()
 {
 	if(m_size == 0)
 	{
-//		throw StackUnderFlowExeption;
+		throw expt::UnderFlowErr("Stack::pop", "underflow error: stack is empty");
 	}
 
-	long removedTop = m_stack.back();
+	unsigned long removedTop = m_stack.back();
 
 	m_stack.pop_back();
 	--m_size;

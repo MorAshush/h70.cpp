@@ -4,10 +4,12 @@
 
 #include "factory.hpp"
 #include "instruction_arg.hpp"
+#include "invalid_instruction.hpp"
+#include "missing_argument.hpp"
 
 
 
-Factory::Factory(Grammar a_grammar)
+Factory::Factory(Grammar const& a_grammar)
 : m_grammar(a_grammar)
 {
 }
@@ -25,13 +27,15 @@ std::vector<act::Instruction*> Factory::create(std::list<std::string> const& a_i
 	while(current != end)
 	{
 		std::string instrutctionName = *current;
-		act::Instruction* i = m_grammar.creator_func(instrutctionName)(a_stack, a_controller, a_memory);
-		if(!i)
+		bool result = m_grammar.find(instrutctionName);
+
+		if(result == 0)
 		{
-			//throw invalidInstruction execption
+			throw expt::InvalidCmdErr("Factory::create", "invalid command in program");
 		}
 		else
 		{
+			act::Instruction* i = m_grammar.creator_func(instrutctionName)();
 			instructions.push_back(i);
 		}
 
@@ -50,10 +54,10 @@ std::vector<act::Instruction*> Factory::create(std::list<std::string> const& a_i
 			{
 				if(current == end || isalpha(instrutctionName[0]))
 				{
-					//throw missingArgument exception
+					throw expt::MissingArgErr("Factor::create", "missing argument for instruction");
 				}
 
-				act::Arg* i = act::create_arg(a_stack, a_controller, a_memory);
+				act::Arg* i = act::create_arg();
 				i->set_arg(instrutctionName);
 				instructions.push_back(i);
 				++current;

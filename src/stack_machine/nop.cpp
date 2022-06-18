@@ -6,8 +6,7 @@ namespace act
 
 const std::string Nop::NAME = "NOP";
 
-Nop::Nop(mng::Controller* a_controller)
-: m_controller(a_controller)
+Nop::Nop()
 {
 }
 
@@ -15,15 +14,16 @@ Nop::~Nop()
 {
 }
 
-void Nop::execute()
+int Nop::execute(Bus& a_bus)
 {
-	++m_controller;
-	return;
+	++*(a_bus.controller());
+
+	return 1;
 }
 
-Instruction* create_nop(container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory)
+Instruction* create_nop()
 {
-	return new Nop(a_controller);
+	return new Nop;
 }
 
 }//namespace act

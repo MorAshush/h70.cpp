@@ -12,8 +12,8 @@ class Stack
 public:
 	Stack(size_t a_size);
 
-	void push(long a_num);
-	long pop();
+	void push(unsigned long a_num);
+	unsigned long pop();
 
 	void print() const;
 private:
@@ -27,13 +27,6 @@ private:
 
 
 }//namespace container
-
-
-
-
-
-
-
 
 
 

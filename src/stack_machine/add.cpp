@@ -6,9 +6,7 @@ namespace act
 
 const std::string Add::NAME = "ADD";
 
-Add::Add(container::Stack* a_stack, mng::Controller* a_controller)
-: m_stack(a_stack)
-, m_controller(a_controller)
+Add::Add()
 {
 }
 
@@ -16,19 +14,23 @@ Add::~Add()
 {
 }
 
-void Add::execute()
+int Add::execute(Bus& a_bus)
 {
-	long first = m_stack->pop();
-	long second = m_stack->pop();
+	container::Stack<unsigned long>* s = a_bus.numbers_stack();
 
-	m_stack->push(first + second);
+	unsigned long first = s->pop();
+	unsigned long second = s->pop();
 
-	++m_controller;
+	s->push(first + second);
+
+	++*(a_bus.controller());
+
+	return 1;
 }
 
-Instruction* create_add(container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory)
+Instruction* create_add()
 {
-	return new Add(a_stack, a_controller);
+	return new Add;
 }
 
 }//namespace act

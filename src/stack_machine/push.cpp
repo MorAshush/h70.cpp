@@ -5,8 +5,7 @@ namespace act
 
 const std::string Push::NAME = "PUSH";
 
-Push::Push(mng::Controller* a_controller)
-: m_controller(a_controller)
+Push::Push()
 {
 }
 
@@ -14,14 +13,16 @@ Push::~Push()
 {
 }
 
-void Push::execute()
+int Push::execute(Bus& a_bus)
 {
-	++m_controller;
+	++*(a_bus.controller());
+		
+	return 1;
 }
 
-Instruction* create_push(container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory)
+Instruction* create_push()
 {
-	return new Push(a_controller);
+	return new Push;
 }
 
 }//namespace act

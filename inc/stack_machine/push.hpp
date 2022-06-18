@@ -4,6 +4,7 @@
 #include <string>
 
 #include "instruction_base.hpp"
+#include "bus.hpp"
 #include "stack.hpp"
 #include "controller.hpp"
 #include "memory.hpp"
@@ -14,19 +15,16 @@ namespace act
 class Push: public Instruction
 {
 public:
-    Push(mng::Controller* a_controller);
+    Push();
     ~Push();
 
-    virtual void execute();
+    virtual int execute(Bus& a_bus);
 
 public:
     static const std::string NAME;
-
-private:
-    mng::Controller* m_controller;
 };
 
-Instruction* create_push(container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory);
+Instruction* create_push();
 
 }//namespace act
 

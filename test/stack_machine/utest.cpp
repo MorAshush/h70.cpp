@@ -1,10 +1,11 @@
 #include <string>
+#include <stdlib.h>
 
 #include "virtual_machine.hpp"
 #include "instruction_base.hpp"
 #include "parser.hpp"
 #include "factory.hpp"
-#include "stack.hpp"
+#include "stack_template.hpp"
 #include "controller.hpp"
 #include "memory.hpp"
 #include "mapper.hpp"
@@ -14,36 +15,42 @@
 int main()
 {
 
-	container::Stack st(20);
-	st.push(1);
-	st.push(2);
-	st.push(3);
-	st.push(4);
-	st.push(5);
-	st.push(6);
+	container::Stack<unsigned long> stNum(10);
+	container::Stack<act::Instruction*> stPtr(10);
 	
 	mng::Controller cn;
-	mng::Memory me(100);
+	mng::Memory me(100, 100);
 	Grammar grammar;
 	Parser p(grammar);
 
-	std::string s = "SUB\n"
-					"PUSH 5\n"
-					"AND\n"
-					"ADD\n"
+	std::string s = "PUSH 10\n"
+					"PUSH 30\n"
+					"IN\n"
+					"IN\n"
+					"OUT\n"
+					"DROP\n"
 					"NOP\n"
 					"LOAD\n"
+					"PUSH 50\n"
 					"HLT";
 
 	std::list<std::string> actionsNames = p.parse(s, ' ');
-
+	std::vector<act::Instruction*> v;
 
 	Factory factory(grammar);
-	std::vector<act::Instruction*> v = factory.create(actionsNames, &st, &cn, &me);
+	try
+	{
+		v = factory.create(actionsNames, &stNum, &cn, &me);
+	}
+	catch(const expt::Error& e)
+	{
+		std::cout << e << "\nexiting program...\n";
+		exit(EXIT_FAILURE);
+	}
 
 	me.set_instructions(v);
 
-	mng::VirtualMachine vm(&st, &me, &cn);
+	mng::VirtualMachine vm(&stNum, &stPtr, &me, &cn);
 
 	vm.run();
 	return 0;

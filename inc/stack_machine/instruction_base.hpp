@@ -3,6 +3,8 @@
 
 #include <string>
 
+class Bus;
+
 namespace act
 {
 
@@ -13,7 +15,7 @@ public:
 
     virtual ~Instruction(); 
 
-    virtual void execute() = 0;
+    virtual int execute(Bus& a_bus) = 0;
 };
 
 }//namespace act

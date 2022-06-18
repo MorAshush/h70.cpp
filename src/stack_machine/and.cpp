@@ -1,13 +1,13 @@
 #include "and.hpp"
+#include "bus.hpp"
+
 
 namespace act
 {
 
 const std::string And::NAME = "AND";
 
-And::And(container::Stack* a_stack, mng::Controller* a_controller)
-: m_stack(a_stack)
-, m_controller(a_controller)
+And::And()
 {
 }
 
@@ -15,19 +15,22 @@ And::~And()
 {
 }
 
-void And::execute()
+int And::execute(Bus& a_bus)
 {
-	long first = m_stack->pop();
-	long second = m_stack->pop();
+	container::Stack<unsigned long>* s = a_bus.numbers_stack();
+	unsigned long first = s->pop();
+	unsigned long second = s->pop();
 
-	m_stack->push(first & second);
+	s->push(first & second);
 
-	++m_controller;
+	++*(a_bus.controller());
+	
+	return 1;
 }
 
-Instruction* create_and(container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory)
+Instruction* create_and()
 {
-	return new And(a_stack, a_controller);
+	return new And;
 }
 
 }//namespace act

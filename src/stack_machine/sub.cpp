@@ -6,9 +6,7 @@ namespace act
 
 const std::string Sub::NAME = "SUB";
 
-Sub::Sub(container::Stack* a_stack, mng::Controller* a_controller)
-: m_stack(a_stack)
-, m_controller(a_controller)
+Sub::Sub()
 {
 }
 
@@ -16,19 +14,23 @@ Sub::~Sub()
 {
 }
 
-void Sub::execute()
+int Sub::execute(Bus& a_bus)
 {
-	long first = m_stack->pop();
-	long second = m_stack->pop();
+	container::Stack<unsigned long>* s = a_bus.numbers_stack();
 
-	m_stack->push(first - second);
+	long first = s->pop();
+	long second = s->pop();
 
-	++m_controller;
+	s->push(first - second);
+
+	++*(a_bus.controller());
+		
+	return 1;
 }
 
-Instruction* create_sub(container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory)
+Instruction* create_sub()
 {
-	return new Sub(a_stack, a_controller);
+	return new Sub;
 }
 
 }//namespace act

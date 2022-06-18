@@ -9,10 +9,7 @@ namespace act
 
 const std::string Arg::NAME = "ARG";
 
-Arg::Arg(container::Stack* a_stack, mng::Controller* a_controller)
-: m_arg()
-, m_stack(a_stack)
-, m_controller(a_controller)
+Arg::Arg()
 {
 }
 
@@ -25,16 +22,19 @@ void Arg::set_arg(std::string const& a_arg)
 	delete[] cstring;
 }
 
-void Arg::execute()
+int Arg::execute(Bus& a_bus)
 {
-	m_stack->push(m_arg);
+	container::Stack<unsigned long>* s = a_bus.numbers_stack();
+	s->push(m_arg);
 
-	++m_controller;
+	++*(a_bus.controller());
+		
+	return 1;
 }
 
-Arg* create_arg(container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory)
+Arg* create_arg()
 {
-	return new Arg(a_stack, a_controller);
+	return new Arg;
 }
 
 }//namespace act

@@ -21,7 +21,7 @@ public:
 
 	size_t ip();
 
-	void execute_instruction(act::Instruction* a_instruction);
+	int execute_instruction(act::Instruction* a_instruction);
 
 private:
 	size_t m_ip;

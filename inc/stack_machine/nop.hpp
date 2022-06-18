@@ -4,10 +4,10 @@
 #include <string>
 
 #include "instruction_base.hpp"
+#include "bus.hpp"
 #include "stack.hpp"
 #include "controller.hpp"
 #include "memory.hpp"
-//#include "bus.hpp"
 
 
 namespace act
@@ -16,19 +16,16 @@ namespace act
 class Nop: public Instruction
 {
 public:
-    Nop(mng::Controller* a_controller);
+    Nop();
     ~Nop();
 
-    virtual void execute();
+    virtual int execute(Bus& a_bus);
 
 public:
     static const std::string NAME;
-
-private:
-    mng::Controller* m_controller;
 };
 
-Instruction* create_nop(container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory);
+Instruction* create_nop();
 
 }//namespace act
 

@@ -4,6 +4,7 @@
 #include <string>
 
 #include "instruction_base.hpp"
+#include "bus.hpp"
 #include "stack.hpp"
 #include "controller.hpp"
 #include "memory.hpp"
@@ -17,14 +18,14 @@ class Hlt: public Instruction
 public:
     Hlt();
 
-    virtual void execute();
+    virtual int execute(Bus& a_bus);
 
 public:
     static const std::string NAME;
   
 };
 
-Instruction* create_hlt(container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory);
+Instruction* create_hlt();
 
 }//namespace act
 
