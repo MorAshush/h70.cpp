@@ -5,11 +5,9 @@
 #include <vector>
 
 #include "instruction_base.hpp"
-#include "stack.hpp"
+#include "stack_template.hpp"
 #include "memory.hpp"
 #include "controller.hpp"
-//#include "stdin.hpp"
-//#include "stdout.hpp"
 
 
 namespace mng
@@ -18,15 +16,15 @@ namespace mng
 class VirtualMachine
 {
 public:
-	VirtualMachine(Stack<unsigned long>* a_numStack, 
-					Stack<act::Instruction*>* m_ptrStack, Memory* a_memory, Controller* a_controller);
+	VirtualMachine(container::Stack<unsigned long>* a_numStack, 
+					container::Stack<act::Instruction*>* m_ptrStack, Memory* a_memory, Controller* a_controller);
 	~VirtualMachine();
 
 	void run();
 
 private:
-	Stack<unsigned long>* m_numStack;
-	Stack<act::Instruction*>* m_ptrStack;
+	container::Stack<unsigned long>* m_numStack;
+	container::Stack<act::Instruction*>* m_ptrStack;
 	Memory* m_memory;
 	Controller* m_controller;
 };

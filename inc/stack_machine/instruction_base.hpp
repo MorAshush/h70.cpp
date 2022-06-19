@@ -3,7 +3,7 @@
 
 #include <string>
 
-class Bus;
+#include "bus.hpp"
 
 namespace act
 {

@@ -1,4 +1,9 @@
 #include "bus.hpp"
+#include "stack_template.hpp"
+#include "memory.hpp"
+#include "controller.hpp"
+#include "instruction_base.hpp"
+
 
 Bus::Bus(container::Stack<unsigned long>* a_numStack, container::Stack<act::Instruction*>* m_ptrStack, mng::Memory* a_memory, mng::Controller* a_controller)
 : m_numStack(a_numStack)
