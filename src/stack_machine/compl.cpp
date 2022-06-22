@@ -1,5 +1,4 @@
 #include "compl.hpp"
-#include "bus.hpp"
 
 namespace act
 {
@@ -14,16 +13,11 @@ Compl::~Compl()
 {
 }
 
-int Compl::execute(Bus& a_bus)
+unsigned long Compl::actual_operation(unsigned long a_num, Bus& a_bus)
 {
-	container::Stack<unsigned long>* s = a_bus.numbers_stack();
-	unsigned long top = s->pop();
+	unsigned long result = ~a_num;
 
-	s->push(~top);
-
-	++*(a_bus.controller());
-	
-	return 1;
+	return result;
 }
 
 Instruction* create_compl()

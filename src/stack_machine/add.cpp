@@ -14,23 +14,15 @@ Add::~Add()
 {
 }
 
-int Add::execute(Bus& a_bus)
+unsigned long Add::actual_operation(unsigned long a_first, unsigned long a_second)
 {
-	container::Stack<unsigned long>* s = a_bus.numbers_stack();
-
-	unsigned long first = s->pop();
-	unsigned long second = s->pop();
-
-	s->push(first + second);
-
-	++*(a_bus.controller());
-
-	return 1;
+	return a_first + a_second;
 }
 
 Instruction* create_add()
 {
 	return new Add;
 }
+
 
 }//namespace act

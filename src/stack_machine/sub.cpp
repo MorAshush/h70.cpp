@@ -14,18 +14,9 @@ Sub::~Sub()
 {
 }
 
-int Sub::execute(Bus& a_bus)
+unsigned long Sub::actual_operation(unsigned long a_first, unsigned long a_second)
 {
-	container::Stack<unsigned long>* s = a_bus.numbers_stack();
-
-	long first = s->pop();
-	long second = s->pop();
-
-	s->push(first - second);
-
-	++*(a_bus.controller());
-		
-	return 1;
+	return a_first - a_second;
 }
 
 Instruction* create_sub()

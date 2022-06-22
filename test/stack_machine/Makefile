@@ -19,8 +19,14 @@ TARGET = utest
 OBJS = utest.o $(SRC_DIR)/virtual_machine.o \
 				$(SRC_DIR)/stack_template.o \
 				$(SRC_DIR)/instruction_base.o \
+				$(SRC_DIR)/bi_instruction.o \
+				$(SRC_DIR)/binary_jmp_instruction.o \
+				$(SRC_DIR)/indirect_jmp.o \
+				$(SRC_DIR)/un_instruction.o \
 				$(SRC_DIR)/instruction_arg.o \
+				$(SRC_DIR)/jmp_arg.o \
 				$(SRC_DIR)/bus.o \
+				$(SRC_DIR)/operator_func.o \
 				$(SRC_DIR)/nop.o \
 				$(SRC_DIR)/add.o \
 				$(SRC_DIR)/sub.o \
@@ -28,12 +34,21 @@ OBJS = utest.o $(SRC_DIR)/virtual_machine.o \
 				$(SRC_DIR)/hlt.o \
 				$(SRC_DIR)/load.o \
 				$(SRC_DIR)/push.o \
+				$(SRC_DIR)/puship.o \
+				$(SRC_DIR)/puship_arg.o \
+				$(SRC_DIR)/popip.o \
+				$(SRC_DIR)/dropip.o \
 				$(SRC_DIR)/or.o \
 				$(SRC_DIR)/xor.o \
 				$(SRC_DIR)/not.o \
 				$(SRC_DIR)/stor.o \
 				$(SRC_DIR)/jmp.o \
 				$(SRC_DIR)/jz.o \
+				$(SRC_DIR)/je.o \
+				$(SRC_DIR)/jg.o \
+				$(SRC_DIR)/jl.o \
+				$(SRC_DIR)/jle.o \
+				$(SRC_DIR)/jge.o \
 				$(SRC_DIR)/dup.o \
 				$(SRC_DIR)/swap.o \
 				$(SRC_DIR)/rol3.o \
@@ -71,7 +86,12 @@ check: $(TARGET)
 utest : utest.cpp $(SRC_DIR)/virtual_machine.cpp $(INC_DIR)/virtual_machine.hpp \
 					$(INC_DIR)/stack_template.hpp \
 					$(SRC_DIR)/instruction_base.cpp $(INC_DIR)/instruction_base.hpp \
+					$(SRC_DIR)/bi_instruction.cpp $(INC_DIR)/bi_instruction.hpp \
+					$(SRC_DIR)/binary_jmp_instruction.cpp $(INC_DIR)/binary_jmp_instruction.hpp \
+					$(SRC_DIR)/indirect_jmp.cpp $(INC_DIR)/indirect_jmp.hpp \
+					$(SRC_DIR)/un_instruction.cpp $(INC_DIR)/un_instruction.hpp \
 					$(SRC_DIR)/instruction_arg.cpp $(INC_DIR)/instruction_arg.hpp \
+					$(SRC_DIR)/jmp_arg.cpp $(INC_DIR)/jmp_arg.hpp \
 					$(SRC_DIR)/bus.cpp $(INC_DIR)/bus.hpp \
 					$(SRC_DIR)/nop.cpp $(INC_DIR)/nop.hpp \
 					$(SRC_DIR)/add.cpp $(INC_DIR)/add.hpp \
@@ -79,6 +99,10 @@ utest : utest.cpp $(SRC_DIR)/virtual_machine.cpp $(INC_DIR)/virtual_machine.hpp 
 					$(SRC_DIR)/and.cpp $(INC_DIR)/and.hpp \
 					$(SRC_DIR)/hlt.cpp $(INC_DIR)/hlt.hpp \
 					$(SRC_DIR)/load.cpp $(INC_DIR)/load.hpp \
+					$(SRC_DIR)/puship.cpp $(INC_DIR)/puship.hpp \
+					$(SRC_DIR)/puship_arg.cpp $(INC_DIR)/puship_arg.hpp \
+					$(SRC_DIR)/popip.cpp $(INC_DIR)/popip.hpp \
+					$(SRC_DIR)/dropip.cpp $(INC_DIR)/dropip.hpp \
 					$(SRC_DIR)/push.cpp $(INC_DIR)/push.hpp \
 					$(SRC_DIR)/or.cpp $(INC_DIR)/or.hpp \
 					$(SRC_DIR)/xor.cpp $(INC_DIR)/xor.hpp \
@@ -86,6 +110,13 @@ utest : utest.cpp $(SRC_DIR)/virtual_machine.cpp $(INC_DIR)/virtual_machine.hpp 
 					$(SRC_DIR)/stor.cpp $(INC_DIR)/stor.hpp \
 					$(SRC_DIR)/jmp.cpp $(INC_DIR)/jmp.hpp \
 					$(SRC_DIR)/jz.cpp $(INC_DIR)/jz.hpp \
+					$(SRC_DIR)/je.cpp $(INC_DIR)/je.hpp \
+					$(SRC_DIR)/jg.cpp $(INC_DIR)/jg.hpp \
+					$(SRC_DIR)/jl.cpp $(INC_DIR)/jl.hpp \
+					$(SRC_DIR)/jle.cpp $(INC_DIR)/jle.hpp \
+					$(SRC_DIR)/jge.cpp $(INC_DIR)/jge.hpp \
+					$(SRC_DIR)/jgi.cpp $(INC_DIR)/jgi.hpp \
+					$(SRC_DIR)/jei.cpp $(INC_DIR)/jei.hpp \
 					$(SRC_DIR)/dup.cpp $(INC_DIR)/dup.hpp \
 					$(SRC_DIR)/swap.cpp $(INC_DIR)/swap.hpp \
 					$(SRC_DIR)/rol3.cpp $(INC_DIR)/rol3.hpp \

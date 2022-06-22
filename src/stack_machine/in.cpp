@@ -8,9 +8,7 @@ namespace act
 
 const std::string In::NAME = "IN";
 
-In::In(container::Stack* a_stack, mng::Controller* a_controller)
-: m_stack(a_stack)
-, m_controller(a_controller)
+In::In()
 {
 }
 
@@ -29,14 +27,14 @@ int In::execute(Bus& a_bus)
 
 	s->push(c);
 
-	++*(a_bus.controller());
-
+	mng::Controller* cont = a_bus.controller();
+	++*cont;
 	return 1;
 }
 
-Instruction* create_in(container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory)
+Instruction* create_in()
 {
-	return new In(a_stack, a_controller);
+	return new In;
 }
 
 }//namespace act

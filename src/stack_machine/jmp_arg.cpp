@@ -1,20 +1,19 @@
 #include <cstring>
 #include <stdlib.h>
 
-#include "instruction_arg.hpp"
-#include "stack_template.hpp"
+#include "jmp_arg.hpp"
 #include "controller.hpp"
 
 namespace act
 {
 
-const std::string Arg::NAME = "ARG";
+const std::string JmpArg::NAME = "JMPARG";
 
-Arg::Arg()
+JmpArg::JmpArg()
 {
 }
 
-void Arg::set_arg(std::string const& a_arg)
+void JmpArg::set_arg(std::string const& a_arg)
 {
 	char* cstring = new char[a_arg.length() + 1];
 	strcpy(cstring, a_arg.c_str());
@@ -23,20 +22,18 @@ void Arg::set_arg(std::string const& a_arg)
 	delete[] cstring;
 }
 
-int Arg::execute(Bus& a_bus)
+int JmpArg::execute(Bus& a_bus)
 {
-	container::Stack<unsigned long>* s = a_bus.numbers_stack();
-	s->push(m_arg);
-
 	mng::Controller* c = a_bus.controller();
-	++*(c);
-		
+	c->jump_to(m_arg);
+
+	++*c;
 	return 1;
 }
 
-Arg* create_arg()
+Instruction* create_jmp_arg()
 {
-	return new Arg;
+	return new JmpArg;
 }
 
 }//namespace act

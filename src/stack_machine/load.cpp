@@ -1,5 +1,5 @@
 #include "load.hpp"
-
+#include "memory.hpp"
 
 
 namespace act
@@ -15,18 +15,12 @@ Load::~Load()
 {
 }
 
-int Load::execute(Bus& a_bus)
+unsigned long Load::actual_operation(unsigned long a_num, Bus& a_bus)
 {
-	container::Stack<unsigned long>* s = a_bus.numbers_stack();
+	mng::Memory* m = a_bus.memory();
+	unsigned long data = m->get_data(a_num);
 
-	unsigned long top = s->pop();
-	unsigned long data = s->get_data(top);
-
-	s->push(data);
-
-	++*m_controller;
-		
-	return 1;
+	return data;
 }
 
 Instruction* create_load()

@@ -1,5 +1,5 @@
 #include "dup.hpp"
-
+#include "stack_template.hpp"
 
 namespace act
 {
@@ -14,17 +14,12 @@ Dup::~Dup()
 {
 }
 
-int Dup::execute()
+unsigned long Dup::actual_operation(unsigned long a_num, Bus& a_bus)
 {
 	container::Stack<unsigned long>* s = a_bus.numbers_stack();
-	unsigned long top = s->pop();
+	s->push(a_num);
 
-	s->push(top);
-	s->push(top);
-
-	++*(a_bus.controller());
-
-	return 1;
+	return a_num;
 }
 
 Instruction* create_dup()

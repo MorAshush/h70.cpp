@@ -1,5 +1,6 @@
 #include "dropip.hpp"
-
+#include "stack_template.hpp"
+#include "controller.hpp"
 
 namespace act
 {
@@ -16,7 +17,7 @@ DropIP::~DropIP()
 
 int DropIP::execute(Bus& a_bus)
 {
-	container::Stack<Instruction*>* s = a_bus.pointers_stack();
+	container::Stack<unsigned long>* s = a_bus.pointers_stack();
 
 	s->pop();
 

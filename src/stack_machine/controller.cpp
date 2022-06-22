@@ -30,9 +30,4 @@ size_t Controller::ip()
 }
 
 
-int Controller::execute_instruction(act::Instruction* a_instruction)
-{
-	return a_instruction->execute();
-}
-
 }//namspace mng

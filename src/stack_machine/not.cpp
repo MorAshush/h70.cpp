@@ -13,17 +13,9 @@ Not::~Not()
 {
 }
 
-int Not::execute(Bus& a_bus)
+unsigned long Not::actual_operation(unsigned long a_num, Bus& a_bus)
 {
-	container::Stack<unsigned long>* s = a_bus.numbers_stack();
-
-	unsigned long num = s->pop();
-
-	s->push(!num);
-
-	++*(a_bus.controller());
-	
-	return 1;
+	return !a_num;
 }
 
 Instruction* create_not()

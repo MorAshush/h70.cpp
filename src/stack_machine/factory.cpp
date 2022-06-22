@@ -4,6 +4,8 @@
 
 #include "factory.hpp"
 #include "instruction_arg.hpp"
+#include "puship_arg.hpp"
+#include "jmp_arg.hpp"
 #include "invalid_instruction.hpp"
 #include "missing_argument.hpp"
 
@@ -14,8 +16,7 @@ Factory::Factory(Grammar const& a_grammar)
 {
 }
 
-std::vector<act::Instruction*> Factory::create(std::list<std::string> const& a_instructionsList,
-												container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory)
+std::vector<act::Instruction*> Factory::create(std::list<std::string> const& a_instructionsList)
 {
 	std::vector<act::Instruction*> instructions;
 
@@ -31,6 +32,7 @@ std::vector<act::Instruction*> Factory::create(std::list<std::string> const& a_i
 
 		if(result == 0)
 		{
+			std::cout << instrutctionName << '\n';
 			throw expt::InvalidCmdErr("Factory::create", "invalid command in program");
 		}
 		else
@@ -43,25 +45,28 @@ std::vector<act::Instruction*> Factory::create(std::list<std::string> const& a_i
 		if(argsNum)
 		{
 			++current;
-			if(current == end)
+
+			std::string argValue = *current;			
+			if(current == end || isalpha(argValue[0]))
 			{
-				break;
+				std::cout << instrutctionName << '\n';
+				throw expt::MissingArgErr("Factor::create", "missing argument for instruction");
 			}
 
-			instrutctionName = *current;
-			
-			for(size_t j = 0; j < argsNum; ++j)
+			if(instrutctionName == "PUSH")
 			{
-				if(current == end || isalpha(instrutctionName[0]))
-				{
-					throw expt::MissingArgErr("Factor::create", "missing argument for instruction");
-				}
-
 				act::Arg* i = act::create_arg();
-				i->set_arg(instrutctionName);
+				i->set_arg(argValue);
 				instructions.push_back(i);
-				++current;
 			}
+			if(instrutctionName == "PUSHIP")
+			{
+				act::PushIpArg* i = act::create_puship_arg();
+				i->set_arg(argValue);
+				instructions.push_back(i);
+			}
+
+			++current;
 		}
 		else
 		{

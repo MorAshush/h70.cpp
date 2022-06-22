@@ -8,7 +8,6 @@
 #include "stack_template.hpp"
 #include "controller.hpp"
 #include "memory.hpp"
-#include "mapper.hpp"
 #include "grammar.hpp"
 
 
@@ -16,22 +15,28 @@ int main()
 {
 
 	container::Stack<unsigned long> stNum(10);
-	container::Stack<act::Instruction*> stPtr(10);
+	container::Stack<size_t> stPtr(10);
 	
 	mng::Controller cn;
 	mng::Memory me(100, 100);
 	Grammar grammar;
 	Parser p(grammar);
 
-	std::string s = "PUSH 10\n"
-					"PUSH 30\n"
-					"IN\n"
-					"IN\n"
-					"OUT\n"
-					"DROP\n"
-					"NOP\n"
-					"LOAD\n"
-					"PUSH 50\n"
+	std::string s = "PUSH 100\n"
+					"PUSHIP 13\n"
+					"PUSHIP 7\n"
+					"POPIP\n"
+					"DUP\n"
+					"DUP\n"
+					"DUP\n"
+					"DUP\n"
+					"DUP\n"
+					"POPIP\n"
+					"ADD\n"
+					"ADD\n"
+					"ADD\n"
+					"ADD\n"
+					"ADD\n"
 					"HLT";
 
 	std::list<std::string> actionsNames = p.parse(s, ' ');
@@ -40,7 +45,7 @@ int main()
 	Factory factory(grammar);
 	try
 	{
-		v = factory.create(actionsNames, &stNum, &cn, &me);
+		v = factory.create(actionsNames);
 	}
 	catch(const expt::Error& e)
 	{

@@ -1,7 +1,41 @@
 #include <iterator>
 
 #include "grammar.hpp"
-
+#include "nop.hpp"
+#include "add.hpp"
+#include "sub.hpp"
+#include "and.hpp"
+#include "hlt.hpp"
+#include "load.hpp"
+#include "instruction_arg.hpp"
+#include "jmp_arg.hpp"
+#include "push.hpp"
+#include "or.hpp"
+#include "xor.hpp"
+#include "not.hpp"
+#include "stor.hpp"
+#include "jmp.hpp"
+#include "jz.hpp"
+#include "dup.hpp"
+#include "swap.hpp"
+#include "rol3.hpp"
+#include "jnz.hpp"
+#include "drop.hpp"
+#include "compl.hpp"
+#include "in.hpp"
+#include "out.hpp"
+#include "outnum.hpp"
+#include "innum.hpp"
+#include "puship_arg.hpp"
+#include "puship.hpp"
+#include "popip.hpp"
+#include "je.hpp"
+#include "jg.hpp"
+#include "jl.hpp"
+#include "jle.hpp"
+#include "jge.hpp"
+#include "jgi.hpp"
+#include "jei.hpp"
 
 Grammar::Grammar()
 {
@@ -29,6 +63,17 @@ Grammar::Grammar()
 	m_argsTable[act::Out::NAME] = 0;
 	m_argsTable[act::OutNum::NAME] = 0;
 	m_argsTable[act::InNum::NAME] = 0;
+	m_argsTable[act::PushIP::NAME] = 1;
+	m_argsTable[act::PushIpArg::NAME] = 0;
+	m_argsTable[act::PopIP::NAME] = 0;
+	m_argsTable[act::JmpArg::NAME] = 0;
+	m_argsTable[act::Je::NAME] = 1;
+	m_argsTable[act::Jg::NAME] = 1;
+	m_argsTable[act::Jl::NAME] = 1;
+	m_argsTable[act::Jle::NAME] = 1;
+	m_argsTable[act::Jge::NAME] = 1;
+	m_argsTable[act::Jgi::NAME] = 0;
+	m_argsTable[act::Jei::NAME] = 0;
 
 
 	m_creatorsTable[act::Nop::NAME] = &act::create_nop;
@@ -55,6 +100,17 @@ Grammar::Grammar()
 	m_creatorsTable[act::Out::NAME] = &act::create_out;
 	m_creatorsTable[act::OutNum::NAME] = &act::create_outnum;
 	m_creatorsTable[act::InNum::NAME] = &act::create_innum;
+	m_creatorsTable[act::PushIP::NAME] = &act::create_puship;
+//	m_creatorsTable[act::PushIpArg::NAME] = &act::create_puship_arg;
+	m_creatorsTable[act::PopIP::NAME] = &act::create_popip;
+	m_creatorsTable[act::Je::NAME]= &act::create_je;
+	m_creatorsTable[act::Jg::NAME]= &act::create_jg;
+	m_creatorsTable[act::Jl::NAME]= &act::create_jl;
+	m_creatorsTable[act::Jle::NAME]= &act::create_jle;
+	m_creatorsTable[act::Jge::NAME]= &act::create_jge;
+	m_creatorsTable[act::Jgi::NAME]= &act::create_jgi;
+	m_creatorsTable[act::Jei::NAME]= &act::create_jei;
+
 }
 
 size_t Grammar::args_num(std::string const& a_instructionName)
@@ -86,9 +142,9 @@ functionPtr Grammar::creator_func(std::string const& a_instructionName)
 
 bool Grammar::find(std::string a_instructionName)
 {
-	std::map<std::string, functionPtr>::iterator it = m_creatorsTable.find(a_instructionName);
+	std::map<std::string, size_t>::iterator it = m_argsTable.find(a_instructionName);
 
-	if(it != m_creatorsTable.end())
+	if(it != m_argsTable.end())
 	{
 		return 1;
 	}

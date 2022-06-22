@@ -19,7 +19,8 @@ int Drop::execute(Bus& a_bus)
 	container::Stack<unsigned long>* s = a_bus.numbers_stack();
 	s->pop();
 
-	++*(a_bus.controller());
+	mng::Controller* c = a_bus.controller();
+	++*c;
 
 	return 1;
 }

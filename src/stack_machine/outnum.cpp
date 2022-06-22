@@ -9,8 +9,6 @@ namespace act
 const std::string OutNum::NAME = "OUTNUM";
 
 OutNum::OutNum()
-: m_stack(a_stack)
-, m_controller(a_controller)
 {
 }
 
@@ -18,7 +16,7 @@ OutNum::~OutNum()
 {
 }
 
-int OutNum::execute()
+int OutNum::execute(Bus& a_bus)
 {
 	container::Stack<unsigned long>* s = a_bus.numbers_stack();
 
@@ -26,8 +24,8 @@ int OutNum::execute()
 
 	std::cout << top << '\n';
 
-	++*(a_bus.controller());
-
+	mng::Controller* c = a_bus.controller();
+	++*c;
 	return 1;
 }
 

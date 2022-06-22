@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "popip.hpp"
 
 
@@ -16,15 +18,13 @@ PopIP::~PopIP()
 
 int PopIP::execute(Bus& a_bus)
 {
-	container::Stack<act::Instructor*>* s = a_bus.pointers_stack();
+	container::Stack<unsigned long>* s = a_bus.pointers_stack();
 
-	act::Instruction* toptInstruction = s->pop();
+	unsigned long topAddress = s->pop();
 
-	mng::Memory* m = a_bus.memory();
+	mng::Controller* c = a_bus.controller();
 
-	size_t address = m->instruction_address(toptInstruction);
-
-	a_bus.controller()->jump_to(address);
+	c->jump_to(topAddress);
 
 	return 1;
 }

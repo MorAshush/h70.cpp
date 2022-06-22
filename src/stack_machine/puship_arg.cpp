@@ -1,20 +1,20 @@
 #include <cstring>
 #include <stdlib.h>
 
-#include "instruction_arg.hpp"
+#include "puship_arg.hpp"
 #include "stack_template.hpp"
 #include "controller.hpp"
 
 namespace act
 {
 
-const std::string Arg::NAME = "ARG";
+const std::string PushIpArg::NAME = "PUSHIPARG";
 
-Arg::Arg()
+PushIpArg::PushIpArg()
 {
 }
 
-void Arg::set_arg(std::string const& a_arg)
+void PushIpArg::set_arg(std::string const& a_arg)
 {
 	char* cstring = new char[a_arg.length() + 1];
 	strcpy(cstring, a_arg.c_str());
@@ -23,9 +23,9 @@ void Arg::set_arg(std::string const& a_arg)
 	delete[] cstring;
 }
 
-int Arg::execute(Bus& a_bus)
+int PushIpArg::execute(Bus& a_bus)
 {
-	container::Stack<unsigned long>* s = a_bus.numbers_stack();
+	container::Stack<unsigned long>* s = a_bus.pointers_stack();
 	s->push(m_arg);
 
 	mng::Controller* c = a_bus.controller();
@@ -34,9 +34,9 @@ int Arg::execute(Bus& a_bus)
 	return 1;
 }
 
-Arg* create_arg()
+PushIpArg* create_puship_arg()
 {
-	return new Arg;
+	return new PushIpArg;
 }
 
 }//namespace act

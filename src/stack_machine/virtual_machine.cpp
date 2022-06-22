@@ -7,7 +7,7 @@
 namespace mng
 {
 
-VirtualMachine::VirtualMachine(Stack<unsigned long>* a_numStack, Stack<act::Instruction*>* m_ptrStack,
+VirtualMachine::VirtualMachine(container::Stack<unsigned long>* a_numStack, container::Stack<size_t>* m_ptrStack,
 													 Memory* a_memory, Controller* a_controller)
 : m_numStack(a_numStack)
 , m_ptrStack(m_ptrStack)
@@ -22,14 +22,15 @@ VirtualMachine::~VirtualMachine()
 
 void VirtualMachine::run()
 {
-	Bus bus(m_numStack, m_ptrStack, m_memory, m_controller);
+	Bus bus;
+	bus.set_bus(m_numStack, m_ptrStack, m_memory, m_controller);
+	size_t counter = 0;
 	while(true)
 	{
 		size_t address = m_controller->ip();
-		
+
 		try
 		{
-			m_numStack->print();
 			act::Instruction* instructionPtr = m_memory->instruction_ptr(address);
 
 			int result = instructionPtr->execute(bus);
@@ -38,6 +39,11 @@ void VirtualMachine::run()
 			{
 				break;
 			}
+			std::cout << "instruction number: " << counter << '\n';
+
+			m_numStack->print();
+			std::cout << '\n';
+			++counter;
 		}
 		catch(const expt::Error& e)
 		{
