@@ -17,14 +17,14 @@ class VirtualMachine
 {
 public:
 	VirtualMachine(container::Stack<unsigned long>* a_numStack, 
-					container::Stack<act::Instruction*>* m_ptrStack, Memory* a_memory, Controller* a_controller);
+					container::Stack<unsigned long>* m_ptrStack, Memory* a_memory, Controller* a_controller);
 	~VirtualMachine();
 
 	void run();
 
 private:
 	container::Stack<unsigned long>* m_numStack;
-	container::Stack<act::Instruction*>* m_ptrStack;
+	container::Stack<unsigned long>* m_ptrStack;
 	Memory* m_memory;
 	Controller* m_controller;
 };

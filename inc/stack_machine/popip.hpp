@@ -5,7 +5,7 @@
 
 #include "instruction_base.hpp"
 #include "bus.hpp"
-#include "ip_stack.hpp"
+#include "stack_template.hpp"
 #include "controller.hpp"
 #include "memory.hpp"
 

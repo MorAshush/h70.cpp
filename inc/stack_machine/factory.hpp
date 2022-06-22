@@ -5,7 +5,7 @@
 #include <vector>
 #include <list>
 
-#include "stack.hpp"
+#include "stack_template.hpp"
 #include "controller.hpp"
 #include "memory.hpp"
 #include "instruction_base.hpp"
@@ -17,8 +17,7 @@ class Factory
 public:
 	Factory(Grammar const& a_grammar);
 
-	std::vector<act::Instruction*> create(std::list<std::string> const& a_instructionsList,
-											container::Stack* a_stack, mng::Controller* a_controller, mng::Memory* a_memory);
+	std::vector<act::Instruction*> create(std::list<std::string> const& a_instructionsList);
 
 private:
 	Grammar m_grammar;

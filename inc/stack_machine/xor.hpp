@@ -3,23 +3,19 @@
 
 #include <string>
 
-#include "instruction_base.hpp"
-#include "stack.hpp"
-#include "controller.hpp"
-
+#include "bi_instruction.hpp"
 
 namespace act
 {
 
-class Xor: public Instruction
+class Xor: public BiInstruction
 {
 public:
     Xor();
     ~Xor();
 
-    virtual int execute(Bus& a_bus);
-
 public:
+    virtual unsigned long actual_operation(unsigned long a_first, unsigned long a_second);    
     static const std::string NAME;
 };
 

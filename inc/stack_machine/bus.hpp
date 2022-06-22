@@ -28,17 +28,17 @@ public:
 	Bus();
 	~Bus();
 
-	void set_bus(container::Stack<unsigned long>* a_numStack, container::Stack<act::Instruction*>* m_ptrStack,
+	void set_bus(container::Stack<unsigned long>* a_numStack, container::Stack<unsigned long>* m_ptrStack,
 																 mng::Memory* a_memory, mng::Controller* a_controller);
 
 	container::Stack<unsigned long>* numbers_stack() const;
-	container::Stack<act::Instruction*>* pointers_stack() const;
+	container::Stack<unsigned long>* pointers_stack() const;
 	mng::Memory* memory() const;
 	mng::Controller* controller() const;
 
 private:
 	container::Stack<unsigned long>* m_numStack;
-	container::Stack<act::Instruction*>* m_ptrStack;
+	container::Stack<unsigned long>* m_ptrStack;
 	mng::Memory* m_memory;
 	mng::Controller* m_controller;
 };

@@ -5,7 +5,6 @@
 
 #include "memory.hpp"
 #include "instruction_base.hpp"
-//#include "instruction_pointer.hpp"
 
 namespace mng
 {
@@ -21,7 +20,7 @@ public:
 
 	size_t ip();
 
-	int execute_instruction(act::Instruction* a_instruction);
+//	int execute_instruction(act::Instruction* a_instruction);
 
 private:
 	size_t m_ip;

@@ -3,23 +3,21 @@
 
 #include <string>
 
-#include "instruction_base.hpp"
-//#include "stack_template.hpp"
-//#include "controller.hpp"
+#include "un_instruction.hpp"
+#include "bus.hpp"
 
 
 namespace act
 {
 
-class Compl: public Instruction
+class Compl: public UnInstruction
 {
 public:
     Compl();
     ~Compl();
 
-    virtual int execute(Bus& a_bus);
-
 public:
+    virtual unsigned long actual_operation(unsigned long a_num, Bus& a_bus);    
     static const std::string NAME;
 
 };

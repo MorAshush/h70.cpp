@@ -1,33 +1,32 @@
-#ifndef HLT_HPP
-#define HLT_HPP
+#ifndef JMP_ARG_HPP
+#define JMP_ARG_HPP
 
 #include <string>
 
 #include "instruction_base.hpp"
 #include "bus.hpp"
-#include "stack_template.hpp"
-#include "controller.hpp"
-#include "memory.hpp"
 
 
 namespace act
 {
 
-class Hlt: public Instruction
+class JmpArg: public Instruction
 {
 public:
-    Hlt();
+    JmpArg();
 
     virtual int execute(Bus& a_bus);
+    void set_arg(std::string const& a_arg);
 
 public:
     static const std::string NAME;
+    unsigned long m_arg;
   
 };
 
-Instruction* create_hlt();
+Instruction* create_jmp_arg();
 
 }//namespace act
 
 
-#endif//HLT_HPP
+#endif//JMP_ARG_HPP

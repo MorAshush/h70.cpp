@@ -4,7 +4,7 @@
 #include <string>
 
 #include "instruction_base.hpp"
-#include "stack.hpp"
+#include "stack_template.hpp"
 #include "controller.hpp"
 #include "memory.hpp"
 

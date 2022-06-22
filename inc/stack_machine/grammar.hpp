@@ -4,30 +4,6 @@
 #include <map>
 
 #include "instruction_base.hpp"
-#include "nop.hpp"
-#include "add.hpp"
-#include "sub.hpp"
-#include "and.hpp"
-#include "hlt.hpp"
-#include "load.hpp"
-#include "instruction_arg.hpp"
-#include "push.hpp"
-#include "or.hpp"
-#include "xor.hpp"
-#include "not.hpp"
-#include "stor.hpp"
-#include "jmp.hpp"
-#include "jz.hpp"
-#include "dup.hpp"
-#include "swap.hpp"
-#include "rol3.hpp"
-#include "jnz.hpp"
-#include "drop.hpp"
-#include "compl.hpp"
-#include "in.hpp"
-#include "out.hpp"
-#include "outnum.hpp"
-#include "innum.hpp"
 
 
 typedef act::Instruction* (*functionPtr)();

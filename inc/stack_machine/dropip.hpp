@@ -4,10 +4,7 @@
 #include <string>
 
 #include "instruction_base.hpp"
-//#include "stack_base.hpp"
-//#include "ip_stack.hpp"
-//#include "controller.hpp"
-//#include "memory.hpp"
+
 
 namespace act
 {

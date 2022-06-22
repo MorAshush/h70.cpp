@@ -3,29 +3,24 @@
 
 #include <string>
 
-#include "instruction_base.hpp"
-#include "stack_template.hpp"
-#include "controller.hpp"
-#include "memory.hpp"
-
-
+#include "bi_instruction.hpp"
 
 namespace act
 {
 
-class Add: public Instruction
+class Add: public BiInstruction
 {
 public:
     Add();
     ~Add();
 
-    virtual int execute(Bus& a_bus);
-
 public:
+    virtual unsigned long actual_operation(unsigned long a_first, unsigned long a_second);    
     static const std::string NAME;
 };
 
 Instruction* create_add();
+
 
 }//namespace act
 
