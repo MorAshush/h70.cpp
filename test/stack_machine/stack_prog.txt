@@ -1,0 +1,16 @@
+			PUSH 100
+			PUSHIP 13
+			PUSHIP 7
+			POPIP
+			DUP
+			DUP
+			DUP
+			DUP
+			DUP
+			POPIP
+			ADD
+			ADD
+			ADD
+			ADD
+			ADD
+			HLT

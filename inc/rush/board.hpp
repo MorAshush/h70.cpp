@@ -24,7 +24,7 @@ public:
 	bool move_object(std::string a_name, char a_direction);
 	bool is_victory() const;
 
-	void print();
+	std::vector<char> get_state();
 
 private:
 	size_t width() const;
@@ -32,10 +32,10 @@ private:
 	bool check_horizontal_vailidity(size_t a_length, struct Coordinates a_loctaion) const;
 	bool check_vertical_vailidity(size_t a_length, struct Coordinates a_loctaion) const;
 	bool check_victory(size_t a_length, struct Coordinates a_loctaion) const;
-	bool check_direction_vailidity(std::string a_name, char a_direction) const;
-	Coordinates get_new_location(std::string a_name, char a_direction);
-	void set_object_location(std::string a_name, struct Coordinates newLocation);
+	bool is_move_possible(Car a_car, char a_direction);
+	bool is_cell_free(size_t a_row, size_t a_column);
 	void change_location_on_board(std::string a_name, char a_direction);
+	char get_car_by_location(size_t a_row, size_t a_column);
 
 private:
 

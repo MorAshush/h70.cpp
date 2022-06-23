@@ -24,14 +24,53 @@ private:
 };
 
 
+template<typename T>
+class SingleLinkedList;
+
+
+template<typename T>
+class ListItr
+{
+public:
+    ListItr(typename SingleLinkedList<T>::Node* a_current);
+
+    T& get_data();
+    void set_data(T& a_data);
+
+    ListItr operator++() ;
+    T& operator*() ;
+    const T& operator*() const;
+    bool operator==(ListItr const& a_itr) const;
+    bool operator!=(ListItr const& a_itr) const;
+    ListItr operator=(ListItr const& a_itr);
+
+private:
+	typename SingleLinkedList<T>::Node* m_currentNode;
+}; //class ListItr
+
+
+template<typename T>
+class ConstListItr
+{
+public:
+    ConstListItr(const typename SingleLinkedList<T>::Node* a_current);
+
+    T const& get_data() const;
+
+    ConstListItr operator++() ;
+    T const& operator*() const;
+
+private:
+	const typename SingleLinkedList<T>::Node* m_currentNode;
+}; //class ConstListItr
+
+
 template <typename T>
 class SingleLinkedList
 {
 
-public:
-	class ListItr;
-	class ConstListItr;
-//	typedef T (*action_func)(T const& a_data, void* a_context); 
+	friend class ListItr<T>;
+	friend class ConstListItr<T>;
 
 public:
 	SingleLinkedList();
@@ -51,10 +90,10 @@ public:
 	T& back();
 	T const & back() const;
 
-	ListItr begin();
-	ConstListItr cbegin() const;
-	ListItr end();
-	ConstListItr cend() const;
+	ListItr<T> begin();
+	ConstListItr<T> cbegin() const;
+	ListItr<T> end();
+	ConstListItr<T> cend() const;
 
 	size_t size() const;
 
@@ -71,7 +110,9 @@ public:
 	SingleLinkedList& operator<<(SingleLinkedList a_list);
 
 	SingleLinkedList& reverse();
-//	void for_each(T (*action_func)(T const& a_data, void* a_context), void* a_context);
+
+	template<typename Actor>
+	void for_each(Actor& a_act);
 
 	bool is_empty() const;
 	void print() const;
@@ -100,40 +141,21 @@ private:
 
 };//class SingleLinkedList
 
-
-template<typename T>
-class SingleLinkedList<T>::ListItr
-{
-public:
-    ListItr(Node* a_current);
-
-    T& get_data();
-    void set_data(T& a_data);
-
-    ListItr operator++() ;
-    T& operator*() ;
-    const T& operator*() const;
-    bool operator==(ListItr const& a_itr) const;
-
-private:
-	Node* m_currentNode;
-}; //class ListItr
+template<typename T, typename Actor>
+void for_each(SingleLinkedList<T>& a_list, Actor& a_act);
 
 
 template<typename T>
-class SingleLinkedList<T>::ConstListItr
-{
-public:
-    ConstListItr(const Node* a_current);
+bool operator!=(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second);
 
-    T const& get_data() const;
+template<typename T>
+bool operator>(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second);
 
-    ConstListItr operator++() ;
-    T const& operator*() const;
+template<typename T>
+bool operator>=(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second);
 
-private:
-	const Node* m_currentNode;
-}; //class ConstListItr
+template<typename T>
+bool operator<=(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second);
 
 
 template<typename T>
@@ -158,20 +180,6 @@ private:
 
 
 template<typename T>
-bool operator!=(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second);
-
-template<typename T>
-bool operator>(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second);
-
-template<typename T>
-bool operator>=(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second);
-
-template<typename T>
-bool operator<=(SingleLinkedList<T>const& a_first, SingleLinkedList<T>const& a_second);
-
-
-
-template<typename T>
 SingleLinkedList<T>::SingleLinkedList()
 : m_head(0)
 , m_tail(0)
@@ -179,6 +187,22 @@ SingleLinkedList<T>::SingleLinkedList()
 , m_size(0)
 {
 
+}
+
+
+template<typename T>
+SingleLinkedList<T>::SingleLinkedList(const SingleLinkedList& a_list)
+: m_head(0)
+, m_tail(0)
+, m_end(0)
+, m_size(0)
+{
+	Node* currentNode = a_list.get_head();
+	while(currentNode != m_end)
+	{
+		append(currentNode->data());
+
+	}
 }
 
 
@@ -438,6 +462,33 @@ bool SingleLinkedList<T>::is_empty() const
 
 
 template<typename T>
+template<typename Actor>
+void SingleLinkedList<T>::for_each(Actor& a_act)
+{
+	Node* currentNode = get_head();
+	while(currentNode != get_end())
+	{
+		a_act(currentNode->data());
+		currentNode = currentNode->next();
+	}
+}
+
+
+template<typename T, typename Actor>
+void for_each(SingleLinkedList<T>& a_list, Actor& a_act)
+{
+	ListItr<T> current = a_list.begin();
+	ListItr<T> end = a_list.end();
+
+	while(current != end)
+	{
+		a_act(current.get_data());
+		++current;
+	}
+}
+
+
+template<typename T>
 bool SingleLinkedList<T>::operator==(SingleLinkedList<T>const& a_list) const
 {
 	if(a_list.is_empty() && this->is_empty())
@@ -674,44 +725,44 @@ void SingleLinkedList<T>::print() const
 
 
 template<typename T>
-typename SingleLinkedList<T>::ListItr SingleLinkedList<T>::begin() 
+ListItr<T> SingleLinkedList<T>::begin() 
 {
 	assert(!is_empty() && "list is empty");
 
-	ListItr itr(m_head);
+	ListItr<T> itr(m_head);
 
 	return itr;
 }
 
 
 template<typename T>
-typename SingleLinkedList<T>::ConstListItr SingleLinkedList<T>::cbegin() const 
+ConstListItr<T> SingleLinkedList<T>::cbegin() const 
 {
 	assert(!is_empty() && "list is empty");
 
-	ConstListItr itr(m_head);
+	ConstListItr<T> itr(m_head);
 
 	return itr;
 }
 
 
 template<typename T>
-typename SingleLinkedList<T>::ListItr SingleLinkedList<T>::end() 
+ListItr<T> SingleLinkedList<T>::end() 
 {
 	assert(!is_empty() && "list is empty");
 
-	ListItr itr(m_tail);
+	ListItr<T> itr(m_end);
 
 	return itr;
 }
 
 
 template<typename T>
-typename SingleLinkedList<T>::ConstListItr SingleLinkedList<T>::cend() const
+ConstListItr<T> SingleLinkedList<T>::cend() const
 {
 	assert(!is_empty() && "list is empty");
 
-	ConstListItr itr(m_tail);
+	ConstListItr<T> itr(m_end);
 
 	return itr;
 }
@@ -781,7 +832,7 @@ typename SingleLinkedList<T>::Node* SingleLinkedList<T>::Node::operator=(Node* a
 
 
 template<typename T>
-SingleLinkedList<T>::ListItr::ListItr(Node* a_current)
+ListItr<T>::ListItr(typename SingleLinkedList<T>::Node* a_current)
 : m_currentNode(0)
 {
 	assert(a_current && "node pointer is null");
@@ -790,79 +841,107 @@ SingleLinkedList<T>::ListItr::ListItr(Node* a_current)
 
 
 template<typename T>
-T& SingleLinkedList<T>::ListItr::get_data()
+T& ListItr<T>::get_data()
 {
 	return m_currentNode->data();
 }
 
 
 template<typename T>
-void SingleLinkedList<T>::ListItr::set_data(T& a_data)
+void ListItr<T>::set_data(T& a_data)
 {
 	m_currentNode->data() = a_data;
 }
 
 
 template<typename T>
-typename SingleLinkedList<T>::ListItr SingleLinkedList<T>::ListItr::operator++()
+ListItr<T> ListItr<T>::operator++()
 {
 	if(m_currentNode->next() == 0) //if end?
 	{
 		return *this;
 	}
 
-	return m_currentNode->next();
+	m_currentNode = m_currentNode->next();
+
+	return *this;
 }
 
 
 template<typename T>
-T& SingleLinkedList<T>::ListItr::operator*()
+T& ListItr<T>::operator*()
 {
+	assert(m_currentNode->next() && "can't dereference the end");
 	return m_currentNode->data();
 }
 
 
 template<typename T>
-T const& SingleLinkedList<T>::ListItr::operator*() const
+T const& ListItr<T>::operator*() const
 {
+	assert(m_currentNode->next() && "can't dereference the end");
 	return m_currentNode->data();
 }
 
 
 template<typename T>
-bool SingleLinkedList<T>::ListItr::operator==(ListItr const& a_itr) const
+bool ListItr<T>::operator==(ListItr const& a_itr) const
 {
-	return m_currentNode == a_itr.m_currentNode;;
+	return m_currentNode == a_itr.m_currentNode;
 }
 
 
-
-/*
 template<typename T>
-typename SingleLinkedList<T>::ListItr::ConstListItr(const Node* a_current)
+bool ListItr<T>::operator!=(ListItr const& a_itr) const
+{
+	return !(m_currentNode == a_itr.m_currentNode);
+}
+
+
+template<typename T>
+ListItr<T> ListItr<T>::operator=(ListItr const& a_itr)
+{
+	m_currentNode = a_itr.m_currentNode;
+
+	return *this;
+}
+
+
+template<typename T>
+ConstListItr<T>::ConstListItr(const typename SingleLinkedList<T>::Node* a_current)
 : m_currentNode(a_current)
 {}
 
 
 template<typename T>
-typename SingleLinkedList<T>::ConstListItr SingleLinkedList<T>::ConstListItr::operator++()
-{
-	if(m_currentNode->next() == 0)
-	{
-		return *this;
-	}
-
-	return m_currentNode->next();
-}
-
-
-template<typename T>
-T const& SingleLinkedList<T>::ConstListItr::operator*() const
+T const& ConstListItr<T>::get_data() const
 {
 	return m_currentNode->data();
 }
 
-*/
+
+template<typename T>
+ConstListItr<T> ConstListItr<T>::operator++()
+{
+	if(m_currentNode->next() == 0) //if currentNode = end?
+	{
+		return *this;
+	}
+
+	m_currentNode = m_currentNode->next();
+
+	return *this;
+}
+
+
+template<typename T>
+T const& ConstListItr<T>::operator*() const
+{
+	assert(m_currentNode->next() && "can't dereference the end");
+	return m_currentNode->data();
+}
+
+
 
 
 

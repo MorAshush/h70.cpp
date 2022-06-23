@@ -25,8 +25,28 @@ std::string ProgramLoader::load()
     getline(fin, line);
     while(fin)
     {
-        programString += line;
-        programString += '\n';
+        if(line[0] != '#' && line[0] != '\n') //exclude comments and empty new lines
+        {            
+            if(line[0] == '\t' || line[0] == ' ')
+            {
+                auto it = line.begin();
+                auto end = line.end();
+
+                while(it != end && !isalpha(*it))
+                {
+                    if(*it == '\t' || *it == ' ')
+                    {
+                        line.erase(it);
+                    }
+                    else
+                    {
+                         ++it;
+                    }
+                }
+                programString += line;
+                programString += '\n';
+            } 
+        }
         getline(fin, line);
     }
 

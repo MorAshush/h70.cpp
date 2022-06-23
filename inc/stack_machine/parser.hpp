@@ -10,12 +10,14 @@ class Parser
 {
 public:
 
-    Parser(Grammar a_grammar);
+    Parser(Grammar const& a_grammar);
 
     std::list<std::string> const& parse(std::string const& a_string, char a_delimeter);
+    std::list<std::string> const& compile();
 
 private:
-    std::list<std::string> m_instructionsList;
+    Grammar m_grammar;
+    std::list<std::string> m_wordsList;
 };
 
 

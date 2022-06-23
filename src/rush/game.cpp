@@ -51,8 +51,8 @@ void Game::start()
 	std::cout << "type in the car's letter and first letter of direction(d-down, u-up, l-left. r-right)\n e.g. \"Yu\" for Yellow, Up\n ";
 	std::cout << "type in '!' if you wish to quit game.\n";
 	
-	m_board.print();
-
+//	m_board.print();
+	print_board();
 	std::string input;
 	std::cout << "choose your move:\n";
 	std::cin >> input;
@@ -70,7 +70,7 @@ void Game::start()
 			bool result = m_board.move_object(input, input[1]);
 			if(!result)
 			{
-				std::cout << "your move is not possible, think again";
+				std::cout << "your move is not possible, think again\n";
 			}
 			
 			if(m_board.is_victory())
@@ -83,7 +83,7 @@ void Game::start()
 			std::cout << "input is invalid, try again.\nCar's letter must be exisiting on board, direction can only be d, u, l, r.\n";
 		}
 
-		m_board.print();
+		
 
 		std::cout << "choose your move:\n";
 		std::cin >> input;
@@ -92,6 +92,39 @@ void Game::start()
 	std::cout << "Level completed. Good job!\n";
 
 	return;
+}
+
+void Game::print_board()
+{
+	std::vector<char> state = m_board.get_state();
+	for(size_t i = 0; i < m_board.width(); ++i)
+	{
+		std::cout << "---";
+	}
+	std::cout << "--\n";
+	for(size_t i = 0; i < m_board.height(); ++i)
+	{
+		std::cout << '|';
+
+		for(size_t j = 0; j < m_board.width(); ++j)
+		{
+			std::cout << ' ' << state[i * m_board.width() + j] << ' ';
+		}
+
+		if(i != m_board.height()/2)
+		{
+			std::cout << '|';
+		}
+
+		std::cout << '\n';
+	}
+
+	for(size_t i = 0; i < m_board.width(); ++i)
+	{
+		std::cout << "---";
+	}
+
+	std::cout << "--\n";
 }
 
 
@@ -134,5 +167,7 @@ bool implementation_details::is_direction_valid(char a_direction)
 
 	return false;
 }
+
+
 
 }//namespace game

@@ -1,16 +1,13 @@
-#include <cstdio>
-#include <iostream>
 #include <fstream>
 #include <cassert>
 
 #include "file_output.hpp"
-#include "text_output.hpp"
 
 
 namespace out
 {
 
-FileOutput::FileOutput(char* a_fileName)
+FileOutput::FileOutput(const char* a_fileName)
 : TextOutput()
 , m_fileName(a_fileName)
 {

@@ -10,8 +10,9 @@ namespace in
 class TextInput{
 public:
 
+    virtual ~TextInput();   
+
     virtual std::string recieve() = 0;
-//  virtual ~TextInput() = 0;  
 };
 
 }//namespace input

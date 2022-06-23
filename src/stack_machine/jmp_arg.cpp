@@ -31,7 +31,7 @@ int JmpArg::execute(Bus& a_bus)
 	return 1;
 }
 
-Instruction* create_jmp_arg()
+JmpArg* create_jmp_arg()
 {
 	return new JmpArg;
 }

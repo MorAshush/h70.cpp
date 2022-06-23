@@ -15,19 +15,21 @@ struct Coordinates
 
 class Car
 {
-	friend class Board;
+//	friend class Board;
 
 public:
 	Car(std::string a_name, size_t a_length, bool a_orientation, struct Coordinates a_location);
 
+	std::string name() const;
 	size_t length() const;
 	bool orientation() const;
 	Coordinates location() const;
+	void move(char a_direction);
+	bool is_valid_direction(char a_direction);
+//	Coordinates get_new_location(char a_direction);
 
-//	void set_location(struct Coordinates a_location);
-
-private:
-	bool check_object_features(char* a_name, char a_length, struct Coordinates a_location, bool a_orientation);
+//private:
+//	bool check_object_features(char* a_name, char a_length, struct Coordinates a_location, bool a_orientation);
 
 private:
 	std::string m_name;

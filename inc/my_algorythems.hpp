@@ -93,7 +93,7 @@ C& gen_container_partition(C& a_container, F a_criteriaFunc)
 
 
 template <typename T, typename C, typename F>
-T& find_last_of_criteria(C& a_container, F a_criteriaFunc)
+T find_last_of_criteria(C& a_container, F a_criteriaFunc)
 {
 	typename C::iterator rev_end = a_container.rend();
 	typename C::reverse_iterator rev_it = a_container.rbegin();
@@ -102,7 +102,7 @@ T& find_last_of_criteria(C& a_container, F a_criteriaFunc)
 	{		
 		if(a_criteriaFunc(*rev_it)) //current is the last element that fulfill the criteria
 		{
-			return *rev_it;
+			return rev_it;
 		}
 		else //move to next iterator 
 		{

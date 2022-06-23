@@ -44,10 +44,18 @@ std::string RotThirteen::transform(std::string& a_string)
 
 	return a_string; 
 }
-/*
-std::string RotThirteen::retransform(std::string& a_string)
+
+std::string const RotThirteen::m_name = "rot13";
+
+std::string const& RotThirteen::name()
 {
-	return transform(a_string); 
+	return m_name;
 }
-*/
+
+TextTransformer* create_rotThirteen()
+{
+	return new RotThirteen;
+}
+
+
 }//namespace text

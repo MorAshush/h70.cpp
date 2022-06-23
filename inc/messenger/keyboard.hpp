@@ -11,12 +11,11 @@ namespace in
 class Keyboard: public TextInput 
 {
 public:
+
+//  virtual ~Keyboard(); 
     Keyboard();
     
     virtual std::string recieve();
-
-//    virtual ~Keyboard(); 
-
 };
 
 

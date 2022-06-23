@@ -13,7 +13,7 @@ Screen::Screen()
 
 void Screen::send(std::string const& a_text)
 {
-    std::cout << a_text;
+    std::cout << a_text << '\n';
 }
 
 

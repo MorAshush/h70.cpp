@@ -4,6 +4,8 @@
 #include <cstring>
 #include <stdlib.h>
 #include <iostream>
+#include <ctype.h>
+
 
 #include "udp_socket_input.hpp"
 
@@ -36,14 +38,21 @@ namespace in
 		int readBytes = 0;
 		char buffer[4096];
 
-		std::cout << "type in your message.\n";
-		std::cout << "new line with enter. end your message with sending the word \"EOM\" seperatly\n";
-
 		std::string data;
+
+		std::cout << "recieving...\n";
+		readBytes = recvfrom(m_socket, buffer, sizeof(buffer), 0, (struct sockaddr*)(&m_sockaddr), &sinLen);
+		data += buffer;
+
+		if(data == "EOM")
+		{
+			data = "";
+			return data;
+		}
 
 		while(true)
 		{
-			std::cout << "recieving...";
+			std::cout << "recieving...\n";
 			readBytes = recvfrom(m_socket, buffer, sizeof(buffer), 0, (struct sockaddr*)(&m_sockaddr), &sinLen);
 
 			assert(readBytes >= 0 && "recieving failed");
@@ -52,12 +61,32 @@ namespace in
 			{
 				break;
 			}
-
-			data += readBytes;
+			
+			data += '\n';
+			data += buffer;
 		}
 
 		data += '\0';
 
 		return data;
 	}
+
+InputUDPsocket* create_udpSocket_inputer(std::string a_ipPortString)
+{
+	std::string ipString;
+	std::string portString;
+	
+	size_t i = a_ipPortString.find(':', 0);
+	ipString = a_ipPortString.substr(0, i);
+	portString = a_ipPortString.substr(i + 1);
+
+	char* ip = new char[ipString.length() + 1];
+	strcpy(ip, ipString.c_str());
+
+	char* port = new char[portString.length() + 1];
+	strcpy(port, portString.c_str());
+
+	return new InputUDPsocket(ip, port);
 }
+
+}//namespace in

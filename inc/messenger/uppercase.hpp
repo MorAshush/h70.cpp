@@ -14,14 +14,27 @@ namespace text
 // UpperCase is-a TextTransformer
 class UpperCase: public TextTransformer {
 public:
+
+//  virtual ~UpperCase(); 
     UpperCase();
     
     virtual std::string transform(std::string& a_string);
 
-//    virtual ~UpperCase(); 
+public:
+    
+    static std::string const& name();
+
 private:
-std::locale m_locale; 
+
+    static const std::string m_name;
+
+private:
+
+    std::locale m_locale; 
 };
+
+
+TextTransformer* create_uppercase();
 
 }//namespace text
 

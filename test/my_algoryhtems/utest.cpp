@@ -279,7 +279,7 @@ BEGIN_TEST(partition_on_vector_persons_with_bmi_criteria)
 	ASSERT_PASS();
 
 END_TEST
-/*
+
 BEGIN_TEST(find_last_element_of_specific_criteria)
 
 	std::vector<int> v;
@@ -295,17 +295,12 @@ BEGIN_TEST(find_last_element_of_specific_criteria)
 	v.push_back(0);
 	v.push_back(15);
 	
-	int result = my_algorythems::find_last_of_criteria(v, is_positive);
+	std::vector<int>::iterator i = my_algorythems::find_last_of_criteria(v, is_positive);
 
-	for(size_t i = 0; i < v.size(); ++i)
-	{
-		std::cout << v[i] << ',';
-	}
-
-	ASSERT_EQUAL(result, 15);
+	ASSERT_EQUAL(*i, 15);
 
 END_TEST
-*/
+
 BEGIN_SUITE(my algorythems)
 
 	TEST(sort_list_of_persons_test)
@@ -321,7 +316,7 @@ BEGIN_SUITE(my algorythems)
 	TEST(partition_on_vector_ints_with_odd_criteria)
 	TEST(partition_on_vector_persons_with_bmi_criteria)
 
-//	TEST(find_last_element_of_specific_criteria)
+	TEST(find_last_element_of_specific_criteria)
 
 END_SUITE
 

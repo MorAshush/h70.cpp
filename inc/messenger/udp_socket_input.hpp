@@ -24,6 +24,7 @@ private:
 
 };
 
+InputUDPsocket* create_udpSocket_inputer(std::string a_ipPortString);
 
 }//namespace in
 

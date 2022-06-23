@@ -40,5 +40,23 @@ namespace out
 		std::cout << "message sent\n";
 	}
 
+OutputUDPsocket* create_udpSocket_outputer(std::string a_ipPortString)
+{
+	std::string ipString;
+	std::string portString;
+
+	size_t i = a_ipPortString.find(':', 0);
+	ipString = a_ipPortString.substr(0, i);
+	portString = a_ipPortString.substr(i + 1);
+
+	char* ip = new char[ipString.length() + 1];
+	strcpy(ip, ipString.c_str());
+	
+	char* port = new char[portString.length() + 1];
+	strcpy(port, portString.c_str());
+	
+	return new OutputUDPsocket(ip, port);
+}
+
 
 }//namespace out

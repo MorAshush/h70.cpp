@@ -22,4 +22,18 @@ std::string LowerCase::transform(std::string& a_string)
 	return a_string; 
 }
 
+std::string const LowerCase::m_name = "lowercase";
+
+std::string const& LowerCase::name()
+{
+	return m_name;
+}
+
+
+TextTransformer* create_lowercase()
+{
+	return new LowerCase();
+}
+
+
 }//namespace text

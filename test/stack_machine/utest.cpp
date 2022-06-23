@@ -3,6 +3,7 @@
 
 #include "virtual_machine.hpp"
 #include "instruction_base.hpp"
+#include "program_loader.hpp"
 #include "parser.hpp"
 #include "factory.hpp"
 #include "stack_template.hpp"
@@ -21,7 +22,11 @@ int main()
 	mng::Memory me(100, 100);
 	Grammar grammar;
 	Parser p(grammar);
-
+	char fileName[] = "stack_prog.txt";
+	in::ProgramLoader fileLoader(fileName);
+	std::string programString = fileLoader.load();
+	std::cout << programString << '\n';
+/*
 	std::string s = "PUSH 100\n"
 					"PUSHIP 13\n"
 					"PUSHIP 7\n"
@@ -38,8 +43,17 @@ int main()
 					"ADD\n"
 					"ADD\n"
 					"HLT";
+*/
+	std::list<std::string> actionsNames = p.parse(programString, ' ');
+	auto it = actionsNames.begin();
+	auto end = actionsNames.end();
+	while(it != end)
+	{
+		std::cout << *it << " ,";
+		++it;
+	}
+	std::cout << '\n';
 
-	std::list<std::string> actionsNames = p.parse(s, ' ');
 	std::vector<act::Instruction*> v;
 
 	Factory factory(grammar);

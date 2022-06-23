@@ -65,4 +65,18 @@ std::string Censor::transform(std::string& a_string)
 	return a_string; 
 }
 
+std::string const Censor::m_name = "censor";
+
+std::string const& Censor::name()
+{
+	return m_name;
+}
+
+
+TextTransformer* create_censor()
+{
+    return new Censor;
+}
+
+
 }//namespace text

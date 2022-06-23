@@ -27,6 +27,7 @@ public:
 	Game(const char* a_levelPath);
 
 	void start();
+	void print_board();
 
 
 

@@ -49,7 +49,7 @@ std::list<std::string> string_parser(std::string a_string, char a_delimeter)
 	return namesList;
 }
 
-in::TextInput* get_inputer(std::string a_string)
+in::TextInput* get_inputer(std::string const& a_string)
 {
 	if(a_string == "stdin")
 	{

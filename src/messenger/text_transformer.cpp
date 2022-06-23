@@ -5,8 +5,8 @@
 namespace text
 {
 
-//TextTransformer::~TextTransformer()
-//{}
+TextTransformer::~TextTransformer()
+{}
 
 
 }//namespace text

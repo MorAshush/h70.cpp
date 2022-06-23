@@ -74,11 +74,26 @@ bool Board::place_object(std::string a_name, size_t a_length, bool a_orientation
 
 bool Board::move_object(std::string a_name, char a_direction)
 {
+	Car car = m_cars.at(a_name[0]);
+	if(car.is_valid_direction(a_direction)) //check_direction_vailidity(a_name, a_direction)
+	{
+		if(is_move_possible(car, a_direction))
+		{
+			car.move(a_direction);
+			return 1;
+		}
+	}
+	
+	return 0;
+}
+/*
+bool Board::move_object(std::string a_name, char a_direction)
+{
 	bool result = check_direction_vailidity(a_name, a_direction);
 	if(result)
 	{
 		Coordinates newLocation = get_new_location(a_name, a_direction);
-		if(newLocation.m_row <= m_height && newLocation.m_column <= m_width)
+		if((newLocation.m_row <= m_height) && (newLocation.m_column <= m_width) && is_location_available(a_name, a_direction)) 
 		{
 			change_location_on_board(a_name, a_direction);
 			set_object_location(a_name, newLocation);
@@ -89,14 +104,14 @@ bool Board::move_object(std::string a_name, char a_direction)
 	
 	return 0;
 }
-
+*/
 bool Board::is_victory() const
 {
 	char carsNames[] = {'Y', 'R', 'G', 'O', 'B', 'W'};
 
 	for(size_t i = 0; i < std::strlen(carsNames); ++i)
 	{
-		if(m_cars.at(carsNames[i]).m_orientation)
+		if(m_cars.at(carsNames[i]).orientation())
 		{
 			bool result = check_victory(m_cars.at(carsNames[i]).length(), m_cars.at(carsNames[i]).location());
 			if(result)
@@ -119,6 +134,40 @@ size_t Board::height() const
 	return m_height;
 }
 
+std::string Board::get_state()
+{
+	std::string state;
+
+	for(size_t i = 0; i < width(); ++i)
+	{
+		state += "---";
+	}
+
+	state += '\n';
+
+	for(size_t i = 0; i < height(); ++i)
+	{
+		state += '|';
+
+		for(size_t j = 0; j < width(); ++j)
+		{
+			state += ' ';
+			char carName = get_car_by_location(i, j);
+			state += carName;
+			state += ' ';
+		}
+		if(i != height()/2)
+		{
+			state += '|';
+		}
+
+
+		state += '\n';
+	}
+	
+	return state;
+}
+/*
 void Board::print()
 {
 	for(size_t i = 0; i < width(); ++i)
@@ -150,7 +199,7 @@ void Board::print()
 
 	std::cout << "--\n";
 }
-
+*/
 bool Board::check_horizontal_vailidity(size_t a_length, struct Coordinates a_location) const
 {
 	size_t row = a_location.m_row;
@@ -189,21 +238,6 @@ bool Board::check_vertical_vailidity(size_t a_length, struct Coordinates a_locat
 	return false;
 }
 
-bool Board::check_direction_vailidity(std::string a_name, char a_direction) const
-{
-	bool orientation = m_cars.at(a_name[0]).m_orientation;
-	if(orientation && (a_direction == 'l' || a_direction == 'r'))
-	{
-		return true;
-	}
-	else if(!orientation && (a_direction == 'd' || a_direction == 'u'))
-	{
-		return true;
-	}
-
-	return false;
-	
-}
 
 bool Board::check_victory(size_t a_length, struct Coordinates a_location) const
 {
@@ -217,11 +251,11 @@ bool Board::check_victory(size_t a_length, struct Coordinates a_location) const
 
 	return false;
 }
-
+/*
 Coordinates Board::get_new_location(std::string a_name, char a_direction)
 {
 
-	Coordinates newLocation = m_cars.at(a_name[0]).m_location;
+	Coordinates newLocation = m_cars.at(a_name[0]).location();
 	if(a_direction == 'd')
 	{
 		++newLocation.m_row;
@@ -242,19 +276,59 @@ Coordinates Board::get_new_location(std::string a_name, char a_direction)
 	return newLocation;
 }
 
-void Board::set_object_location(std::string a_name, struct Coordinates newLocation)
+bool Board::is_location_available(std::string a_name, char a_direction)
 {
-	m_cars.at(a_name[0]).m_location.m_row = newLocation.m_row;
-	m_cars.at(a_name[0]).m_location.m_column = newLocation.m_column;
+	Car car = m_cars.at(a_name[0]);
+	bool orientation = car.orientation();
+
+	Coordinates location = car.location();
+	size_t row = location.m_row;
+	size_t column = location.m_column;
+
+	if(orientation && a_direction == 'r')
+	{
+		if((m_board[row * m_width + (column + car.length())] == ' '))
+		{
+			return true;
+		}
+	}
+	else if(orientation && a_direction == 'l')
+	{
+		if(m_board[row * m_width + (column - 1)] == ' ')
+		{
+			return true;
+		}
+	}
+	else if(!orientation && a_direction == 'u')
+	{
+		if(m_board[(row - 1) * m_width + column] == ' ')
+		{
+			return true;
+		}
+	}
+	else if(!orientation && a_direction == 'd')
+	{
+		if(m_board[(row + car.length()) * m_width + column] == ' ')
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
+void Board::set_object_location(std::string a_name, struct Coordinates newLocation)
+{
+	m_cars.at(a_name[0]).set_location(newLocation); 
+}
+*/
 
 void Board::change_location_on_board(std::string a_name, char a_direction)
 {
-	bool orientation = m_cars.at(a_name[0]).m_orientation;
-	size_t row = m_cars.at(a_name[0]).m_location.m_row;
-	size_t column = m_cars.at(a_name[0]).m_location.m_column;
-	size_t length = m_cars.at(a_name[0]).m_length;
+	bool orientation = m_cars.at(a_name[0]).orientation();
+	size_t row = m_cars.at(a_name[0]).location().m_row;
+	size_t column = m_cars.at(a_name[0]).location().m_column;
+	size_t length = m_cars.at(a_name[0]).length();
 
 	if(orientation) 
 	{
@@ -282,6 +356,79 @@ void Board::change_location_on_board(std::string a_name, char a_direction)
 			m_board[(row - 1) * m_width + column] = a_name[0];
 		}	
 	}
+}
+
+bool Board::is_move_possible(Car a_car, char a_direction)
+{
+	size_t row = a_car.location().m_row;
+	size_t column = a_car.location().m_column;
+
+	if(a_car.orientation() && a_direction == 'l')
+	{
+		if(!is_cell_free(row, column - 1))
+		{
+			return false;
+		}
+	}
+	else if(a_car.orientation() && a_direction == 'r')
+	{
+		if(!is_cell_free(row, column + a_car.length()))
+		{
+			return false;
+		}
+	}
+	else if(!a_car.orientation() && a_direction == 'u')
+	{
+		if(!is_cell_free(row - 1, column))
+		{
+			return false;
+		}
+	}
+	else if(!a_car.orientation() && a_direction == 'd')
+	{
+		if(!is_cell_free(row + a_car.length(), column))
+		{
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+bool Board::is_cell_free(size_t a_row, size_t a_column)
+{
+	std::map<char, Car>::iterator current = m_cars.begin();
+	std::map<char, Car>::iterator end = m_cars.end();
+
+	while(current != end)
+	{
+		if(current->second.location().m_row == a_row && current->second.location().m_column == a_column)
+		{
+			return false;
+		}
+
+		++current;	
+	}
+
+	return true;
+}
+
+char Board::get_car_by_location(size_t a_row, size_t a_column)
+{
+	std::map<char, Car>::iterator current = m_cars.begin();
+	std::map<char, Car>::iterator end = m_cars.end();
+
+	while(current != end)
+	{
+		if(current->second.location().m_row == a_row && current->second.location().m_column == a_column)
+		{
+			return current->second.name()[0];
+		}
+
+		++current;	
+	}
+
+	return ' ';
 }
 
 } // namespace game

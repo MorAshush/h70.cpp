@@ -31,16 +31,19 @@ static double calc_chunk_avg(GrayImage a_img, size_t a_row, size_t a_column, int
 }
 
 
-static double calc_incline(size_t a_firstX, size_t a_firstY, size_t a_secondX, size_t a_secondY)
+static double calc_incline(const size_t a_firstX, const size_t a_firstY, const size_t a_secondX, const size_t a_secondY)
 {
-	double incline = (a_secondY - a_firstY) / (a_secondX - a_firstX);
+	double incline = static_cast<double>(a_secondY - a_firstY) / (a_secondX - a_firstX);
+	//add check divide by zero
 
 	return incline;
 }
 
 
-static void general_operator(GrayImage& a_first, const GrayImage a_second, int (*operation_func)(int a_first, int a_second))
+static GrayImage general_operator(GrayImage& a_first, const GrayImage& a_second, int (*operation_func)(int, int))
 {
+//	GrayImage copy(a_first.width(), a_first.height(), a_first.depth());
+
 	for(size_t i = 0; i < a_first.height() ; ++i)
 	{
 		for(size_t j = 0; j < a_first.width() ; ++j)
@@ -48,6 +51,7 @@ static void general_operator(GrayImage& a_first, const GrayImage a_second, int (
 			a_first(i, j) = operation_func(a_first.get_pixel(i, j), a_second.get_pixel(i, j));
 		}
 	}
+	return a_first;
 }
 
 static int operator_and(int a_first, int a_second)
@@ -65,6 +69,7 @@ static int operator_or(int a_first, int a_second)
 	return a_first | a_second;
 }
 
+
 }//namespace implementation_details
 
 
@@ -74,8 +79,6 @@ GrayImage::GrayImage(size_t a_width, size_t a_height)
 ,m_width(a_width)
 ,m_height(a_height)
 {
-	assert(m_width <= MAX_WIDTH && m_height <= MAX_HEIGHT && "image size are over limits");
-
 	m_image = new int[m_width * m_height];
 	assert(m_image && "matrix allocation failed");
 }
@@ -86,8 +89,6 @@ GrayImage::GrayImage(size_t a_width, size_t a_height, size_t a_depth)
 ,m_width(a_width)
 ,m_height(a_height)
 {
-	assert(m_width <= MAX_WIDTH && m_height <= MAX_HEIGHT && "image size are over limits");
-
 	m_image = new int[m_width * m_height];
 	assert(m_image && "matrix allocation failed");
 }
@@ -100,7 +101,6 @@ GrayImage::GrayImage(const GrayImage& a_img)
 ,m_image(new int[m_width * m_height])
 {
 	assert(m_image && "matrix allocation failed");
-
 	for(size_t i = 0; i < m_height; ++i)
 	{
 		for(size_t j = 0; j < m_width; ++j)
@@ -254,11 +254,11 @@ int* GrayImage::operator[](size_t a_row)
 }
 
 
-void GrayImage::operator&=(const GrayImage a_img)
+void GrayImage::operator&=(const GrayImage a_img) 
 {
 	assert(m_width == a_img.m_width && m_height == a_img.m_height && "images are not equal to operate & on");
 
-	implementation_details::general_operator(this, a_img, implementation_details::operator_and);
+	implementation_details::general_operator(*this, a_img, gfx::implementation_details::operator_and);
 }
 
 
@@ -266,7 +266,7 @@ void GrayImage::operator|=(const GrayImage a_img)
 {
 	assert(m_width == a_img.m_width && m_height == a_img.m_height && m_depth == a_img.m_depth && "images are not equal to operate | on");
 
-	implementation_details::general_operator(this, a_img, implementation_details::operator_or);
+	implementation_details::general_operator(*this, a_img, implementation_details::operator_or);
 }
 
 
@@ -274,7 +274,7 @@ void GrayImage::operator^=(const GrayImage a_img)
 {
 	assert(m_width == a_img.m_width && m_height == a_img.m_height && m_depth == a_img.m_depth && "images are not equal to operate ^ on");
 
-	implementation_details::general_operator(this, a_img, implementation_details::operator_xor);
+	implementation_details::general_operator(*this, a_img, implementation_details::operator_xor);
 }
 
 
@@ -311,9 +311,9 @@ GrayImage operator&(const GrayImage a_first, const GrayImage a_second)
 {
 	GrayImage copy = a_first;
 
-	copy &= a_second;;
+	copy &= a_second;
 
-	return copy; 
+	return copy;
 }
 
 
@@ -321,9 +321,9 @@ GrayImage operator|(const GrayImage a_first, const GrayImage a_second)
 {
 	GrayImage copy = a_first;
 
-	copy |= a_second;;
-	
-	return copy; 
+	copy |= a_second;
+
+	return copy;
 }
 
 
@@ -331,9 +331,9 @@ GrayImage operator^(const GrayImage a_first, const GrayImage a_second)
 {
 	GrayImage copy = a_first;
 
-	copy ^= a_second;;
-	
-	return copy; 
+	copy ^= a_second;
+
+	return copy;
 }
 
 
@@ -474,20 +474,18 @@ GrayImage scale_down_dims(GrayImage a_img, int a_scale)
 void draw_line(GrayImage& a_img, size_t a_firstX, size_t a_firstY, size_t a_secondX, size_t a_secondY, int a_shade)
 {
 	double a = implementation_details::calc_incline(a_firstX, a_firstY, a_secondX, a_secondY);
-	double b = a * a_firstX - a_firstY;
+	double b = a_firstY - a * a_firstX;
 	//y = a * x + b
 
-	for(size_t i = 0; i < a_img.height(); ++i)
+	for(size_t x = 0; x <= a_img.width(); ++x)
 	{
-		for(size_t j = 0; j < a_img.width(); ++j)
+		double y = a * x + b;
+
+		if(y <  a_img.height() && y > 0 && x >= a_firstX && x <= a_secondX)
 		{
-			double y = a * j + b;
-			if(static_cast<size_t>(y) == i )
-			{
-				a_img(i, j) = a_shade;
-			}
+			a_img(x, static_cast<size_t>(y)) = a_shade;
 		}
-	}	
+	}
 }
 
 

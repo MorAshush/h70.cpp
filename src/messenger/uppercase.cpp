@@ -22,4 +22,18 @@ std::string UpperCase::transform(std::string& a_string)
 	return a_string; 
 }
 
+std::string const UpperCase::m_name = "uppercase";
+
+std::string const& UpperCase::name()
+{
+	return m_name;
+}
+
+TextTransformer* create_uppercase()
+{
+	return new UpperCase;
+}
+
+
+
 }//namespace text

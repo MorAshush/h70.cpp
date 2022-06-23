@@ -399,11 +399,11 @@ END_TEST
 
 BEGIN_TEST(draw_line_test1)
 
-	char fileName[] = "tiger.pgm";
+	char fileName[] = "lenna.pgm";
 	gfx::GrayImage img = gfx::load_img(fileName);
 
-	draw_line(img, 0, 0, 200, 300, 0);
-	char copy[] = "draw_line1_test.pgm";
+	draw_line(img, 100, 200, 300, 300, 15);
+	char copy[] = "line_on_lenna.pgm";
 
 	save_img(img, copy);	
 
@@ -416,15 +416,15 @@ BEGIN_TEST(draw_line_test2)
 	char fileName[] = "tiger.pgm";
 	gfx::GrayImage img = gfx::load_img(fileName);
 
-	draw_line(img, 300, 1500, 700, 200, 0);
-	char copy[] = "draw_line2_test.pgm";
+	draw_line(img, 100, 200, 300, 300, 15);
+	char copy[] = "line_on_tiger.pgm";
 
 	save_img(img, copy);	
 
 	ASSERT_PASS();	
 
 END_TEST
-
+/*
 //class operator function &=:
 
 BEGIN_TEST(and_operator_on_self)	
@@ -604,7 +604,7 @@ BEGIN_TEST(not_equal_test_when_false)
 	ASSERT_EQUAL(img1.depth(), img2.depth());	
 
 END_TEST
-/*
+
 //global operator function &:
 
 BEGIN_TEST()	
@@ -692,12 +692,12 @@ BEGIN_SUITE(GrayImage tests run)
 
 	TEST(reduce_color_test)
 
-	TEST(scale_down_dims_test)
+//	TEST(scale_down_dims_test)
 
 	TEST(draw_line_test1)
 
 	TEST(draw_line_test2)
-
+/*
 	TEST(and_operator_on_self)
 	TEST(and_operator_not_on_self)
 
@@ -712,7 +712,7 @@ BEGIN_SUITE(GrayImage tests run)
 
 	TEST(not_equal_test_when_true)
 	TEST(not_equal_test_when_false)
-/*	
+	
 	TEST()
 	TEST()
 	TEST()

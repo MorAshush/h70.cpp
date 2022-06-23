@@ -1,21 +1,13 @@
-#include <string>
-#include <cstddef>
 #include <fstream>
-#include <cstdio>
-#include <iostream>
-
-#include <iostream>
 #include <cassert>
-#include <string>
 
 #include "file_input.hpp"
-#include "text_input.hpp"
 
 
 namespace in
 {
 
-FileInput::FileInput(char* a_fileName)
+FileInput::FileInput(const char* a_fileName)
 : TextInput()
 , m_fileName(a_fileName)
 {

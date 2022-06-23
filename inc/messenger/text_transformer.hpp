@@ -9,11 +9,10 @@ namespace text
 //abstract pure class
 class TextTransformer{
 public:
+    
     virtual ~TextTransformer(); 
 
     virtual std::string transform(std::string& a_string) = 0;
-
-//    virtual std::string retransform(std::string& a_string) = 0;
 };
 
 

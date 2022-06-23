@@ -10,8 +10,9 @@ namespace out
 class TextOutput{
 public:
 
+    virtual ~TextOutput();  
+    
     virtual void send(std::string const& a_text) = 0;
-//  virtual ~TextOutput() = 0;  
 };
 
 }//namespace out

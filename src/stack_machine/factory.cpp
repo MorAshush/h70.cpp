@@ -65,6 +65,12 @@ std::vector<act::Instruction*> Factory::create(std::list<std::string> const& a_i
 				i->set_arg(argValue);
 				instructions.push_back(i);
 			}
+			if(instrutctionName == "JG" || instrutctionName == "JE" || instrutctionName == "JL" || instrutctionName == "JGE" || instrutctionName == "JLE")
+			{
+				act::JmpArg* i = act::create_jmp_arg();
+				i->set_arg(argValue);
+				instructions.push_back(i);
+			}
 
 			++current;
 		}

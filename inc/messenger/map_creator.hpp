@@ -10,7 +10,6 @@
 #include "uppercase.hpp"
 #include "rot13.hpp"
 
-/*tried to only declare the function and dont include all hpp files. but didnt compile*/
 
 namespace text
 {
@@ -32,6 +31,7 @@ public:
 	std::map<std::string, functionPointer> const& get_map() const;
 
 private:
+	
 	std::map<std::string, functionPointer> m_transformers;
 };
 

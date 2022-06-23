@@ -15,8 +15,8 @@ class TransformersFactory
 public:
 	TransformersFactory(std::map<std::string, functionPointer> const& a_transformers);
 
-	text::TextTransformer* create(std::string a_string);
-	std::vector<text::TextTransformer*> create(std::list<std::string> a_namesList);
+	text::TextTransformer* create(std::string const& a_string);
+	std::vector<text::TextTransformer*> create(std::list<std::string> const& a_namesList);
 
 private:
 	std::map<std::string, functionPointer> m_transformers;

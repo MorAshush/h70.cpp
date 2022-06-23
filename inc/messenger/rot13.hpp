@@ -13,13 +13,23 @@ namespace text
 // RotThirteen is-a TextTransformer
 class RotThirteen: public TextTransformer {
 public:
+
+//  virtual ~RotThirteen();  
     RotThirteen();
     
     virtual std::string transform(std::string& a_string);
-//    virtual std::string retransform(std::string& a_string);
 
-//    virtual ~RotThirteen();  
+public:
+    
+    static std::string const& name();
+
+private:
+
+    static const std::string m_name;
 };
+
+TextTransformer* create_rotThirteen();
+
 
 }//namespace text
 

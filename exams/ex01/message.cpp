@@ -2,7 +2,7 @@
 #include <cassert>
 #include <sys/socket.h>
 
-#include "client_socket.hpp"
+//#include "client_socket.hpp"
 
 
 struct message
@@ -12,27 +12,40 @@ struct message
 	double m_altitude;
 };
 
+void send_a_message(struct message const& a_msg/*, TCPClientSocket a_client*/)
+	{
+		char* packet = new char[sizeof(struct message) + 3];
+		char* ptr = packet;
 
-int send_a_message(struct message const& a_msg, TCPClientSocket a_client)
+		*ptr = sizeof(int);
+		++ptr;
+		*ptr = a_msg.m_id;
+		
+		ptr += sizeof(int);
+
+		*ptr = 2 * sizeof(int);
+		++ptr;
+		*ptr = a_msg.m_speed;
+		
+		ptr += 2 * sizeof(int);
+
+		*ptr = 2 * sizeof(int);
+		++ptr;
+		*ptr = a_msg.m_altitude;
+
+		std::cout << packet << '\n';
+
+		/*return a_client.send(packet);*/
+	}
+
+
+int main()
 {
-	char* packet = new char[sizeof(struct message)];
-	char* ptr = packet;
 
-	*ptr = sizeof(int);
-	++ptr;
-	*ptr = a_msg.m_id;
+	struct message a_msg = {56, 36.33, 50.11};
+
 	
-	ptr += sizeof(int);
-
-	*ptr = 2 * sizeof(int);
-	++ptr;
-	*ptr = a_msg.m_speed;
-	
-	ptr += 2 * sizeof(int);
-
-	*ptr = 2 * sizeof(int);
-	++ptr;
-	*ptr = a_msg.m_altitude;
-
-	return a_client.send(packet);
+	send_a_message(a_msg);
+	return 0;
 }
+

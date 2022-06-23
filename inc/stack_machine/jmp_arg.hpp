@@ -24,7 +24,7 @@ public:
   
 };
 
-Instruction* create_jmp_arg();
+JmpArg* create_jmp_arg();
 
 }//namespace act
 

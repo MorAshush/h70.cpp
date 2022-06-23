@@ -13,9 +13,6 @@ public:
 	Messenger(in::TextInput& a_inputer, text::TextTransformer& a_transformer, out::TextOutput& a_outputer);
 
 	void execute();
-//	void recieve_text();
-//	void encrypt_text(std::string& a_string);
-//	void send_text();
 
 private:
 

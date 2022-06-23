@@ -10,7 +10,7 @@ TransformersFactory::TransformersFactory(std::map<std::string, functionPointer> 
 
 }
 
-text::TextTransformer* TransformersFactory::create(std::string a_string)
+text::TextTransformer* TransformersFactory::create(std::string const& a_string)
 {
 	std::map<std::string, functionPointer>::iterator transformerCreatorPtr;
 	transformerCreatorPtr = m_transformers.find(a_string);
@@ -24,15 +24,22 @@ text::TextTransformer* TransformersFactory::create(std::string a_string)
 	
 }
 
-std::vector<text::TextTransformer*> TransformersFactory::create(std::list<std::string> a_namesList)
+std::vector<text::TextTransformer*> TransformersFactory::create(std::list<std::string> const& a_namesList)
 {
 	std::vector<text::TextTransformer*> transformers;
 	transformers.reserve(a_namesList.size());
 
-	std::list<std::string>::iterator currentName = a_namesList.begin();
-	std::list<std::string>::iterator end = a_namesList.end();
+	std::list<std::string>::const_iterator currentName = a_namesList.begin();
+	std::list<std::string>::const_iterator end = a_namesList.end();
 	while(currentName != end)
 	{
+		text::TextTransformer* p = create(*currentName);
+		if(p)
+		{
+			transformers.push_back(p);
+		}
+
+		/*
 		std::map<std::string, functionPointer>::iterator transformerCreatorPtr;
 
 		transformerCreatorPtr = m_transformers.find(*currentName);
@@ -41,7 +48,7 @@ std::vector<text::TextTransformer*> TransformersFactory::create(std::list<std::s
 		{
 			transformers.push_back(transformerCreatorPtr->second());
 		}
-
+*/
 		++currentName;
 	}
 

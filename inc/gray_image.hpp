@@ -36,7 +36,9 @@ class GrayImage
 
 		int& at(size_t a_row, size_t a_column); //returns a specified pixel by refernce
 		int& operator()(size_t a_row, size_t a_column); //returns a specified pixel by refernce
+//		int& operator()(size_t a_row, size_t a_column) const; //returns a specified pixel by refernce
 		int* operator[](size_t a_row); //returns a ptr to the head of specified row
+//		int* operator[](size_t a_row) const;
 		void operator&=(const GrayImage a_img);
 		void operator|=(const GrayImage a_img);
 		void operator^=(const GrayImage a_img);
@@ -44,8 +46,6 @@ class GrayImage
 
 	private:
 		const static size_t DEFAULT_DEPTH = 15;
-		const static size_t MAX_WIDTH = 2000;
-		const static size_t MAX_HEIGHT = 2000;
 		size_t m_depth;
 		size_t m_width;
 		size_t m_height;

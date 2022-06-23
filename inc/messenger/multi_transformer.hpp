@@ -17,12 +17,10 @@ public:
     MultiTransformer(std::vector<TextTransformer*> const& a_transformers);
     virtual std::string transform(std::string& a_string);
 
-//    ~MultiTransformer(); compiler will do
+    ~MultiTransformer();
 
 private:
-	void extract_transformers(std::string const& a_string);
-	TextTransformer* get_transformer(std::string const& a_string);
-private:
+    
     std::vector<TextTransformer*> m_transformers;  
 };
 

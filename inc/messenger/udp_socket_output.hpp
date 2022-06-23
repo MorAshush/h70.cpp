@@ -26,6 +26,7 @@ private:
 };
 
 
+OutputUDPsocket* create_udpSocket_outputer(std::string a_ipPortString);
 
 
 
