@@ -1,31 +1,43 @@
 #include "functions.hpp"
+#include "stack.hpp"
+#include "controller.hpp"
+#include "memory.hpp"
 
 namespace firmware
 {
-	void push(container::Stack& a_stack, mng::Memory& a_memory, mng::Controller& a_controller)
+	void push(Bus& a_bus)
 	{
-	    size_t currentIp = a_controller.ip();
-	    unsigned long arg = a_memory[++currentIp];
-	    a_stack.push(arg); 
-	    ++a_controller;
-	    ++a_controller;
+		container::Stack* stack = a_bus.numbers_stack();	    
+	    mng::Controller* controller = a_bus.controller();
+	    mng::Memory* memory = a_bus.memory();
+
+	    size_t currentIp = controller->ip();
+	    
+	    unsigned long arg = memory->operator[](++currentIp);
+	    stack->push(arg);
+
+	    ++controller;
+	    ++controller;
 	}
 
-	void add(container::Stack& a_stack)
+	void add(Bus& a_bus)
 	{
-		a_stack.push(a_stack.pop() + a_stack.pop());
+		container::Stack* stack = a_bus.numbers_stack();
+		stack->push(stack->pop() + stack->pop());
 	}
 
-	void sub(container::Stack& a_stack)
+	void sub(Bus& a_bus)
 	{
-		a_stack.push(a_stack.pop() - a_stack.pop());
+		container::Stack* stack = a_bus.numbers_stack();		
+		stack->push(stack->pop() - stack->pop());
 	}
 
-	void dup(container::Stack& a_stack)
+	void dup(Bus& a_bus)
 	{
-		unsigned long top = a_stack.pop();
-		a_stack.push(top);
-		a_stack.push(top);
+		container::Stack* stack = a_bus.numbers_stack();		
+		unsigned long top = stack->pop();
+		stack->push(top);
+		stack->push(top);
 	}
 
 }

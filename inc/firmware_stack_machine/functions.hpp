@@ -1,17 +1,16 @@
 #ifndef FUNCTIONS_HPP
 #define FUNCTIONS_HPP
 
-#include "controller.hpp"
-#include "stack.hpp"
+#include "bus.hpp"
 
 
 namespace firmware
 {
 
-	void push(container::Stack& a_stack, mng::Memory& a_memory, mng::Controller& a_controller);
-	void add(container::Stack& a_stack);
-	void sub(container::Stack& a_stack);
-	void dup(container::Stack& a_stack);
+	void push(Bus& a_bus);
+	void add(Bus& a_bus);
+	void sub(Bus& a_bus);
+	void dup(Bus& a_bus);
 
 
 }//namespace firmware
