@@ -14,11 +14,12 @@ public:
     Parser(Mapper const& a_mapper);
 
     std::list<std::string> const& parse(std::string const& a_string, char a_delimeter);
-    std::vector<int> const& compile();
+    std::vector<opCode> const& compile();
 
 private:
     Mapper m_mapper;
     std::list<std::string> m_wordsList;
+    std::vector<opCode> m_code;
 };
 
 

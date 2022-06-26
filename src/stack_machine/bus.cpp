@@ -1,5 +1,5 @@
 #include "bus.hpp"
-#include "stack_template.hpp"
+#include "stack.hpp"
 #include "memory.hpp"
 #include "controller.hpp"
 #include "instruction_base.hpp"
@@ -15,7 +15,7 @@ Bus::~Bus()
 
 }
 
-void Bus::set_bus(container::Stack<unsigned long>* a_numStack, container::Stack<unsigned long>* a_ptrStack, mng::Memory* a_memory, mng::Controller* a_controller)
+void Bus::set_bus(container::Stack* a_numStack, container::Stack* a_ptrStack, mng::Memory* a_memory, mng::Controller* a_controller)
 {
 	m_numStack = a_numStack;
 	m_ptrStack = a_ptrStack;
@@ -23,12 +23,12 @@ void Bus::set_bus(container::Stack<unsigned long>* a_numStack, container::Stack<
 	m_controller = a_controller;
 }
 
-container::Stack<unsigned long>* Bus::numbers_stack() const
+container::Stack* Bus::numbers_stack() const
 {
 	return m_numStack;
 }
 
-container::Stack<unsigned long>* Bus::pointers_stack() const
+container::Stack* Bus::pointers_stack() const
 {
 	return m_ptrStack;
 }

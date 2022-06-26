@@ -35,10 +35,8 @@ std::list<std::string> const& Parser::parse(std::string const& a_string, char a_
 	return m_wordsList;
 }
 
-std::vector<int> const& Parser::compile()
+std::vector<opCode> const& Parser::compile()
 {
-	std::vector<opCode> code;
-
 	auto itName = m_wordsList.begin();
 	auto listEnd = m_wordsList.end();
 
@@ -49,18 +47,18 @@ std::vector<int> const& Parser::compile()
 		if(m_mapper.find(*itName))
 		{
 			std::string name = *itName;
-			code.push_back(opCodesMap[name]);
+			m_code.push_back(opCodesMap[name]);
 
 			if((*itName == "PUSH") || (*itName == "PUSHIP"))
 			{
 				++itName;
 				name = *itName;
-				if(isalpha(name))
+				if(!isdigit(name[0]))
 				{
 					throw expt::MissingArgErr("Parser::compile", "missing argument for instruction");
 				}
 
-				code.push_back(stoi(name));
+				m_code.push_back(static_cast<opCode>(stoi(name, nullptr)));
 			}
 		}
 		else
@@ -71,6 +69,8 @@ std::vector<int> const& Parser::compile()
 
 		++itName;
 	}
+
+	return m_code;
 
 }
 
