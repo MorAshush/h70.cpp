@@ -21,3 +21,7 @@ private:
     std::list<std::string> m_wordsList;
     std::vector<int64_t> m_code;
 };
+
+
+
+#endif //PARSER_HPP
