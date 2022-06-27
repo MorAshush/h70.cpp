@@ -6,29 +6,29 @@
 
 #include "bus.hpp"
 
-using codeFunc = std::function<void()>;
-
-enum class opCode
+enum opCode : int64_t
 {
 	PUSH,
 	ADD,
 	SUB,
-	DUP
+	DUP,
+	HLT
 };
 
 class Mapper
 {
 
 public:
-	Mapper(Bus const& a_bus);
+	Mapper(Bus& a_bus);
 
 	bool find(std::string a_instructionName);
+
 	std::map<std::string, opCode> const& opcodes_map();
-	std::map<opCode, codeFunc> const& functions_map();
+	std::map<opCode, std::function<void()>> const& functions_map();
 
 private:
 	std::map<std::string, opCode> m_opCodes;
-	std::map<opCode, codeFunc> m_codeFunctions;
+	std::map<opCode, std::function<void()>> m_codeFunctions;
 };
 
 

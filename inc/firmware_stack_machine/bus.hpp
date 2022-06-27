@@ -34,12 +34,16 @@ public:
 	mng::Memory* memory() const;
 	mng::Controller* controller() const;
 
+	void stop();
+
 private:
 	container::Stack* m_numStack;
 	container::Stack* m_ptrStack;
 	mng::Memory* m_memory;
 	mng::Controller* m_controller;
+	bool m_is_active;
 };
+
 
 
 #endif//BUS_HPP

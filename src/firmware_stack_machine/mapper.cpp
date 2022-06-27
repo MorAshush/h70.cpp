@@ -2,24 +2,38 @@
 
 #include "mapper.hpp"
 #include "functions.hpp"
+#include "stack.hpp"
+#include "controller.hpp"
+#include "memory.hpp"
 
-Mapper::Mapper(Bus const& a_bus)
+Mapper::Mapper(Bus& a_bus)
 {
 /*	container::Stack* s = a_bus.numbers_stack();
 	mng::Controller* c = a_bus.controller();
 	mng::Memory* m = a_bus.memory();
 */
-	m_opCodes["PUSH"] = opCode::PUSH;
-	m_opCodes["ADD"] = opCode::ADD;
-	m_opCodes["SUB"] = opCode::SUB;
-	m_opCodes["DUP"] = opCode::DUP;
+	m_opCodes["PUSH"] = PUSH;
+	m_opCodes["ADD"] = ADD;
+	m_opCodes["SUB"] = SUB;
+	m_opCodes["DUP"] = DUP;
+	m_opCodes["HLT"] = HLT;
 
-/*
-//	m_codeFunctions[opCode::PUSH] = std::bind(firmware::push, std::ref(s), std::ref(m), std::ref(c));
-	m_codeFunctions[opCode::ADD] = std::bind(firmware::add, std::ref(s));
-	m_codeFunctions[opCode::SUB] = std::bind(firmware::sub, std::ref(s));
-	m_codeFunctions[opCode::DUP] = std::bind(firmware::dup, std::ref(s));
-*/	
+
+	m_codeFunctions[PUSH] = std::bind(firmware::push, std::ref(a_bus));
+
+	m_codeFunctions[ADD] = [&a_bus]()
+	{
+		container::Stack* stack = a_bus.numbers_stack();
+		stack->push(stack->pop() + stack->pop());
+		
+		mng::Controller* controller = a_bus.controller();
+		++controller;
+	};
+
+	m_codeFunctions[SUB] = std::bind(firmware::sub, std::ref(a_bus));
+	m_codeFunctions[DUP] = std::bind(firmware::dup, std::ref(a_bus));
+	m_codeFunctions[HLT] = [](){exit(0);};
+	
 }
 
 
@@ -40,8 +54,7 @@ std::map<std::string, opCode> const& Mapper::opcodes_map()
 	return m_opCodes;
 }
 
-std::map<opCode, codeFunc> const& Mapper::functions_map()
+std::map<opCode, std::function<void()>> const& Mapper::functions_map()
 {
 	return m_codeFunctions;
 }
-
