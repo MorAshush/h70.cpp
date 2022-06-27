@@ -24,12 +24,18 @@ namespace firmware
 	{
 		container::Stack* stack = a_bus.numbers_stack();
 		stack->push(stack->pop() + stack->pop());
+		
+		mng::Controller* controller = a_bus.controller();
+		++controller;
 	}
 
 	void sub(Bus& a_bus)
 	{
 		container::Stack* stack = a_bus.numbers_stack();		
 		stack->push(stack->pop() - stack->pop());
+		
+		mng::Controller* controller = a_bus.controller();
+		++controller;
 	}
 
 	void dup(Bus& a_bus)
@@ -38,6 +44,13 @@ namespace firmware
 		unsigned long top = stack->pop();
 		stack->push(top);
 		stack->push(top);
+		
+		mng::Controller* controller = a_bus.controller();
+		++controller;
 	}
 
+	void hlt()
+	{
+		exit(0);
+	}
 }

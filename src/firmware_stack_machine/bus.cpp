@@ -5,6 +5,7 @@
 
 
 Bus::Bus()
+: m_is_active(1)
 {
 
 }
@@ -40,4 +41,9 @@ mng::Memory* Bus::memory() const
 mng::Controller* Bus::controller() const
 {
 	return m_controller;
+}
+
+void Bus::stop()
+{
+	m_is_active = 0;
 }

@@ -11,6 +11,7 @@ namespace firmware
 	void add(Bus& a_bus);
 	void sub(Bus& a_bus);
 	void dup(Bus& a_bus);
+	void hlt();
 
 
 }//namespace firmware

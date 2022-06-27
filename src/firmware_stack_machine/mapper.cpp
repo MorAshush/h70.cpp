@@ -2,6 +2,9 @@
 
 #include "mapper.hpp"
 #include "functions.hpp"
+#include "stack.hpp"
+#include "controller.hpp"
+#include "memory.hpp"
 
 Mapper::Mapper(Bus& a_bus)
 {
@@ -13,12 +16,23 @@ Mapper::Mapper(Bus& a_bus)
 	m_opCodes["ADD"] = ADD;
 	m_opCodes["SUB"] = SUB;
 	m_opCodes["DUP"] = DUP;
+	m_opCodes["HLT"] = HLT;
 
 
 	m_codeFunctions[PUSH] = std::bind(firmware::push, std::ref(a_bus));
-	m_codeFunctions[ADD] = std::bind(firmware::add, std::ref(a_bus));
+
+	m_codeFunctions[ADD] = [&a_bus]()
+	{
+		container::Stack* stack = a_bus.numbers_stack();
+		stack->push(stack->pop() + stack->pop());
+		
+		mng::Controller* controller = a_bus.controller();
+		++controller;
+	};
+
 	m_codeFunctions[SUB] = std::bind(firmware::sub, std::ref(a_bus));
 	m_codeFunctions[DUP] = std::bind(firmware::dup, std::ref(a_bus));
+	m_codeFunctions[HLT] = [](){exit(0);};
 	
 }
 

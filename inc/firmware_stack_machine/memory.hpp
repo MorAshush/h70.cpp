@@ -16,9 +16,9 @@ public:
     
     size_t size() const;
 
-    void set_instructions(std::vector<unsigned long> const& a_code);
-    std::vector<unsigned long> const& get_instructions() const;
-    unsigned long operator[](size_t a_address) const;
+    void set_instructions(std::vector<int64_t> const& a_code);
+    std::vector<int64_t> const& get_instructions() const;
+    int64_t operator[](size_t a_address) const;
 
 //    std::function<void()> const& instruction_func(size_t a_address) const;
 
@@ -28,7 +28,7 @@ public:
     void set_data(size_t a_address, unsigned long a_data);
 
 private:
-    std::vector<unsigned long> m_code;
+    std::vector<int64_t> m_code;
     std::vector<unsigned long> m_dataSegment;
 };
 

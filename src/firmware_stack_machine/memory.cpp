@@ -19,17 +19,17 @@ Memory::~Memory()
 
 }
 
-void Memory::set_instructions(std::vector<unsigned long> const& a_code)
+void Memory::set_instructions(std::vector<int64_t> const& a_code)
 {
     m_code = a_code;
 }
 
-std::vector<unsigned long> const& Memory::get_instructions() const
+std::vector<int64_t> const& Memory::get_instructions() const
 {
     return m_code;
 }
 
-unsigned long Memory::operator[](size_t a_address) const
+int64_t Memory::operator[](size_t a_address) const
 {
     if(a_address >= m_code.size())
     {

@@ -31,11 +31,11 @@ std::list<std::string> const& Parser::parse(std::string const& a_string, char a_
 			word = "";
 		}
 	}
-
+	m_wordsList.push_back(word);
 	return m_wordsList;
 }
 
-std::vector<opCode> const& Parser::compile()
+std::vector<int64_t> const& Parser::compile()
 {
 	auto itName = m_wordsList.begin();
 	auto listEnd = m_wordsList.end();
@@ -47,7 +47,7 @@ std::vector<opCode> const& Parser::compile()
 		if(m_mapper.find(*itName))
 		{
 			std::string name = *itName;
-			m_code.push_back(opCodesMap[name]);
+			m_code.push_back(static_cast<int64_t>(opCodesMap[name]));
 
 			if((*itName == "PUSH") || (*itName == "PUSHIP"))
 			{
@@ -58,7 +58,7 @@ std::vector<opCode> const& Parser::compile()
 					throw expt::MissingArgErr("Parser::compile", "missing argument for instruction");
 				}
 
-				m_code.push_back(static_cast<opCode>(stoi(name, nullptr)));
+				m_code.push_back(static_cast<int64_t>(stoi(name, nullptr)));
 			}
 		}
 		else

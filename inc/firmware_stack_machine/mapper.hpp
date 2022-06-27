@@ -6,12 +6,13 @@
 
 #include "bus.hpp"
 
-enum opCode
+enum opCode : int64_t
 {
 	PUSH,
 	ADD,
 	SUB,
-	DUP
+	DUP,
+	HLT
 };
 
 class Mapper
