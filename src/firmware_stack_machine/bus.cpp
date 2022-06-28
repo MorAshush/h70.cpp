@@ -47,3 +47,8 @@ void Bus::stop()
 {
 	m_is_active = 0;
 }
+
+bool Bus::is_active() const
+{
+	return m_is_active;
+}

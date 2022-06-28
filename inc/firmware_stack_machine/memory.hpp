@@ -20,7 +20,7 @@ public:
     std::vector<int64_t> const& get_instructions() const;
     int64_t operator[](size_t a_address) const;
 
-//    std::function<void()> const& instruction_func(size_t a_address) const;
+    int64_t const& instruction_opcode(size_t a_address) const;
 
 //    size_t instruction_address(std::function<void()> a_functionPtr);
 

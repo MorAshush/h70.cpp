@@ -25,31 +25,31 @@ void VirtualMachine::run()
 	Bus bus;
 	bus.set_bus(m_numStack, m_ptrStack, m_memory, m_controller);
 	Mapper maps(bus);
+	auto operationsMap = maps.functions_map();
 
 	size_t counter = 1;
-	for(size_t i = 0; i < 9; ++i)
+	while(bus.is_active())
 	{
-		auto codeVec = m_memory->get_instructions();
-		auto operationsMap = maps.functions_map();
-
-		for(auto it : codeVec)
+		size_t address = bus.controller()->ip();
+		int64_t	codeValue = m_memory->instruction_opcode(address);	
+		try
 		{
-			try
-			{
-				std::cout << "instruction number: " << counter << '\n';
+			std::cout << "instruction number: " << counter << '\n';
+			std::cout << "instruction address: " << address << '\n';
+			std::cout << "instruction opCode: " << codeValue << '\n';
 
-				operationsMap[static_cast<opCode>(it)]();
+			operationsMap[static_cast<opCode>(codeValue)]();
 
-				m_numStack->print();
-				std::cout << '\n';
-			}
-			catch(const expt::Error& e)
-			{
-				std::cout << e << '\n';
-				break;
-			}
-			++counter;
+			m_numStack->print();
+			std::cout << '\n';
 		}
+		catch(const expt::Error& e)
+		{
+			std::cout << e << '\n';
+			break;
+		}
+		++counter;
+		
 	}
 }
 

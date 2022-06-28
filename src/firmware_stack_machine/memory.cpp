@@ -42,17 +42,17 @@ int64_t Memory::operator[](size_t a_address) const
     return m_code[a_address];
 }
 
-/*
-std::function<void()> const& instruction_func(size_t a_address) const
+int64_t const& Memory::instruction_opcode(size_t a_address) const
 {
-    if(a_address >= m_code->size())
+    if(a_address >= m_code.size())
     {
-        throw expt::SegmentationFaultErr("instruction_func", "invalid memory access. out of range");
+        throw expt::SegmentationFaultErr("instruction_opcode", "invalid memory access. out of range");
     }
 
     return m_code[a_address];
 }
 
+/*
 
 size_t Memory::instruction_address(std::function<void()>* a_functionPtr)
 {

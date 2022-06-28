@@ -18,7 +18,6 @@ int main()
 	container::Stack stNum(10);
 	container::Stack stPtr(10);
 
-	stNum.push(10);
 	
 	mng::Controller cn;
 
@@ -36,19 +35,22 @@ int main()
 	std::string programString = fileLoader.load();
 	std::cout << programString << '\n';
 */
-	std::string s = "DUP\n"
-					"DUP\n"
-					"DUP\n"
-					"DUP\n"
-					"DUP\n"
+	std::string s = "PUSH 10\n"
+					"PUSH 20\n"
+					"PUSH 30\n"
+					"PUSH 40\n"
+					"PUSH 50\n"
 					"ADD\n"
 					"ADD\n"
 					"SUB\n"
+					"AND\n"
 					"HLT";
 
 	std::list<std::string> actionsNames = p.parse(s, ' ');
 	auto it = actionsNames.begin();
 	auto end = actionsNames.end();
+
+	std::cout << "list of names: \n";
 	while(it != end)
 	{
 		std::cout << *it << " ,";
@@ -67,6 +69,13 @@ int main()
 		std::cout << e << "\nexiting program...\n";
 		exit(EXIT_FAILURE);
 	}
+
+	std::cout << "code vector is: \n";
+	for(auto i : codeVec)
+	{
+		std::cout << i << ' ';
+	}
+	std::cout << '\n';
 
 	me.set_instructions(codeVec);
 

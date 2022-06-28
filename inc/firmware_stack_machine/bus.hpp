@@ -35,6 +35,7 @@ public:
 	mng::Controller* controller() const;
 
 	void stop();
+	bool is_active() const;
 
 private:
 	container::Stack* m_numStack;
