@@ -485,13 +485,13 @@ bool operator<(const Rational a_first, const Rational a_second)
     return !(substruct_two_rationals(a_first, a_second)).is_positive(); 
 }
 
-/*
+
 bool operator<=(const Rational a_first, const Rational a_second)
 {
-    
+    return !(a_first > a_second);
 
 }
-*/
+
 bool operator>(const Rational a_first, const Rational a_second)
 {
     if(a_first.is_positive() && !a_second.is_positive())
