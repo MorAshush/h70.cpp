@@ -7,32 +7,26 @@
 
 size_t partition(std::vector<std::unique_ptr<algebra::Rational>>& a_vector, size_t a_left, size_t a_right)
 {
-	std::unique_ptr<algebra::Rational> pivot = std::move(a_vector[a_right]);
+	size_t pivotIndex = a_right;
 
 	while(a_left < a_right)
 	{
-		algebra::Rational l = *a_vector[a_left];
-
-		algebra::Rational r = *a_vector[a_right];
-
-		algebra::Rational p = *pivot;
-
-		if((l > p) && (r <= p))
+		if((*a_vector[a_left] > *a_vector[pivotIndex]) && (*a_vector[a_right] <= *a_vector[pivotIndex]))
 		{
 			a_vector[a_left].swap(a_vector[a_right]);
 		}
 
-		if(l <= p)
+		if(*a_vector[a_left] <= *a_vector[pivotIndex])
 		{
 			++a_left;
 		}
 
-		if(r > p)
+		if(*a_vector[a_right] > *a_vector[pivotIndex])
 		{
 			--a_right;
 		}
 
-		a_vector[a_right].swap(pivot);
+		a_vector[a_right].swap(a_vector[pivotIndex]);
 	}
 
 	return a_right;
@@ -40,7 +34,8 @@ size_t partition(std::vector<std::unique_ptr<algebra::Rational>>& a_vector, size
 
 void quick_sort(std::vector<std::unique_ptr<algebra::Rational>>& a_vector, size_t a_left, size_t a_right)
 {
-	if(a_left >= a_right){
+	if(a_left >= a_right)
+	{
 		return;
 	}
 
@@ -49,10 +44,17 @@ void quick_sort(std::vector<std::unique_ptr<algebra::Rational>>& a_vector, size_
 	quick_sort(a_vector, pivot + 1, a_right);
 }
 
-
-void quick_sort(std::vector<std::unique_ptr<algebra::Rational>>& a_vector)
+void vector_print(std::vector<std::unique_ptr<int>> const& a_vector)
 {
-	quick_sort(a_vector, 0, a_vector.size() - 1);
+	size_t size = a_vector.size();
+
+	for(size_t i = 0; i < size; ++i)
+	{
+		auto const& element = a_vector[i];
+		std::cout << *element << " ,";
+	}
+
+	std::cout << '\n';
 }
 
 void vector_print(std::vector<std::unique_ptr<algebra::Rational>> const& a_vector)
@@ -63,6 +65,7 @@ void vector_print(std::vector<std::unique_ptr<algebra::Rational>> const& a_vecto
 	{
 		auto const& rational = a_vector[i];
 		rational->print();
+		std::cout << " ,";
 	}
 
 	std::cout << '\n';
@@ -71,7 +74,7 @@ void vector_print(std::vector<std::unique_ptr<algebra::Rational>> const& a_vecto
 
 int main()
 {
-	std::vector<std::unique_ptr<algebra::Rational>> vec;
+/*	std::vector<std::unique_ptr<algebra::Rational>> vec;
 
 	std::unique_ptr<algebra::Rational> p1(new algebra::Rational(10, 2));
 	std::unique_ptr<algebra::Rational> p2(new algebra::Rational(2, 6));
@@ -89,15 +92,14 @@ int main()
 	vec.push_back(std::move(p3));
 	vec.push_back(std::move(p4));
 
-
-/*	std::vector<std::unique_ptr<algebra::Rational>> vec;
-
-	for(size_t i = 0; i < 10; ++i)
-	{
-		vec.push_back( std::unique_ptr<algebra::Rational>(new algebra::Rational(rand() % 20, rand() % 30)) );
-		
-	}
 */
+
+	std::vector<std::unique_ptr<algebra::Rational>> vec;
+	for (int i = 0; i < 20; ++i)
+	{
+		vec.push_back(std::unique_ptr<algebra::Rational>(new algebra::Rational(rand() % 10, rand() % 10 + 1)));
+	}
+
 	std::cout << "before\n";
 	vector_print(vec);
 

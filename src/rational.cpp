@@ -138,7 +138,7 @@ bool Rational::is_positive() const
  * @param a_rational to add to self 
  * @return non
  */
-    void Rational::add(Rational a_rational) 
+    void Rational::add(Rational const& a_rational) 
     {
         int numer2 = a_rational.m_numerator;
         int denom2 = a_rational.m_denumerator;
