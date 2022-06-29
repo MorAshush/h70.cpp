@@ -7,7 +7,7 @@ namespace algebra
 class Rational 
 {    
     public:
-        Rational(int a_num);
+        explicit Rational(int a_num);
         Rational(int a_num, int a_denumerator);
 
         void print() const;

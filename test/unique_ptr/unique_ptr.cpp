@@ -40,9 +40,7 @@ size_t partition(std::vector<std::unique_ptr<algebra::Rational>>& a_vector, size
 
 void quick_sort(std::vector<std::unique_ptr<algebra::Rational>>& a_vector, size_t a_left, size_t a_right)
 {
-	size_t n = a_vector.size();
-	if(!n || n == 1)
-	{
+	if(a_left >= a_right){
 		return;
 	}
 
@@ -51,14 +49,20 @@ void quick_sort(std::vector<std::unique_ptr<algebra::Rational>>& a_vector, size_
 	quick_sort(a_vector, pivot + 1, a_right);
 }
 
+
+void quick_sort(std::vector<std::unique_ptr<algebra::Rational>>& a_vector)
+{
+	quick_sort(a_vector, 0, a_vector.size() - 1);
+}
+
 void vector_print(std::vector<std::unique_ptr<algebra::Rational>> const& a_vector)
 {
 	size_t size = a_vector.size();
 
 	for(size_t i = 0; i < size; ++i)
 	{
-		algebra::Rational rational = *a_vector[i];
-		rational.print();
+		auto const& rational = a_vector[i];
+		rational->print();
 	}
 
 	std::cout << '\n';
