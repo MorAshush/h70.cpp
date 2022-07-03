@@ -57,6 +57,11 @@ namespace net
 	{
 		std::cout << "connecting to server\n";
 
+/*		if(bind(m_socket, (struct sockaddr*)&m_sin, sizeof(m_sin)) < 0)
+		{
+			std::cout << "client bind failed\n";
+		}
+*/
 		int status = connect(m_socket, (struct sockaddr*)&m_sin, sizeof(m_sin));
 		if(status < 0)
 		{

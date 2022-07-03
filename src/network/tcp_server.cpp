@@ -119,7 +119,6 @@ void TCPServer::server_run()
 		tempReadfds = masterReadfds;
 
 		int maxSockets = 1024;
-		std::cout << "line 155\n";
 		int activity = select(maxSockets, &tempReadfds, nullptr, nullptr, nullptr);
 		if(activity < 0)
 		{
