@@ -36,11 +36,11 @@ std::string TCPServer::server_recieve(int a_socket)
 
 	if(readBytes < 0)
 	{
-		//throw recieve failed;
+		std::cout << "server recieve failed\n";
 	}
 	else if(readBytes == 0)
 	{
-		//throw connection closed
+		std::cout << "socket closed\n";
 	}
 
 	buffer[readBytes] = '\0';
@@ -68,37 +68,6 @@ void TCPServer::CheckNewClients(fd_set& a_master)
 	
 	FD_SET(socket, &a_master);
 }
-/**
-void TCPServer::CheckCurClients(fd_set& a_master ,fd_set& a_temp, int a_activityVal)
-{
-	for(auto cs : m_clients)
-	{
-		int socket = cs.get_client_socket();
-		if(FD_ISSET(socket, &a_temp))
-		{
-			try
-			{
-				std::string msg = server_recieve(socket);
-				std::cout << "msg from client socket: " << socket << '\n' << msg << '\n';
-			}
-			catch(...) //exception of closed socket or recv failed
-			{
-				auto next = std::next(cs);
-				m_clients.remove(cs);
-				FD_CLR(socket, &a_master);
-				cs = std::move(next);
-			}
-
-			--a_activityVal;
-		}
-
-		if(a_activityVal == 0)
-		{
-			break;
-		}
-	}
-}
-*/
 
 void TCPServer::CheckCurClients(fd_set& a_master ,fd_set& a_temp, int a_activityVal)
 {

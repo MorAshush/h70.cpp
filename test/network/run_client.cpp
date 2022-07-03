@@ -11,7 +11,7 @@
 int main()
 {
 	char ip[] = "127.0.0.1";
-	char port[] = "5555";
+	char port[] = "8888";
 
 	net::TCPClientSocket cs(ip, port);
 	cs.client_connect();

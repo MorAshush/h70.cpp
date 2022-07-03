@@ -1,11 +1,15 @@
-#include "server_socket.hpp"
 #include <sys/socket.h> /*AF_INE def*/
 #include <arpa/inet.h>  /*htons*/
 #include <unistd.h>     /*close*/
 #include <stdlib.h>     /*size_t*/
+#include <stdio.h>
 #include <errno.h>      
 #include <fcntl.h>      /*fcntl*/
 #include <sys/select.h> /*select*/
+#include <iostream>
+
+#include "server_socket.hpp"
+
 
 namespace net
 {
@@ -16,14 +20,14 @@ TCPServerSocket::TCPServerSocket()
 
 	if(sock < 0)
 	{
-		//throw socket_initialization failed
+		std::cout << "server socket ctor failed\n";
 	}
 
 	m_socket = sock;
 	int status = SetToNoBlocksMode(m_socket);
 	if(status < 0)
 	{
-		//throw no block failed;
+		std::cout << "noblock failed\n";
 	}
 }
 
@@ -50,20 +54,21 @@ void TCPServerSocket::ss_bind(struct sockaddr_in a_sin)
 
 	if(setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &optVal, sizeof(optVal)) < 0)
 	{
-		//throw reuse of socket failed;
+		std::cout << "reuse of socket failed\n";
 	}
 
 	if(bind(m_socket, (struct sockaddr*)&a_sin, sizeof(a_sin)) < 0)
 	{
-		//throw bind failed;
+		std::cout << "server bind failed\n";
 	}
+	perror("bind");
 }
 
 void TCPServerSocket::ss_listen()
 {
 	if(listen(m_socket, 15) < 0)
 	{
-		//throw listen failed;
+		std::cout << "listening failed\n";
 	}
 }
 
@@ -76,7 +81,7 @@ TCPClientSocket TCPServerSocket::ss_accept()
 
 	if(clientSocket < 0)
 	{
-		//throw client acception failed;
+		std::cout << "client accept failed\n";
 	}
 
 	return TCPClientSocket(clientSocket);
@@ -93,12 +98,12 @@ int TCPServerSocket::SetToNoBlocksMode(int a_socket)
 
 	if (-1 == (flags = fcntl(m_socket, F_GETFL)))
 	{
-		//throw error at fcntl
+		std::cout << "noblock failed\n";
 	}
 
 	if(-1 == fcntl(m_socket, F_SETFL, flags | O_NONBLOCK))
 	{
-		//throw error at fcntl
+		std::cout << "noblock failed\n";
 	}
 
 	return 0;
