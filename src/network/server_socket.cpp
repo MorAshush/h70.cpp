@@ -2,6 +2,7 @@
 #include <arpa/inet.h>  /*htons*/
 #include <unistd.h>     /*close*/
 #include <stdlib.h>     /*size_t*/
+#include <cstring>      /*memset*/
 #include <stdio.h>
 #include <errno.h>      
 #include <fcntl.h>      /*fcntl*/
@@ -14,7 +15,7 @@
 namespace net
 {
 
-TCPServerSocket::TCPServerSocket()
+TCPServerSocket::TCPServerSocket(const char* a_address, const char* a_port)
 {
 	int sock = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -24,11 +25,21 @@ TCPServerSocket::TCPServerSocket()
 	}
 
 	m_socket = sock;
+
 	int status = SetToNoBlocksMode(m_socket);
 	if(status < 0)
 	{
 		std::cout << "noblock failed\n";
 	}
+
+	memset(&m_sin, 0, sizeof(m_sin));
+
+	m_sin.sin_family = AF_INET;
+    m_sin.sin_addr.s_addr = inet_addr(a_address); 
+    m_sin.sin_port = htons(atoi(a_port));
+
+    bind(m_sin);
+    listen();
 }
 
 TCPServerSocket::TCPServerSocket(TCPServerSocket&& a_other)
@@ -48,7 +59,7 @@ TCPServerSocket::~TCPServerSocket()
 	close(m_socket);
 }
 
-void TCPServerSocket::ss_bind(struct sockaddr_in a_sin)
+void TCPServerSocket::bind(struct sockaddr_in a_sin)
 {
 	int optVal = 1;
 
@@ -57,27 +68,27 @@ void TCPServerSocket::ss_bind(struct sockaddr_in a_sin)
 		std::cout << "reuse of socket failed\n";
 	}
 
-	if(bind(m_socket, (struct sockaddr*)&a_sin, sizeof(a_sin)) < 0)
+	if(::bind(m_socket, (struct sockaddr*)&a_sin, sizeof(a_sin)) < 0)
 	{
 		std::cout << "server bind failed\n";
 	}
 	perror("bind");
 }
 
-void TCPServerSocket::ss_listen()
+void TCPServerSocket::listen()
 {
-	if(listen(m_socket, 15) < 0)
+	if(::listen(m_socket, 15) < 0)
 	{
 		std::cout << "listening failed\n";
 	}
 }
 
-TCPClientSocket TCPServerSocket::ss_accept()
+TCPClientSocket TCPServerSocket::accept()
 {
 	struct sockaddr_in clientSin;
 	unsigned int addr_len = sizeof(clientSin);
 
-	int clientSocket = accept(m_socket, (struct sockaddr*)&clientSin, &addr_len);
+	int clientSocket = ::accept(m_socket, (struct sockaddr*)&clientSin, &addr_len);
 
 	if(clientSocket < 0)
 	{

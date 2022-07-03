@@ -9,7 +9,7 @@
 int main()
 {
 	char ip[] = "127.0.0.1";
-	char port[] = "7777";
+	char port[] = "4445";
 
 	net::TCPServer s(ip, port);
 	s.server_run();

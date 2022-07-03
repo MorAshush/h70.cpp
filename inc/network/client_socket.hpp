@@ -3,6 +3,7 @@
 
 #include <string>
 #include <netinet/in.h>
+#include <vector>
 
 namespace net
 {
@@ -13,19 +14,25 @@ public:
 	explicit TCPClientSocket(int a_socket);
 	TCPClientSocket(char* a_address, char* a_port);
 
-	TCPClientSocket(TCPClientSocket const& a_other); //copy ctor---declared cut not defined
 	TCPClientSocket(TCPClientSocket&& a_other); //move ctor
 
-	void operator=(TCPClientSocket const& a_other); //copy op=---declared cut not defined
 	void operator=(TCPClientSocket && a_other); //move op=
 
 	~TCPClientSocket();
 
-	void client_connect();
+	void connect();
 	void write(std::string const& a_text);
-	std::string read();
+	std::vector<uint8_t> read();
+
+private:
+//	friend class Selector;
+	friend class TCPServer;
 
 	int get_client_socket() const;
+
+private:
+	TCPClientSocket(TCPClientSocket const& a_other);
+	void operator=(TCPClientSocket const& a_other);
 
 private:
 	int m_socket;

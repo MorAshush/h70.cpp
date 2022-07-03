@@ -11,15 +11,19 @@
 int main()
 {
 	char ip[] = "127.0.0.1";
-	char port[] = "7777";
+	char port[] = "4445";
 
 	net::TCPClientSocket cs(ip, port);
-	cs.client_connect();
+	cs.connect();
 
 	cs.write("Ping");
 	cs.write("Ping");
 	cs.write("Ping");
 	cs.write("Ping");
+
+	cs.read();
+	cs.read();
+	cs.read();
 
 	return 0;
 }

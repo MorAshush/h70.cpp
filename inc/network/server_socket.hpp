@@ -9,27 +9,29 @@ namespace net
 class TCPServerSocket
 {
 public:
-	TCPServerSocket();
+	TCPServerSocket(const char* a_address, const char* a_port);
 
-	TCPServerSocket(TCPServerSocket const& a_other); //copy ctor---declared cut not defined
 	TCPServerSocket(TCPServerSocket&& a_other); //move ctor
 
-	void operator=(TCPServerSocket const& a_other); //copy op=---declared cut not defined
 	void operator=(TCPServerSocket&& a_other); //move op=
 
 	~TCPServerSocket();
 
-	void ss_bind(struct sockaddr_in a_sin);
-	void ss_listen();
-	TCPClientSocket ss_accept();
+	void bind(struct sockaddr_in a_sin);
+	void listen();
+	TCPClientSocket accept();
 
 	int get_server_socket() const;
 
 private:
 	int SetToNoBlocksMode(int _socket);
 
+	TCPServerSocket(TCPServerSocket const& a_other); //copy ctor---declared cut not defined
+	void operator=(TCPServerSocket const& a_other); //copy op=---declared cut not defined
+
 private:
 	int m_socket;
+	struct sockaddr_in m_sin;
 
 };
 

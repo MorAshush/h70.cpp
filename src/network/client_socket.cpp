@@ -3,6 +3,7 @@
 #include <arpa/inet.h> /*htons*/
 #include <unistd.h> /*close*/
 #include <stdlib.h> /*atoi*/
+#include <errno.h>
 #include <string.h> 
 #include <iostream>
 
@@ -15,7 +16,10 @@ namespace net
 	TCPClientSocket::TCPClientSocket(int a_socket)
 	: m_socket(a_socket)
 	{
-
+		if(a_socket < 0)
+		{
+			throw "socket initialization failed";
+		}
 	}
 
 	TCPClientSocket::TCPClientSocket(char* a_address, char* a_port)
@@ -24,7 +28,7 @@ namespace net
 
 		if(sock < 0)
 		{
-			//throw socket_initialization failed
+			throw "socket initialization failed";
 		}
 
 		m_socket = sock;
@@ -44,8 +48,12 @@ namespace net
 
 	void TCPClientSocket::operator=(TCPClientSocket&& a_other)
 	{
-		m_socket = a_other.get_client_socket();
-		a_other.m_socket = -1; //??
+		if(&a_other != this)
+		{
+			close(m_socket);
+			m_socket = a_other.get_client_socket();
+			a_other.m_socket = -1; //??
+		}
 	}
 
 	TCPClientSocket::~TCPClientSocket()
@@ -53,7 +61,7 @@ namespace net
 		close(m_socket);
 	}
 
-	void TCPClientSocket::client_connect()
+	void TCPClientSocket::connect()
 	{
 		std::cout << "connecting to server\n";
 
@@ -62,7 +70,7 @@ namespace net
 			std::cout << "client bind failed\n";
 		}
 */
-		int status = connect(m_socket, (struct sockaddr*)&m_sin, sizeof(m_sin));
+		int status = ::connect(m_socket, (struct sockaddr*)&m_sin, sizeof(m_sin));
 		if(status < 0)
 		{
 			//throw connection failed;
@@ -83,30 +91,42 @@ namespace net
 
 		if(sentBytes < 0)
 		{
-			//throw send failed;
+			perror("recv");
+			throw "send failed";
 		}
 	}
 
-	std::string TCPClientSocket::read()
+	std::vector<uint8_t> TCPClientSocket::read()
 	{
-		char buffer[4096];
-		int expectedDataLen = sizeof(buffer);
+	//	char buffer[4096];
+	//	int expectedDataLen = sizeof(buffer);
+	//	std::string data;
 
-		std::string data;
-		int readBytes = recv(m_socket, buffer, expectedDataLen, 0);
+		std::vector<uint8_t> buffer(4096, 0);
 
-		if(readBytes < 0)
+		int readBytes = recv(m_socket, buffer.data(), buffer.size(), 0);
+
+		if(readBytes == -1)
 		{
-			//throw recieve failed;
+			perror("recv");
+			throw "recieve failed";
 		}
 		else if(readBytes == 0)
 		{
-			//throw socket closed error;
+			perror("recv");
+			//remove client from list!
+			throw "socket closed error";
 		}
 
-		data += '\0';
+		for(auto c : buffer)
+		{
+			std::cout << c;
+		}
+		std::cout << '\n';
 
-		return data;
+	//	data += '\0';
+
+		return buffer;
 	}
 
 	int TCPClientSocket::get_client_socket() const

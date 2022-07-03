@@ -4,6 +4,7 @@
 #include <list>
 #include <string>
 #include <arpa/inet.h>
+#include <vector>
 
 #include "server_socket.hpp"
 //#include "handler.hpp"
@@ -18,22 +19,22 @@ namespace net
 class TCPServer
 {
 public:
-	TCPServer(char* a_address, char* a_port);
+	TCPServer(const char* a_address, const char* a_port);
 	~TCPServer();
 
-	std::string server_recieve(int a_socket);
-	std::string server_send();
+	std::vector<uint8_t> recieve(int a_socket);
+	void send(int a_socket, std::string const& a_text);
 	void server_run();
 
 private:
+	friend class SelectSelctor;
 	void CheckNewClients(fd_set& a_master);
 	void CheckCurClients(fd_set& a_master ,fd_set& a_temp, int a_activityVal);
 
 
 private:
-	struct sockaddr_in m_sin;
+//	struct sockaddr_in m_sin;
 	TCPServerSocket m_serverSocket;
-//	Handler m_handler;
 //	Protocol m_protocol;
 	std::list<TCPClientSocket> m_clients;
 
