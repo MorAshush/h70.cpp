@@ -12,7 +12,7 @@ class TCPClientSocket
 {
 public:
 	explicit TCPClientSocket(int a_socket);
-	TCPClientSocket(char* a_address, char* a_port);
+	TCPClientSocket(const char* a_address, const char* a_port);
 
 	TCPClientSocket(TCPClientSocket&& a_other); //move ctor
 

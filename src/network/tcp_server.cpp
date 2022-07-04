@@ -26,12 +26,10 @@ TCPServer::~TCPServer()
 
 std::vector<uint8_t> TCPServer::recieve(int a_socket)
 {
-	std::cout << "in server recieve\n";
-
 	std::vector<uint8_t> buffer(4096, 0);
 
 	int readBytes = recv(a_socket, buffer.data(), buffer.size(), 0);
-	std::cout << "readBytes: " << readBytes << '\n';
+	std::cout << "\nreadBytes: " << readBytes << '\n';
 
 	if(readBytes == -1)
 	{
@@ -86,7 +84,7 @@ void TCPServer::CheckNewClients(fd_set& a_master)
 
 void TCPServer::CheckCurClients(fd_set& a_master ,fd_set& a_temp, int a_activityVal)
 {
-	std::cout << "checking for new messages...\n";
+	std::cout << "\nchecking for new messages...\n";
 
 	auto it = m_clients.begin();
 	auto end = m_clients.end();
@@ -98,12 +96,10 @@ void TCPServer::CheckCurClients(fd_set& a_master ,fd_set& a_temp, int a_activity
 		{
 			try
 			{
-				std::cout << "trying to call server_recieve\n";
-
 				std::vector<uint8_t> buffer;
 				buffer = recieve(socket);
 
-				std::cout << "msg from client socket: " << socket << '\n' << "pong\n" << '\n';
+				std::cout << "\nrecieved msg from client in socket: " << socket << '\n';
 
 				send(socket, "this is a msg from server\n");
 			}
@@ -156,7 +152,6 @@ void TCPServer::server_run()
 			if(FD_ISSET(listeningSocket, &tempReadfds))
 			{
 				CheckNewClients(masterReadfds);
-				std::cout << "checked for new clients.\n";
 			}
 
 			CheckCurClients(masterReadfds, tempReadfds, activity);

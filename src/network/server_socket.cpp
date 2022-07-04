@@ -73,6 +73,7 @@ void TCPServerSocket::bind(struct sockaddr_in a_sin)
 		std::cout << "server bind failed\n";
 	}
 	perror("bind");
+	std::cout << '\n';
 }
 
 void TCPServerSocket::listen()

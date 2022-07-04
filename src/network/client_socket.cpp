@@ -23,7 +23,7 @@ namespace net
 		}
 	}
 
-	TCPClientSocket::TCPClientSocket(char* a_address, char* a_port)
+	TCPClientSocket::TCPClientSocket(const char* a_address, const char* a_port)
 	{
 		int sock = socket(AF_INET, SOCK_STREAM, 0);
 
