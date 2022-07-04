@@ -40,6 +40,8 @@ namespace net
 		m_sin.sin_family = AF_INET;
 		m_sin.sin_addr.s_addr = inet_addr(a_address);
 		m_sin.sin_port = htons(atoi(a_port));
+
+		connect();
 	}
 
 	TCPClientSocket::TCPClientSocket(TCPClientSocket&& a_other)

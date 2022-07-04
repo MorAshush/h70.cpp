@@ -5,13 +5,11 @@
 #include <string>
 #include <arpa/inet.h>
 #include <vector>
+#include <memory>
 
 #include "server_socket.hpp"
-//#include "handler.hpp"
-//#include "protocol.hpp"
+#include "handler.hpp"
 
-class Handler;
-class Protocol;
 
 namespace net
 {
@@ -19,7 +17,7 @@ namespace net
 class TCPServer
 {
 public:
-	TCPServer(const char* a_address, const char* a_port);
+	TCPServer(const char* a_address, const char* a_port, Handler* a_handler);
 	~TCPServer();
 
 	std::vector<uint8_t> recieve(int a_socket);
@@ -35,7 +33,7 @@ private:
 private:
 //	struct sockaddr_in m_sin;
 	TCPServerSocket m_serverSocket;
-//	Protocol m_protocol;
+	Handler* m_handler;
 	std::list<TCPClientSocket*> m_clients;
 
 };

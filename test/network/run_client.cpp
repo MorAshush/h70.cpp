@@ -14,7 +14,6 @@ int main()
 	char port[] = "4445";
 
 	net::TCPClientSocket cs(ip, port);
-	cs.connect();
 
 	cs.write("Ping");
 	cs.read();
@@ -24,7 +23,7 @@ int main()
 
 	cs.write("Ping");
 	cs.read();
-	
+
 	cs.write("Ping");
 	cs.read();
 

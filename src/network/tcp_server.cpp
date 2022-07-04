@@ -10,8 +10,9 @@
 namespace net
 {
 
-TCPServer::TCPServer(const char* a_address, const char* a_port)
+TCPServer::TCPServer(const char* a_address, const char* a_port, Handler* a_handler)
 : m_serverSocket(a_address, a_port)
+, m_handler(std::move(a_handler))
 {
 }
 
@@ -22,6 +23,7 @@ TCPServer::~TCPServer()
 		delete client;
 	}
 
+	delete m_handler;
 }
 
 std::vector<uint8_t> TCPServer::recieve(int a_socket)
@@ -73,6 +75,7 @@ void TCPServer::send(int a_socket, std::string const& a_text)
 
 void TCPServer::CheckNewClients(fd_set& a_master)
 {
+	std::cout << "\nchecking for new clients...\n";
 	m_clients.push_back(std::move(m_serverSocket.accept()));
 
 	auto last = m_clients.rbegin();
@@ -135,7 +138,6 @@ void TCPServer::server_run()
 
 	while(true)
 	{
-		std::cout << "listening socket: " << listeningSocket << '\n';
 		FD_ZERO(&tempReadfds);
 		tempReadfds = masterReadfds;
 

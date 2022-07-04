@@ -13,7 +13,7 @@ public:
 
 	TCPServerSocket(TCPServerSocket&& a_other); //move ctor
 
-	void operator=(TCPServerSocket&& a_other); //move op=
+	TCPServerSocket& operator=(TCPServerSocket&& a_other); //move op=
 
 	~TCPServerSocket();
 
@@ -26,8 +26,8 @@ public:
 private:
 	int SetToNoBlocksMode(int _socket);
 
-	TCPServerSocket(TCPServerSocket const& a_other); //copy ctor---declared cut not defined
-	void operator=(TCPServerSocket const& a_other); //copy op=---declared cut not defined
+	TCPServerSocket(TCPServerSocket const& a_other) = delete; 
+	void operator=(TCPServerSocket const& a_other) = delete; 
 
 private:
 	int m_socket;

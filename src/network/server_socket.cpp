@@ -48,10 +48,12 @@ TCPServerSocket::TCPServerSocket(TCPServerSocket&& a_other)
 	a_other.m_socket = -1; //??
 }
 
-void TCPServerSocket::operator=(TCPServerSocket&& a_other)
+TCPServerSocket& TCPServerSocket::operator=(TCPServerSocket&& a_other)
 {
 	m_socket = a_other.get_server_socket();
 	a_other.m_socket = -1; //??
+
+	return *this;
 }
 
 TCPServerSocket::~TCPServerSocket()
