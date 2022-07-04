@@ -9,7 +9,7 @@ class SelectorBase
 {
 
 public:
-	virtual ~SelectorBase() = default;
+	virtual ~SelectorBase();
 
 	virtual void select() = 0;
 };

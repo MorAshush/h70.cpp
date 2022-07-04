@@ -10,8 +10,8 @@
 namespace net
 {
 
-TCPServer::TCPServer(const char* a_address, const char* a_port, Handler* a_handler)
-: m_serverSocket(a_address, a_port)
+TCPServer::TCPServer(Address const& a_address, Handler* a_handler)
+: m_serverSocket(a_address)
 , m_handler(std::move(a_handler))
 {
 }
@@ -54,41 +54,32 @@ std::vector<uint8_t> TCPServer::recieve(int a_socket)
 }
 
 
-void TCPServer::send(int a_socket, std::string const& a_text)
+void TCPServer::send(int a_socket, std::vector<uint8_t>const& a_text)
 {
-	char* cstr = new char[a_text.length() + 1];
+	int sentBytes = ::send(a_socket, a_text.data(), a_text.size(), 0);
+	std::cout << "sent" << sentBytes << "Bytes to client at socket: " << a_socket << '\n';
 
-		strcpy(cstr, a_text.c_str());
-
-		int sentBytes = ::send(a_socket, cstr, strlen(cstr), 0);
-		std::cout << "sentBytes to client at socket: " << a_socket << ", " << sentBytes << '\n';
-
-		delete [] cstr;
-
-		if(sentBytes < 0)
-		{
-			perror("recv");
-			std::cout << "server send failed\n";
-			//throw "server send failed";
-		}
+	if(sentBytes < 0)
+	{
+		perror("recv");
+		std::cout << "server send failed\n";
+		//throw "server send failed";
+	}
 }
 
-void TCPServer::CheckNewClients(fd_set& a_master)
+void TCPServer::check_new_clients(fd_set& a_master)
 {
-	std::cout << "\nchecking for new clients...\n";
 	m_clients.push_back(std::move(m_serverSocket.accept()));
 
 	auto last = m_clients.rbegin();
 	int socket = (*last)->get_client_socket();
 	
-	std::cout << "client connected at socket: " << socket << '\n';
+	std::cout << "\nclient connected at socket: " << socket << '\n';
 	FD_SET(socket, &a_master);
 }
 
-void TCPServer::CheckCurClients(fd_set& a_master ,fd_set& a_temp, int a_activityVal)
+void TCPServer::check_cur_clients(fd_set& a_master ,fd_set& a_temp, int a_activityVal)
 {
-	std::cout << "\nchecking for new messages...\n";
-
 	auto it = m_clients.begin();
 	auto end = m_clients.end();
 
@@ -102,9 +93,9 @@ void TCPServer::CheckCurClients(fd_set& a_master ,fd_set& a_temp, int a_activity
 				std::vector<uint8_t> buffer;
 				buffer = recieve(socket);
 
-				std::cout << "\nrecieved msg from client in socket: " << socket << '\n';
+				auto indication = m_handler->handle(buffer);
 
-				send(socket, "this is a msg from server\n");
+				send(socket, indication);
 			}
 			catch(...) //exception of closed socket or recv failed
 			{
@@ -126,6 +117,14 @@ void TCPServer::CheckCurClients(fd_set& a_master ,fd_set& a_temp, int a_activity
 	}
 }
 
+void TCPServer::server_run(SelectorBase* a_selector)
+{
+	while(true)
+	{
+		a_selector->select();
+	}
+}
+/*
 void TCPServer::server_run()
 {
 	fd_set masterReadfds;
@@ -153,12 +152,18 @@ void TCPServer::server_run()
 		{
 			if(FD_ISSET(listeningSocket, &tempReadfds))
 			{
-				CheckNewClients(masterReadfds);
+				check_new_clients(masterReadfds);
 			}
 
-			CheckCurClients(masterReadfds, tempReadfds, activity);
+			check_cur_clients(masterReadfds, tempReadfds, activity);
 		}	
 	}
+}
+*/
+
+int TCPServer::get_socket() const
+{
+	return m_serverSocket.get_server_socket();
 }
 
 }//namespace net

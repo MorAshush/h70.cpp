@@ -6,17 +6,21 @@
 #include "client_socket.hpp"
 #include "handler.hpp"
 #include "random_guess.hpp"
+#include "selector_base.hpp"
+#include "select_selector.hpp"
 
 
 int main()
 {
-	char ip[] = "127.0.0.1";
-	char port[] = "4445";
+	net::Address ad("127.0.0.1", "4445");
 
-	net::Handler* rg = new net::RandomGuess;
+	net::RandomGuess rg;
 
-	net::TCPServer s(ip, port, rg);
-	s.server_run();
+	net::TCPServer server(ad, &rg);
+
+	net::SelectSelector selector(&server);
+
+	server.server_run(&selector);
 
 	return 0;
 }

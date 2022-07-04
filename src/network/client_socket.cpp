@@ -13,132 +13,151 @@
 namespace net
 {
 
-	TCPClientSocket::TCPClientSocket(int a_socket)
-	: m_socket(a_socket)
+TCPClientSocket::TCPClientSocket(int a_socket)
+: m_socket(a_socket)
+{
+	if(a_socket < 0)
 	{
-		if(a_socket < 0)
-		{
-			std::cout << "socket initialization failed\n";
-			//throw "socket initialization failed";
-		}
+		std::cout << "socket initialization failed\n";
+		//throw "socket initialization failed";
+	}
+}
+
+TCPClientSocket::TCPClientSocket(Address const& a_address)
+{
+	int sock = socket(AF_INET, SOCK_STREAM, 0);
+
+	if(sock < 0)
+	{
+		std::cout << "socket initialization failed\n";
+		//throw "socket initialization failed";
 	}
 
-	TCPClientSocket::TCPClientSocket(const char* a_address, const char* a_port)
-	{
-		int sock = socket(AF_INET, SOCK_STREAM, 0);
+	m_socket = sock;
 
-		if(sock < 0)
-		{
-			std::cout << "socket initialization failed\n";
-			//throw "socket initialization failed";
-		}
+	memset(&m_sin, 0, sizeof(m_sin));
 
-		m_socket = sock;
+	m_sin.sin_family = AF_INET;
+	m_sin.sin_addr.s_addr = inet_addr(a_address.get_ip());
+	m_sin.sin_port = htons(a_address.get_port());
 
-		memset(&m_sin, 0, sizeof(m_sin));
+	connect();
+}
 
-		m_sin.sin_family = AF_INET;
-		m_sin.sin_addr.s_addr = inet_addr(a_address);
-		m_sin.sin_port = htons(atoi(a_port));
+TCPClientSocket::TCPClientSocket(TCPClientSocket&& a_other)
+: m_socket(a_other.get_client_socket())
+{
+	a_other.m_socket = -1; //??
+}
 
-		connect();
-	}
-
-	TCPClientSocket::TCPClientSocket(TCPClientSocket&& a_other)
-	: m_socket(a_other.get_client_socket())
-	{
-		a_other.m_socket = -1; //??
-	}
-
-	void TCPClientSocket::operator=(TCPClientSocket&& a_other)
-	{
-		if(&a_other != this)
-		{
-			close(m_socket);
-			m_socket = a_other.get_client_socket();
-			a_other.m_socket = -1; //??
-		}
-	}
-
-	TCPClientSocket::~TCPClientSocket()
+void TCPClientSocket::operator=(TCPClientSocket&& a_other)
+{
+	if(&a_other != this)
 	{
 		close(m_socket);
+		m_socket = a_other.get_client_socket();
+		a_other.m_socket = -1; //??
 	}
+}
 
-	void TCPClientSocket::connect()
-	{
-		std::cout << "connecting to server\n";
+TCPClientSocket::~TCPClientSocket()
+{
+	close(m_socket);
+}
+
+void TCPClientSocket::connect()
+{
+	std::cout << "connecting to server\n";
 
 /*		if(bind(m_socket, (struct sockaddr*)&m_sin, sizeof(m_sin)) < 0)
-		{
-			std::cout << "client bind failed\n";
-		}
+	{
+		std::cout << "client bind failed\n";
+	}
 */
-		int status = ::connect(m_socket, (struct sockaddr*)&m_sin, sizeof(m_sin));
-		if(status < 0)
-		{
-			//throw connection failed;
-			std::cout << "connect: failed\n";
-		}
-	}
-
-	void TCPClientSocket::write(std::string const& a_text)
+	int status = ::connect(m_socket, (struct sockaddr*)&m_sin, sizeof(m_sin));
+	if(status < 0)
 	{
-		char* cstr = new char[a_text.length() + 1];
-
-		strcpy(cstr, a_text.c_str());
-
-		int sentBytes = send(m_socket, cstr, strlen(cstr), 0);
-		std::cout << "sentBytes: " << sentBytes << " to socket: " << m_socket << '\n';
-
-		delete [] cstr;
-
-		if(sentBytes < 0)
-		{
-			perror("recv");
-			std::cout << "client send failed\n";
-			//throw "send failed";
-		}
+		//throw connection failed;
+		std::cout << "connect: failed\n";
 	}
+}
 
-	std::vector<uint8_t> TCPClientSocket::read()
+void TCPClientSocket::write(std::vector<uint8_t>const& a_text) const
+{
+	int sentBytes = send(m_socket, a_text.data(), a_text.size(), 0);
+	std::cout << "sentBytes: " << sentBytes << " to socket: " << m_socket << '\n';
+
+	if(sentBytes < 0)
 	{
-	//	char buffer[4096];
-	//	int expectedDataLen = sizeof(buffer);
-	//	std::string data;
-
-		std::vector<uint8_t> buffer(4096, 0);
-
-		int readBytes = recv(m_socket, buffer.data(), buffer.size(), 0);
-
-		if(readBytes == -1)
-		{
-			perror("recv");
-			std::cout << "client recieve failed\n";
-			//throw "client recieve failed";
-		}
-		else if(readBytes == 0)
-		{
-			perror("recv");
-			//remove client from list!
-			std::cout << "client recieve: socket closed error\n";
-			//throw "socket closed error";
-		}
-
-		for(auto c : buffer)
-		{
-			std::cout << c;
-		}
-		std::cout << '\n';
-
-	//	data += '\0';
-
-		return buffer;
+		perror("recv");
+		std::cout << "client send failed\n";
+		//throw "send failed";
 	}
+}
 
-	int TCPClientSocket::get_client_socket() const
+std::vector<uint8_t> TCPClientSocket::read() const
+{
+//	char buffer[4096];
+//	int expectedDataLen = sizeof(buffer);
+//	std::string data;
+
+	std::vector<uint8_t> buffer(4096, 0);
+
+	int readBytes = recv(m_socket, buffer.data(), buffer.size(), 0);
+
+	if(readBytes == -1)
 	{
-		return m_socket;
+		perror("recv");
+		std::cout << "client recieve failed\n";
+		//throw "client recieve failed";
 	}
+	else if(readBytes == 0)
+	{
+		perror("recv");
+		//remove client from list!
+		std::cout << "client recieve: socket closed error\n";
+		//throw "socket closed error";
+	}
+
+	for(auto c : buffer)
+	{
+		std::cout << c;
+	}
+	std::cout << '\n';
+
+//	data += '\0';
+
+	return buffer;
+}
+
+int TCPClientSocket::get_client_socket() const
+{
+	return m_socket;
+}
+
+void run_guessing(TCPClientSocket& a_clientSocket, Handler* a_handler)
+{
+	std::vector<uint8_t> guess(1, static_cast<uint8_t>(rand() % 256));
+
+	a_clientSocket.write(std::move(guess));
+
+	std::string correct("correct");
+	std::vector<uint8_t> victory(correct.begin(), correct.end());
+
+	while(true)
+	{
+		std::vector<uint8_t> buffer = a_clientSocket.read();
+
+		auto indication = a_handler->handle(buffer);
+		if(indication == victory)
+		{
+			break;
+		}
+
+		a_clientSocket.write(indication);
+	}
+
+	std::cout << "client guessed correctly!\n";
+}
 
 }

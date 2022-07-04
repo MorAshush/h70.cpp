@@ -15,7 +15,7 @@
 namespace net
 {
 
-TCPServerSocket::TCPServerSocket(const char* a_address, const char* a_port)
+TCPServerSocket::TCPServerSocket(Address const& a_address)
 {
 	int sock = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -35,8 +35,8 @@ TCPServerSocket::TCPServerSocket(const char* a_address, const char* a_port)
 	memset(&m_sin, 0, sizeof(m_sin));
 
 	m_sin.sin_family = AF_INET;
-    m_sin.sin_addr.s_addr = inet_addr(a_address); 
-    m_sin.sin_port = htons(atoi(a_port));
+    m_sin.sin_addr.s_addr = inet_addr(a_address.get_ip()); 
+    m_sin.sin_port = htons(a_address.get_port());
 
     bind(m_sin);
     listen();

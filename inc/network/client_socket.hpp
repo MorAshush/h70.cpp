@@ -5,13 +5,16 @@
 #include <netinet/in.h>
 #include <vector>
 
+#include "address_class.hpp"
+#include "handler.hpp"
+
 namespace net
 {
 
 class TCPClientSocket
 {
 public:
-	TCPClientSocket(const char* a_address, const char* a_port);
+	TCPClientSocket(Address const& a_address);
 
 	TCPClientSocket(TCPClientSocket&& a_other); //move ctor
 
@@ -19,11 +22,11 @@ public:
 
 	~TCPClientSocket();
 
-	void write(std::string const& a_text);
-	std::vector<uint8_t> read();
+	void write(std::vector<uint8_t>const& a_text) const;
+	std::vector<uint8_t> read() const;
 
 private:
-//	friend class Selector;
+	friend class SelectSelector;
 	friend class TCPServer;
 	friend class TCPServerSocket;
 
@@ -39,6 +42,8 @@ private:
 	int m_socket;
 	struct sockaddr_in m_sin;
 };
+
+void run_guessing(TCPClientSocket& a_clientSocket, Handler* a_handler);
 
 }//namespace net
 

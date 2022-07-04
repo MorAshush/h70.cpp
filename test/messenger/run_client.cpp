@@ -2,7 +2,8 @@
 #include <sys/socket.h> /*AF_INE def*/
 #include <arpa/inet.h> /*htons*/
 #include <unistd.h> /*close*/
-#include <string.h> 
+#include <string.h>
+#include <vector> 
 
 #include "udp_socket_output.hpp"
 
@@ -10,21 +11,10 @@
 
 int main()
 {
-	std::string ipString = "127.0.0.1";
-	std::string portString = "5555";
+	net::Address ad("127.0.0.1", "4445");
 
-	char* ip = new char[ipString.length() + 1];
-	char* port = new char[portString.length() + 1];
-
-	strcpy(ip, ipString.c_str());
-	strcpy(port, portString.c_str());
-
-	out::OutputUDPsocket c(ip, port);
-	c.send("Ping");
-	c.send("Pong");
-	c.send("Ping");
-	c.send("Pong");
-	c.send("EOM");
+	out::OutputUDPsocket c(ad);
+	c.send(std::vector<uint8_t> geuss(1, 56));
 
 	return 0;
 }

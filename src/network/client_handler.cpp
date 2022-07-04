@@ -24,10 +24,15 @@ std::vector<uint8_t>const& ClientHandler::handle(std::vector<uint8_t>const& a_bu
 		case '>':
 			newGuess = rand() % m_lastGuess[0] - 1;
 			break;
+
+		case '=':
+			std::string correct("correct");
+			std::vector<uint8_t> victory(correct.begin(), correct.end());
+			m_lastGuess = std::move(victory);
+			return m_lastGuess;
 	}
 
 	m_lastGuess[0] = newGuess;
-
 	return m_lastGuess;
 }
 

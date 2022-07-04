@@ -2,30 +2,23 @@
 #include <sys/socket.h> /*AF_INE def*/
 #include <arpa/inet.h> /*htons*/
 #include <unistd.h> /*close*/
-#include <string.h> 
+#include <string.h>
+#include <vector> 
 
 #include "client_socket.hpp"
-
+#include "client_handler.hpp"
 
 
 int main()
 {
-	char ip[] = "127.0.0.1";
-	char port[] = "4445";
+	net::Address ad("127.0.0.1", "4445");
 
-	net::TCPClientSocket cs(ip, port);
+	net::ClientHandler handler;
 
-	cs.write("Ping");
-	cs.read();
+	net::TCPClientSocket c(ad);
 
-	cs.write("Ping");
-	cs.read();
-
-	cs.write("Ping");
-	cs.read();
-
-	cs.write("Ping");
-	cs.read();
+	run_guessing(c, &handler);
+	
 
 	return 0;
 }

@@ -7,11 +7,16 @@
 namespace net
 {
 
-class SelectSelctor: public SelectorBase
+class SelectSelector: public SelectorBase
 {
 
 public:
-	SelectSelctor(TCPServer& a_server, std::function<void(fd_set&)> a_onAccept, std::function<void(fd_set&)> a_read_write);
+	SelectSelector(TCPServer* a_server);
+
+	virtual void select();
+
+private:
+	TCPServer* m_server;
 
 };
 

@@ -18,7 +18,7 @@ public:
 	virtual std::vector<uint8_t>const& handle(std::vector<uint8_t>const& a_buffer);
 
 private:
-	int m_num;
+	uint8_t m_num;
 	std::vector<uint8_t> m_indication;
 };
 

@@ -1,6 +1,7 @@
 #ifndef SERVER_SOCKET_HPP
 #define SERVER_SOCKET_HPP
 
+#include "address_class.hpp"
 #include "client_socket.hpp"
 
 namespace net
@@ -9,7 +10,7 @@ namespace net
 class TCPServerSocket
 {
 public:
-	TCPServerSocket(const char* a_address, const char* a_port);
+	TCPServerSocket(Address const& a_address);
 
 	TCPServerSocket(TCPServerSocket&& a_other); //move ctor
 

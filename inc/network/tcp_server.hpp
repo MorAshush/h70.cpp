@@ -8,7 +8,9 @@
 #include <memory>
 
 #include "server_socket.hpp"
+#include "address_class.hpp"
 #include "handler.hpp"
+#include "selector_base.hpp"
 
 
 namespace net
@@ -17,17 +19,20 @@ namespace net
 class TCPServer
 {
 public:
-	TCPServer(const char* a_address, const char* a_port, Handler* a_handler);
+	TCPServer(Address const& a_address, Handler* a_handler);
 	~TCPServer();
 
 	std::vector<uint8_t> recieve(int a_socket);
-	void send(int a_socket, std::string const& a_text);
-	void server_run();
+	void send(int a_socket, std::vector<uint8_t>const& a_text);
+	
+	void server_run(SelectorBase* a_selector);
 
 private:
-	friend class SelectSelctor;
-	void CheckNewClients(fd_set& a_master);
-	void CheckCurClients(fd_set& a_master ,fd_set& a_temp, int a_activityVal);
+	friend class SelectSelector;
+
+	void check_new_clients(fd_set& a_master);
+	void check_cur_clients(fd_set& a_master ,fd_set& a_temp, int a_activityVal);
+	int get_socket() const;
 
 
 private:
