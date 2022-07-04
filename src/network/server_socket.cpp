@@ -83,7 +83,7 @@ void TCPServerSocket::listen()
 	}
 }
 
-TCPClientSocket TCPServerSocket::accept()
+TCPClientSocket* TCPServerSocket::accept()
 {
 	struct sockaddr_in clientSin;
 	unsigned int addr_len = sizeof(clientSin);
@@ -95,7 +95,9 @@ TCPClientSocket TCPServerSocket::accept()
 		std::cout << "client accept failed\n";
 	}
 
-	return TCPClientSocket(clientSocket);
+	TCPClientSocket* newClient = new TCPClientSocket(clientSocket);
+
+	return newClient;
 }
 
 int TCPServerSocket::get_server_socket() const

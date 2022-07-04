@@ -17,12 +17,15 @@ int main()
 	cs.connect();
 
 	cs.write("Ping");
-	cs.write("Ping");
-	cs.write("Ping");
-	cs.write("Ping");
+	cs.read();
 
+	cs.write("Ping");
 	cs.read();
+
+	cs.write("Ping");
 	cs.read();
+	
+	cs.write("Ping");
 	cs.read();
 
 	return 0;

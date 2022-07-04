@@ -18,7 +18,8 @@ namespace net
 	{
 		if(a_socket < 0)
 		{
-			throw "socket initialization failed";
+			std::cout << "socket initialization failed\n";
+			//throw "socket initialization failed";
 		}
 	}
 
@@ -28,7 +29,8 @@ namespace net
 
 		if(sock < 0)
 		{
-			throw "socket initialization failed";
+			std::cout << "socket initialization failed\n";
+			//throw "socket initialization failed";
 		}
 
 		m_socket = sock;
@@ -92,7 +94,8 @@ namespace net
 		if(sentBytes < 0)
 		{
 			perror("recv");
-			throw "send failed";
+			std::cout << "client send failed\n";
+			//throw "send failed";
 		}
 	}
 
@@ -109,13 +112,15 @@ namespace net
 		if(readBytes == -1)
 		{
 			perror("recv");
-			throw "recieve failed";
+			std::cout << "client recieve failed\n";
+			//throw "client recieve failed";
 		}
 		else if(readBytes == 0)
 		{
 			perror("recv");
 			//remove client from list!
-			throw "socket closed error";
+			std::cout << "client recieve: socket closed error\n";
+			//throw "socket closed error";
 		}
 
 		for(auto c : buffer)

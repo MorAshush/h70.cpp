@@ -36,7 +36,7 @@ private:
 //	struct sockaddr_in m_sin;
 	TCPServerSocket m_serverSocket;
 //	Protocol m_protocol;
-	std::list<TCPClientSocket> m_clients;
+	std::list<TCPClientSocket*> m_clients;
 
 };
 

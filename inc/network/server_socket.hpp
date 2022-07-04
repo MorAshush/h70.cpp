@@ -19,7 +19,7 @@ public:
 
 	void bind(struct sockaddr_in a_sin);
 	void listen();
-	TCPClientSocket accept();
+	TCPClientSocket* accept();
 
 	int get_server_socket() const;
 
