@@ -1,8 +1,12 @@
 #ifndef THREAD_SAFE_QUEUE_HPP
 #define THREAD_SAFE_QUEUE_HPP
 
+#include <iostream>
 #include <queue>
 #include <mutex>
+#include <list>
+#include <memory>
+
 
 template <typename T>
 class SafeQueue
@@ -20,6 +24,10 @@ public:
 	void pop();
 	void push(T const& a_element);
 
+	T front() const;
+
+	size_t size() const;
+
 private:
 	std::queue<T> m_que;
 	std::mutex m_mtx;
@@ -33,9 +41,17 @@ SafeQueue<T>::SafeQueue()
 
 template <typename T>
 SafeQueue<T>::SafeQueue(SafeQueue<T>const& a_other)
-: m_que(a_other)
+: m_que(std::move(a_other.m_que))
 {
 
+}
+
+
+template <typename T>
+SafeQueue<T>& SafeQueue<T>::operator=(SafeQueue<T>&& a_other)
+{
+	m_que = a_other.m_que;
+	return *this;
 }
 
 template <typename T>
@@ -47,6 +63,11 @@ SafeQueue<T>::~SafeQueue()
 template <typename T>
 void SafeQueue<T>::pop()
 {
+	if(m_que.empty())
+	{
+		return;
+	}
+
 	m_mtx.lock();
 	m_que.pop();
 	m_mtx.unlock();
@@ -60,14 +81,18 @@ void SafeQueue<T>::push(T const& a_element)
 	m_mtx.unlock();
 }
 
+template <typename T>
+T SafeQueue<T>::front() const
+{
+	T front = m_que.front();
+	return front;
+}
 
-
-
-
-
-
-
-
+template <typename T>
+size_t SafeQueue<T>::size() const
+{
+	return m_que.size();
+}
 
 
 #endif //THREAD_SAFE_QUEUE_HPP

@@ -6,7 +6,7 @@ CFLAGS = -g3
 CXXFLAGS = -std=c++17
 CXXFLAGS+= -Wall -pedantic
 CXXFLAGS+= -Werror
-CXXFLAGS+= -g3
+CXXFLAGS+= -g3 -pthread
 
 
 LDFLAGS =
