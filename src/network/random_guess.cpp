@@ -26,8 +26,12 @@ std::vector<uint8_t>const& RandomGuess::handle(std::vector<uint8_t>const& a_buff
 	{
 		m_indication[0] = '>';
 	}
-
-	m_indication[0] = '=';
+	else
+	{
+		m_indication[0] = '=';
+	}
+	
+	std::cout << "\n\nserver handler indication is: " << m_indication[0] << '\n';
 
 	return m_indication;
 }

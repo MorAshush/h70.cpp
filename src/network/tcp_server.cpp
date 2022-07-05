@@ -57,7 +57,7 @@ std::vector<uint8_t> TCPServer::recieve(int a_socket)
 void TCPServer::send(int a_socket, std::vector<uint8_t>const& a_text)
 {
 	int sentBytes = ::send(a_socket, a_text.data(), a_text.size(), 0);
-	std::cout << "sent" << sentBytes << "Bytes to client at socket: " << a_socket << '\n';
+	std::cout << "sent " << sentBytes << " Bytes to client at socket: " << a_socket << '\n';
 
 	if(sentBytes < 0)
 	{
