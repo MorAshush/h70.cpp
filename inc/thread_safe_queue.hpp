@@ -16,10 +16,10 @@ public:
 	~SafeQueue();
 
 	SafeQueue(SafeQueue<T>const& a_other);
-	SafeQueue(SafeQueue<T>&& a_other);
+	SafeQueue(SafeQueue<T>&& a_other) = delete;
 
-	SafeQueue<T>& operator=(SafeQueue<T>const& a_other) = delete;
-	SafeQueue<T>& operator=(SafeQueue<T>&& a_other);
+	SafeQueue<T>& operator=(SafeQueue<T>const& a_other);
+	SafeQueue<T>& operator=(SafeQueue<T>&& a_other) = delete;
 
 	void pop();
 	void push(T const& a_element);
@@ -40,20 +40,10 @@ SafeQueue<T>::SafeQueue()
 }
 
 template <typename T>
-SafeQueue<T>::SafeQueue(SafeQueue<T>&& a_other)
-: m_que(std::move(a_other.m_que))
-, m_mtx(std::move(a_other.m_mtx))
+SafeQueue<T>::SafeQueue(SafeQueue<T> const& a_other)
+: m_que(a_other.m_que)
 {
 
-}
-
-
-template <typename T>
-SafeQueue<T>& SafeQueue<T>::operator=(SafeQueue<T>&& a_other)
-{
-	m_que = std::move(a_other.m_que);
-	m_mtx = std::move(a_other.m_mtx);
-	return *this;
 }
 
 template <typename T>

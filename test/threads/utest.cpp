@@ -51,7 +51,7 @@ std::ostream& operator<<(std::ostream& a_os, std::vector<int64_t> const& a_vec)
 
 void que_print(SafeQueue<IV> const& a_que)
 {
-	SafeQueue<IV> queCopy(std::move(a_que));
+	SafeQueue<IV> queCopy(a_que);
 
 	size_t size = queCopy.size();
 
