@@ -23,7 +23,7 @@ all: $(TARGET)
 check: $(TARGET)
 	./$(TARGET) -v
 
-utest : utest.cpp
+utest : utest.cpp $(INC_DIR)/thread_safe_queue.hpp
 
 vala: $(TARGET)
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes

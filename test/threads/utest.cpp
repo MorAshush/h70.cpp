@@ -59,8 +59,8 @@ void que_print(SafeQueue<IV> const& a_que)
 
 	for(size_t i = 0; i < size; ++i)
 	{
-		IV element = queCopy.front();
-		queCopy.pop();
+		IV element;
+		queCopy.dequeue(element);	
 		elements.push_front(element);
 	}
 
@@ -81,34 +81,42 @@ int main()
 {
 	SafeQueue<IV> sq;
 
-	IV vec(10, 2);
+	IV vec;
 
-	auto safe_pop = [&sq]()
+	auto safe_pop = [&sq](IV& a_vec)
 	{
-		sq.pop();
+		sq.dequeue(a_vec);
 	};
 
 	std::vector<IV> resource = generate_vec_of_vecs();
+		std::cout << "start - the queue size is: " << sq.size() << "\n\n";
 	
-	std::thread producer1(&SafeQueue<IV>::push, std::ref(sq), std::ref(resource[0]));
-	std::thread producer2(&SafeQueue<IV>::push, std::ref(sq), std::ref(resource[1]));
-	std::thread producer3(&SafeQueue<IV>::push, std::ref(sq), std::ref(resource[2]));
-	std::thread producer4(&SafeQueue<IV>::push, std::ref(sq), std::ref(resource[3]));
-	std::thread producer5(&SafeQueue<IV>::push, std::ref(sq), std::ref(resource[4]));
+	std::thread producer1(&SafeQueue<IV>::enqueue, std::ref(sq), std::ref(resource[0]));
+	std::thread producer2(&SafeQueue<IV>::enqueue, std::ref(sq), std::ref(resource[1]));
+	std::thread producer3(&SafeQueue<IV>::enqueue, std::ref(sq), std::ref(resource[2]));
+	std::thread producer4(&SafeQueue<IV>::enqueue, std::ref(sq), std::ref(resource[3]));
+	std::thread producer5(&SafeQueue<IV>::enqueue, std::ref(sq), std::ref(resource[4]));
 
-	std::thread consumer1(safe_pop);
-	std::thread consumer2(safe_pop);
-	std::thread consumer3(safe_pop);
-	std::thread consumer4(safe_pop);
-	std::thread consumer5(safe_pop);
+	std::thread consumer1(safe_pop, std::ref(vec));
+/*	std::thread consumer2(safe_pop, std::ref(vec));
+	std::thread consumer3(safe_pop, std::ref(vec));
+	std::thread consumer4(safe_pop, std::ref(vec));
+*/
+
+	producer1.join();
+	producer2.join();
+	producer3.join();
+	producer4.join();
+	producer5.join();
+
+	consumer1.join();
+/*	consumer2.join();
+	consumer3.join();
+	consumer4.join();
+*/
+	std::cout << "end - the queue size is: " << sq.size() << '\n';
 
 	que_print(sq);
 
-
-/*	auto safe_push = [&sq](IV const& a_vec)
-	{
-		sq.push(a_vec);
-	};
-*/
 	return 0;
 }
