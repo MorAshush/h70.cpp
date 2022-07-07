@@ -4,6 +4,7 @@
 #include <iostream>
 #include <time.h>
 
+#include "mu_test.h"
 #include "thread_safe_queue.hpp"
 
 typedef std::vector<int64_t> IV;
@@ -95,46 +96,41 @@ std::vector<std::thread>& create_threads_vector(SafeQueue<IV>& a_sq, std::vector
 	return a_threadsVec;
 }
 
-int main()
-{
-	SafeQueue<IV> sq;
 
-	IV vec;
+BEGIN_TEST(equal_consumers_and_producers)
 
-	auto safe_pop = [&sq](IV& a_vec)
-	{
-		sq.dequeue(a_vec);
-	};
+	ASSERT_PASS();
 
-	std::vector<IV> resource = generate_vec_of_vecs();
-		std::cout << "start - the queue size is: " << sq.size() << "\n\n";
-	
-	std::thread producer1(&SafeQueue<IV>::enqueue, std::ref(sq), std::ref(resource[0]));
-	std::thread producer2(&SafeQueue<IV>::enqueue, std::ref(sq), std::ref(resource[1]));
-	std::thread producer3(&SafeQueue<IV>::enqueue, std::ref(sq), std::ref(resource[2]));
-	std::thread producer4(&SafeQueue<IV>::enqueue, std::ref(sq), std::ref(resource[3]));
-	std::thread producer5(&SafeQueue<IV>::enqueue, std::ref(sq), std::ref(resource[4]));
+END_TEST
 
-	std::thread consumer1(safe_pop, std::ref(vec));
-/*	std::thread consumer2(safe_pop, std::ref(vec));
-	std::thread consumer3(safe_pop, std::ref(vec));
-	std::thread consumer4(safe_pop, std::ref(vec));
-*/
 
-	producer1.join();
-	producer2.join();
-	producer3.join();
-	producer4.join();
-	producer5.join();
+BEGIN_TEST(more_producers_than_consumers)
 
-	consumer1.join();
-/*	consumer2.join();
-	consumer3.join();
-	consumer4.join();
-*/
-	std::cout << "end - the queue size is: " << sq.size() << '\n';
+	ASSERT_PASS();
 
-	que_print(sq);
+END_TEST
 
-	return 0;
-}
+BEGIN_TEST(more_consumers_than_producers)
+
+	ASSERT_PASS();
+
+END_TEST
+
+BEGIN_TEST(only_consumers_until_que_is_empty)
+
+	ASSERT_PASS();
+
+END_TEST
+
+
+
+
+BEGIN_SUITE(test)
+
+	TEST(equal_consumers_and_producers)
+	TEST(more_producers_than_consumers)
+	TEST(more_consumers_than_producers)
+	TEST(only_consumers_until_que_is_empty)
+
+
+END_SUITE

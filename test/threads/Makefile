@@ -15,8 +15,8 @@ LDLIBS =
 INC_DIR = ../../inc
 SRC_DIR = 
 
-TARGET = utest
-OBJS = utest.o
+TARGET = utest assert_tests
+OBJS = utest.o assert_tests.o
 
 all: $(TARGET)
 
@@ -24,6 +24,8 @@ check: $(TARGET)
 	./$(TARGET) -v
 
 utest : utest.cpp $(INC_DIR)/thread_safe_queue.hpp
+
+assert_tests : assert_tests.cpp $(INC_DIR)/thread_safe_queue.hpp
 
 vala: $(TARGET)
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes
