@@ -1,12 +1,13 @@
+CXX = g++-11
+CC = $(CXX)
+
 CPPFLAGS = -I$(INC_DIR)
-# c language
-CFLAGS = -g3
 
 # c++ language
-CXXFLAGS = -std=c++17
-CXXFLAGS+= -Wall -pedantic
+CXXFLAGS = -std=c++20
+CXXFLAGS+= -Wall -pedantic -pthread
 CXXFLAGS+= -Werror
-CXXFLAGS+= -g3 -pthread
+CXXFLAGS+= -g3
 
 
 LDFLAGS =

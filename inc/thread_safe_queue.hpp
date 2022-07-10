@@ -4,6 +4,7 @@
 #include <iostream>
 #include <queue>
 #include <mutex>
+#include <semaphore>
 #include <list>
 #include <memory>
 #include <condition_variable>
@@ -22,7 +23,8 @@ public:
 	SafeQueue<T>& operator=(SafeQueue<T>const& a_other);
 	SafeQueue<T>& operator=(SafeQueue<T>&& a_other) = delete;
 
-	bool dequeue(T& a_popped);
+	bool dequeue(T& a_popped);//if que is empty, waits until it is not empty and then dequeues.
+	bool try_dequeue(T& a_popped); //tries to dequeue, if not succeeded returns 0. 1 on success.
 	void enqueue(T const& a_element);
 
 	size_t size() const;
@@ -31,16 +33,19 @@ public:
 private:
 	std::queue<T> m_que;
 	mutable std::mutex m_mtx;
+	std::binary_semaphore m_smph;
 };
 
 template <typename T>
 SafeQueue<T>::SafeQueue()
+: m_smph(0)
 {
 
 }
 
 template <typename T>
 SafeQueue<T>::SafeQueue(SafeQueue<T> const& a_other)
+: m_smph(0)
 {
 	std::unique_lock<std::mutex> thisGuard(m_mtx);
 	std::lock_guard<std::mutex> otherGuard(a_other.m_mtx);
@@ -55,18 +60,13 @@ SafeQueue<T>::~SafeQueue()
 }
 
 template <typename T>
-bool SafeQueue<T>::dequeue(T& a_popped)
+bool SafeQueue<T>::try_dequeue(T& a_popped)
 {
 	std::unique_lock<std::mutex> thisGuard(m_mtx);
-
-	auto not_empty = [this]()
+	if(m_que.empty())
 	{
-		return !(m_que.empty());
-	};
-
-	std::condition_variable cv;
-
-	cv.wait(thisGuard, not_empty);
+		return 0;
+	}
 
 	try
 	{
@@ -82,10 +82,28 @@ bool SafeQueue<T>::dequeue(T& a_popped)
 }
 
 template <typename T>
+bool SafeQueue<T>::dequeue(T& a_popped)
+{
+	std::cout << "dequeue is acquiering\n\n";
+	m_smph.acquire();
+
+	a_popped = m_que.front();
+	m_que.pop();
+
+//	m_smph.release();
+
+	return 1;
+}
+
+template <typename T>
 void SafeQueue<T>::enqueue(T const& a_element)
 {
 	std::unique_lock<std::mutex> thisGuard(m_mtx);
 	m_que.push(a_element);
+
+	std::cout << "enqueue - an element was pushed in to que\n\n";
+
+	m_smph.release();
 }
 
 template <typename T>
