@@ -137,8 +137,10 @@ int TCPClientSocket::get_client_socket() const
 
 void run_guessing(TCPClientSocket& a_clientSocket, Handler* a_handler)
 {
-	uint8_t randGuess = static_cast<uint8_t>(rand() % 256 + 5);
-	std::cout << "first guess is: " << randGuess << '\n';
+	uint8_t randGuess;
+	std::cout << "give your first guess\n";
+	std::cin >> randGuess;
+	
 	std::vector<uint8_t> guess(1, randGuess);
 
 	a_clientSocket.write(std::move(guess));
@@ -157,11 +159,11 @@ void run_guessing(TCPClientSocket& a_clientSocket, Handler* a_handler)
 		}
 		else if (indication[0] == '>')
 		{
-			std::cout << "your guess was higher than the secret number. try again: \n";
+			std::cout << "too big. try again: \n";
 		}
 		else if (indication[0] == '<')
 		{
-			std::cout << "your guess was smaller than the secret number. try again: \n";
+			std::cout << "too small. try again: \n";
 		}
 
 		std::cin >> randGuess;
@@ -171,7 +173,7 @@ void run_guessing(TCPClientSocket& a_clientSocket, Handler* a_handler)
 		a_clientSocket.write(guess);
 	}
 
-	std::cout << "client guessed correctly!\n";
+	std::cout << "you guessed correctly!\n";
 }
 
 }

@@ -61,7 +61,7 @@ void que_print(SafeQueue<IV> const& a_que)
 	for(size_t i = 0; i < size; ++i)
 	{
 		IV element;
-		queCopy.dequeue(element);	
+		queCopy.try_dequeue(element);	
 		elements.push_front(element);
 	}
 
