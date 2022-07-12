@@ -9,27 +9,87 @@
 
 typedef std::vector<int64_t> IV;
 
-std::vector<IV> generate_vec_of_vecs()
+void enque_work(SafeQueue<IV>& a_sq, size_t a_numOfTimes)
 {
-	std::vector<IV> vv;
-
-	srand(time(0));
-	size_t size = rand() % 85 + 15;
-
-	vv.reserve(size);
-
-	for(size_t i = 0; i < size; ++i)
+	while(a_numOfTimes-- > 0)
 	{
-		int randCapacity = rand() % 30 + 1;
-		int randInitValue = rand() % 30;
-
-		IV newVec(randCapacity, randInitValue);
-		vv.push_back(std::move(newVec));
- 	}
-
- 	return vv;
+		IV t(1000, 1);
+		a_sq.enqueue(std::move(t));
+	}
 }
 
+void deque_work(SafeQueue<IV>& a_sq, size_t a_numOfTimes)
+{
+	while(a_numOfTimes-- > 0)
+	{
+		IV t;
+		a_sq.dequeue(t);
+	}
+}
+
+void add_producers(SafeQueue<IV>& a_sq, std::vector<std::thread>& a_threadsVec, size_t a_producersNum, size_t a_numOfInserts)
+{
+	while(a_producersNum-- > 0)
+	{
+		a_threadsVec.push_back(std::thread(enque_work, std::ref(a_sq), a_numOfInserts));
+	}
+}
+
+void add_consumers(SafeQueue<IV>& a_sq, std::vector<std::thread>& a_threadsVec, size_t a_consumersNum, size_t a_numOfPops)
+{
+	while(a_consumersNum-- > 0)
+	{
+		a_threadsVec.push_back(std::thread(deque_work, std::ref(a_sq), a_numOfPops));
+	}
+}
+/*
+void fifo_producers(SafeQueue<IV>& a_sq, std::vector<std::thread>& a_threadsVec, size_t a_producersNum, size_t a_numOfInserts)
+{
+	auto fifo_producer = [&a_sq](size_t a_numOfInserts, size_t a_storingIndex)
+	{
+		while(a_numOfInserts-- > 0)
+		{
+			IV t(1000, 1);
+			a_sq.enqueue(std::move(t));
+
+			//insert each enqueued vec the num of thread, sequence in que, and thread inner sequence?
+		}
+	};
+}
+*/
+void fifo_consumers(SafeQueue<IV>& a_sq, std::vector<std::thread>& a_threadsVec, std::vector<std::vector<IV>>& a_vecOfPoppedVecs, 
+																			size_t a_consumersNum, size_t a_numOfPops)
+{
+	a_vecOfPoppedVecs.reserve(a_consumersNum);
+
+	auto fifo_consumer = [&a_sq, &a_vecOfPoppedVecs](size_t a_numOfPops, size_t a_storingIndex)
+	{
+		while(a_numOfPops-- > 0)
+		{
+			IV t;
+			a_sq.dequeue(t);
+			a_vecOfPoppedVecs[a_storingIndex].push_back(std::move(t));
+		}
+	};
+
+	size_t i = 0;
+
+	while(a_consumersNum-- > 0)
+	{
+		a_threadsVec.push_back(std::thread(fifo_consumer, a_numOfPops, i));
+		++i;
+	}
+}
+
+void join_all_threads(std::vector<std::thread>& a_threadsVec)
+{
+	for(auto& t : a_threadsVec)
+	{
+		t.join();
+	}
+}
+
+/*
 std::ostream& operator<<(std::ostream& a_os, std::vector<int64_t> const& a_vec)
 {
 	size_t size = a_vec.size();
@@ -49,55 +109,16 @@ std::ostream& operator<<(std::ostream& a_os, std::vector<int64_t> const& a_vec)
 
 	return a_os;
 }
+*/
 
-void que_print(SafeQueue<IV> const& a_que)
-{
-	SafeQueue<IV> queCopy(a_que);
+BEGIN_TEST(check_fifo_one_producer_two_consumers)
 
-	size_t size = queCopy.size();
+	SafeQueue<IV> sq;
+	std::vector<std::thread> threadsVec;
+	std::vector<std::vector<IV>> vecOfPoppedVecs;
 
-	std::list<IV> elements;
+	fifo_consumers(sq, threadsVec, vecOfPoppedVecs, 2, 1);
 
-	for(size_t i = 0; i < size; ++i)
-	{
-		IV element;
-		queCopy.try_dequeue(element);	
-		elements.push_front(element);
-	}
-
-	auto it = elements.begin();
-	auto end = elements.end();
-
-	while(it != end)
-	{
-		std::cout << *it << ", ";
-
-		++it;
-	}
-
-	std::cout << "\n\n";
-}
-
-std::vector<std::thread>& create_threads_vector(SafeQueue<IV>& a_sq, std::vector<IV>const& a_vecsResource, std::vector<std::thread>& a_threadsVec, size_t a_threadsNum)
-{
-	//TODO - add a checking of how many cpu i have ??
-
-	for(auto& v : a_vecsResource)
-	{
-		if(a_threadsNum == 0)
-		{
-			break;
-		}
-
-		a_threadsVec.push_back(std::thread(&SafeQueue<IV>::enqueue, std::ref(a_sq), std::ref(v)));
-		-- a_threadsNum;
-	}
-
-	return a_threadsVec;
-}
-
-
-BEGIN_TEST(equal_consumers_and_producers)
 
 	ASSERT_PASS();
 
@@ -127,7 +148,6 @@ END_TEST
 
 BEGIN_SUITE(test)
 
-	TEST(equal_consumers_and_producers)
 	TEST(more_producers_than_consumers)
 	TEST(more_consumers_than_producers)
 	TEST(only_consumers_until_que_is_empty)

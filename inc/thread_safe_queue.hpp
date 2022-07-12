@@ -33,26 +33,29 @@ public:
 private:
 	std::queue<T> m_que;
 	mutable std::mutex m_mtx;
-	std::binary_semaphore m_smph;
+	std::counting_semaphore<100000> m_occupiedCount;
+	std::counting_semaphore<100000> m_emptyCount;
 };
 
 template <typename T>
 SafeQueue<T>::SafeQueue()
-: m_smph(0)
+: m_occupiedCount(0)
+, m_emptyCount(100000)
 {
 
 }
-
+/*
 template <typename T>
 SafeQueue<T>::SafeQueue(SafeQueue<T> const& a_other)
-: m_smph(0)
+: m_occupiedCount(20)
 {
 	std::unique_lock<std::mutex> thisGuard(m_mtx);
 	std::lock_guard<std::mutex> otherGuard(a_other.m_mtx);
 
 	m_que = a_other.m_que;
+	//take que size for calculating empty slots???but how?
 }
-
+*/
 template <typename T>
 SafeQueue<T>::~SafeQueue()
 {
@@ -84,13 +87,18 @@ bool SafeQueue<T>::try_dequeue(T& a_popped)
 template <typename T>
 bool SafeQueue<T>::dequeue(T& a_popped)
 {
-	std::cout << "dequeue is acquiering\n\n";
-	m_smph.acquire();
+	m_occupiedCount.acquire();
+
+	m_mtx.lock();
 
 	a_popped = m_que.front();
 	m_que.pop();
 
-//	m_smph.release();
+	m_mtx.unlock();
+
+	std::cout << "dequeue was called\n\n";
+
+	m_emptyCount.release();
 
 	return 1;
 }
@@ -98,12 +106,17 @@ bool SafeQueue<T>::dequeue(T& a_popped)
 template <typename T>
 void SafeQueue<T>::enqueue(T const& a_element)
 {
-	std::unique_lock<std::mutex> thisGuard(m_mtx);
+	m_emptyCount.acquire();
+
+	m_mtx.lock();
+
 	m_que.push(a_element);
 
-	std::cout << "enqueue - an element was pushed in to que\n\n";
+	m_mtx.unlock();
 
-	m_smph.release();
+	std::cout << "enqueue was called\n\n";
+
+	m_occupiedCount.release();
 }
 
 template <typename T>
