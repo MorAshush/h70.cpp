@@ -85,6 +85,7 @@ void TCPServer::check_cur_clients(fd_set& a_master ,fd_set& a_temp, int a_activi
 
 	while(it != end)
 	{
+		TCPClientSocket* cp = *it;
 		int socket = (*it)->get_client_socket();
 		if(FD_ISSET(socket, &a_temp))
 		{
@@ -93,9 +94,9 @@ void TCPServer::check_cur_clients(fd_set& a_master ,fd_set& a_temp, int a_activi
 				std::vector<uint8_t> buffer;
 				buffer = recieve(socket);
 
-				auto indication = m_handler->handle(buffer);
+				m_handler->handle_request(buffer, cp);
 
-				send(socket, indication);
+//				send(socket, indication);
 			}
 			catch(...) //exception of closed socket or recv failed
 			{

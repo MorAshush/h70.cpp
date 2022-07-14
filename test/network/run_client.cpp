@@ -13,11 +13,11 @@ int main()
 {
 	net::Address ad("127.0.0.1", "4445");
 
-	net::ClientHandler handler;
+//	net::ClientHandler handler;
 
 	net::TCPClientSocket c(ad);
 
-	run_guessing(c, &handler);
+	run_guessing(c);
 	
 
 	return 0;

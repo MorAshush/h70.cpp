@@ -43,7 +43,7 @@ private:
 	struct sockaddr_in m_sin;
 };
 
-void run_guessing(TCPClientSocket& a_clientSocket, Handler* a_handler);
+void run_guessing(TCPClientSocket& a_clientSocket);
 
 }//namespace net
 

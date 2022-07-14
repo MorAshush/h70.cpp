@@ -4,9 +4,16 @@
 #include <vector>
 #include <cstddef>
 #include <cstdint>
+#include <utility>
+
 
 namespace net
 {
+
+class TCPClientSocket;
+
+typedef std::vector<uint8_t> Buffer;
+typedef std::pair<Buffer, TCPClientSocket*> Request;
 
 class Handler
 {
@@ -14,7 +21,7 @@ class Handler
 public:
 	virtual ~Handler();
 
-	virtual std::vector<uint8_t>const& handle(std::vector<uint8_t>const& a_buffer) = 0;
+	virtual void handle_request(Buffer const& a_buffer, TCPClientSocket* a_client) = 0;
 };
 
 }//namespace net

@@ -97,10 +97,6 @@ void TCPClientSocket::write(std::vector<uint8_t>const& a_text) const
 
 std::vector<uint8_t> TCPClientSocket::read() const
 {
-//	char buffer[4096];
-//	int expectedDataLen = sizeof(buffer);
-//	std::string data;
-
 	std::vector<uint8_t> buffer(4096, 0);
 
 	int readBytes = recv(m_socket, buffer.data(), buffer.size(), 0);
@@ -135,7 +131,7 @@ int TCPClientSocket::get_client_socket() const
 	return m_socket;
 }
 
-void run_guessing(TCPClientSocket& a_clientSocket, Handler* a_handler)
+void run_guessing(TCPClientSocket& a_clientSocket)
 {
 	uint8_t randGuess;
 	std::cout << "give your first guess\n";
@@ -145,23 +141,23 @@ void run_guessing(TCPClientSocket& a_clientSocket, Handler* a_handler)
 
 	a_clientSocket.write(std::move(guess));
 
-	std::string correct("correct");
-	std::vector<uint8_t> victory(correct.begin(), correct.end());
+//	std::string correct("correct");
+//	std::vector<uint8_t> victory(correct.begin(), correct.end());
 
 	while(true)
 	{
 		std::vector<uint8_t> buffer = a_clientSocket.read();
 
-		auto indication = a_handler->handle(buffer);
-		if(indication == victory)
+//		auto indication = a_handler->handle(buffer);
+		if(buffer[0] == '=')
 		{
 			break;
 		}
-		else if (indication[0] == '>')
+		else if (buffer[0] == '>')
 		{
 			std::cout << "too big. try again: \n";
 		}
-		else if (indication[0] == '<')
+		else if (buffer[0] == '<')
 		{
 			std::cout << "too small. try again: \n";
 		}

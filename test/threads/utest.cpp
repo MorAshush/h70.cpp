@@ -8,25 +8,27 @@
 
 typedef std::vector<int64_t> IV;
 
-void enque_work(SafeQueue<IV>& a_sq, size_t a_numOfTimes)
+void enque_work(SafeQueue<int64_t>& a_sq, size_t a_numOfTimes)
 {
+	size_t i = 0;
 	while(a_numOfTimes-- > 0)
 	{
-		IV t(1000, 1);
-		a_sq.enqueue(std::move(t));
+		int64_t t = i;
+		a_sq.enqueue(t);
+		++i;
 	}
 }
 
-void deque_work(SafeQueue<IV>& a_sq, size_t a_numOfTimes)
+void deque_work(SafeQueue<int64_t>& a_sq, size_t a_numOfTimes)
 {
 	while(a_numOfTimes-- > 0)
 	{
-		IV t;
+		int64_t t;
 		a_sq.dequeue(t);
 	}
 }
 
-void add_producers(SafeQueue<IV>& a_sq, std::vector<std::thread>& a_threadsVec, size_t a_producersNum, size_t a_numOfInserts)
+void add_producers(SafeQueue<int64_t>& a_sq, std::vector<std::thread>& a_threadsVec, size_t a_producersNum, size_t a_numOfInserts)
 {
 	while(a_producersNum-- > 0)
 	{
@@ -34,7 +36,7 @@ void add_producers(SafeQueue<IV>& a_sq, std::vector<std::thread>& a_threadsVec, 
 	}
 }
 
-void add_consumers(SafeQueue<IV>& a_sq, std::vector<std::thread>& a_threadsVec, size_t a_consumersNum, size_t a_numOfPops)
+void add_consumers(SafeQueue<int64_t>& a_sq, std::vector<std::thread>& a_threadsVec, size_t a_consumersNum, size_t a_numOfPops)
 {
 	while(a_consumersNum-- > 0)
 	{
@@ -50,67 +52,16 @@ void join_all_threads(std::vector<std::thread>& a_threadsVec)
 	}
 }
 
-/*
-std::ostream& operator<<(std::ostream& a_os, std::vector<int64_t> const& a_vec)
-{
-	size_t size = a_vec.size();
-
-	a_os << '[';
-	for(size_t i = 0; i < size; ++i)
-	{
-		a_os << a_vec[i];
-
-		if(i != size - 1)
-		{
-			a_os << ", ";
-		}
-	}
-
-	std::cout << "]\n";
-
-	return a_os;
-}
-
-void que_print(SafeQueue<IV> const& a_que)
-{
-	SafeQueue<IV> queCopy(a_que);
-
-	size_t size = queCopy.size();
-
-	std::list<IV> elements;
-
-	for(size_t i = 0; i < size; ++i)
-	{
-		IV element;
-		queCopy.try_dequeue(element);	
-		elements.push_front(element);
-	}
-
-	auto it = elements.begin();
-	auto end = elements.end();
-
-	while(it != end)
-	{
-		std::cout << *it << ", ";
-
-		++it;
-	}
-
-	std::cout << "\n\n";
-}
-*/
-
 int main(int argc, char* argv[])
 {
-	SafeQueue<IV> sq;
+	SafeQueue<int64_t> sq(1000000);
 
 		std::cout << "start - the queue size is: " << sq.size() << "\n\n";
 
 	std::vector<std::thread> threadsVec;
-	IV vec;
 
-	add_consumers(sq, threadsVec, std::stoi(argv[2]), 5000);
-	add_producers(sq, threadsVec, std::stoi(argv[1]), 5000);
+	add_producers(sq, threadsVec, std::stoi(argv[1]), 50000);
+	add_consumers(sq, threadsVec, std::stoi(argv[2]), 50000);
 
 	join_all_threads(threadsVec);	
 
