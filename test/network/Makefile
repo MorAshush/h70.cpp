@@ -31,7 +31,6 @@ OBJS = utest.o $(SRC_DIR)/server_socket.o \
 				$(SRC_DIR_2)/semaphore_error.o\
 				$(SRC_DIR)/processor.o \
 				$(SRC_DIR)/protocol.o \
-				$(SRC_DIR)/command.o \
 				$(SRC_DIR)/supported_cmds.o \
 				$(SRC_DIR)/all_commands.o \
 
@@ -66,8 +65,6 @@ $(SRC_DIR)/processor.cpp \
 $(INC_DIR)/processor.hpp \
 $(SRC_DIR)/protocol.cpp \
 $(INC_DIR)/protocol.hpp \
-$(SRC_DIR)/command.cpp \
-$(INC_DIR)/command.hpp \
 $(INC_DIR)/definitions.hpp \
 $(SRC_DIR)/supported_cmds.cpp \
 $(INC_DIR)/supported_cmds.hpp \

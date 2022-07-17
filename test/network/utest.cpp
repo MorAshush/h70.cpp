@@ -13,7 +13,6 @@
 #include "select_selector.hpp"
 #include "../../inc/threads/thread_safe_queue.hpp"
 #include "processor.hpp"
-#include "command.hpp"
 #include "protocol.hpp"
 #include "definitions.hpp"
 #include "supported_cmds.hpp"

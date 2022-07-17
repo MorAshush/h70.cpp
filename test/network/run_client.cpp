@@ -17,7 +17,10 @@ int main()
 
 	net::TCPClientSocket c(ad);
 
-	run_guessing(c);
+	std::string request("add: 1,2,3,4");
+	std::vector<uint8_t> msg(request.begin(), request.end());
+
+	c.write(msg);
 	
 
 	return 0;
