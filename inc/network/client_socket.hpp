@@ -7,7 +7,6 @@
 
 #include "address_class.hpp"
 
-class Processor;
 
 namespace net
 {

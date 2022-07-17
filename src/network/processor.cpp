@@ -25,13 +25,7 @@ void Processor::process(std::pair<Buffer, net::TCPClientSocket*>& a_request)
 
 void Processor::send_reply(Buffer const& a_reply, net::TCPClientSocket* a_client)
 {
-	int sentBytes = send(a_client->get_client_socket(), a_reply.data(), a_reply.size(), 0);
-	if(sentBytes <= 0)
-	{
-		std::cout << "processor send failed\n";
-		//throw "send failed";
-	}
-	/*
+	
 	try
 	{
 		a_client->write(a_reply);
@@ -41,5 +35,4 @@ void Processor::send_reply(Buffer const& a_reply, net::TCPClientSocket* a_client
 		std::cout << "processor send failed\n";
 		throw;
 	}
-	*/
 }
