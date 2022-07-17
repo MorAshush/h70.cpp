@@ -25,9 +25,15 @@ OBJS = utest.o $(SRC_DIR)/server_socket.o \
 				$(SRC_DIR)/selector_base.o \
 				$(SRC_DIR)/select_selector.o \
 				$(SRC_DIR)/handler.o \
+				$(SRC_DIR)/request_handler.o \
 				$(SRC_DIR)/address_class.o \
 				$(SRC_DIR_2)/semaphore.o\
-				$(SRC_DIR_2)/semaphore_error.o\	
+				$(SRC_DIR_2)/semaphore_error.o\
+				$(SRC_DIR)/processor.o \
+				$(SRC_DIR)/protocol.o \
+				$(SRC_DIR)/command.o \
+				$(SRC_DIR)/supported_cmds.o \
+				$(SRC_DIR)/all_commands.o \
 
 all: $(TARGET)
 
@@ -52,11 +58,21 @@ $(SRC_DIR)/select_selector.cpp \
 $(INC_DIR)/select_selector.hpp \
 $(SRC_DIR)/handler.cpp \
 $(INC_DIR)/handler.hpp \
-$(SRC_DIR)/app_handler.cpp \
-$(INC_DIR)/app_handler.hpp \
+$(SRC_DIR)/request_handler.cpp \
+$(INC_DIR)/request_handler.hpp \
 $(SRC_DIR)/address_class.cpp \
 $(INC_DIR)/address_class.hpp \
-					
+$(SRC_DIR)/processor.cpp \
+$(INC_DIR)/processor.hpp \
+$(SRC_DIR)/protocol.cpp \
+$(INC_DIR)/protocol.hpp \
+$(SRC_DIR)/command.cpp \
+$(INC_DIR)/command.hpp \
+$(INC_DIR)/definitions.hpp \
+$(SRC_DIR)/supported_cmds.cpp \
+$(INC_DIR)/supported_cmds.hpp \
+$(SRC_DIR)/all_commands.cpp \
+$(INC_DIR)/all_commands.hpp \
 
 vala: $(TARGET)
 	valgrind --leak-check=full --track-origins=yes --log-file=logValgrind01.txt ./$(TARGET)

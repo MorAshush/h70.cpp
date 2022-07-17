@@ -6,14 +6,12 @@
 #include <cstdint>
 #include <utility>
 
+#include "definitions.hpp"
+#include "client_socket.hpp"
+
 
 namespace net
 {
-
-class TCPClientSocket;
-
-typedef std::vector<uint8_t> Buffer;
-typedef std::pair<Buffer, TCPClientSocket*> Request;
 
 class Handler
 {

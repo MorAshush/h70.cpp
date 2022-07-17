@@ -8,22 +8,30 @@
 #include "tcp_server.hpp"
 #include "client_socket.hpp"
 #include "handler.hpp"
-#include "app_handler.hpp"
+#include "request_handler.hpp"
 #include "selector_base.hpp"
 #include "select_selector.hpp"
 #include "../../inc/threads/thread_safe_queue.hpp"
+#include "processor.hpp"
+#include "command.hpp"
+#include "protocol.hpp"
+#include "definitions.hpp"
+#include "supported_cmds.hpp"
+#include "all_commands.hpp"
 
-typedef void(*cmdFunc)(std::vector<uint32_t>const&);
-
-cmdFunc cmd_extractor(std::vector<uint8_t> a_buffer, std::map<std::string, cmdFunc> a_supportedCmd)
+std::string parse_func(std::vector<uint8_t>const& a_buffer, std::vector<uint8_t>& a_dataBuffer)
 {
-	std::string cmd;
+	std::string buffer(a_buffer.begin(), a_buffer.end());
+	std::string commandName;
 
-	for(auto c : a_buffer)
+	size_t len = buffer.length();
+
+	size_t i;
+	for(i = 0; i < len; ++i)
 	{
-		if(c != ':')
+		if(buffer[i] != ':')
 		{
-			cmd += c;
+			commandName += buffer[i];
 		}
 		else
 		{
@@ -31,90 +39,41 @@ cmdFunc cmd_extractor(std::vector<uint8_t> a_buffer, std::map<std::string, cmdFu
 		}
 	}
 
-	auto it = a_supportedCmd.find(cmd);
-	if(it != a_supportedCmd.end())
-	{
-		return it->second;
-	}
-	else
-	{
-		std::cout << "command is not supported\n"; 
-		throw "cmd not found";
-	}
+	a_dataBuffer = std::vector<uint8_t>(buffer.begin() + i + 1, buffer.end());
+	return commandName;
 }
-
-auto add = [](std::vector<uint32_t>const& a_nums)
-{
-	uint32_t sum = 0;
-	for(auto& n : a_nums)
-	{
-		sum += n;
-	}
-
-	return sum;
-};
-
-auto mul = [](std::vector<uint32_t>const& a_nums)
-{
-	uint32_t result = 0;
-	for(auto& n : a_nums)
-	{
-		result *= n;
-	}
-
-	return result;
-};
-/*
-std::string const& get(std::string const& a_fileName)
-{
-	std::ifstream fin;
-    fin.open(m_fileName);
-    if(!fin)
-    {
-    	std::cout << "file couldn't open\n";
-    }
-
-    std::string fileContent;
-    std::string line;
-    getline(fin, line);
-    while(fin)
-    {
-    	fileContent += line;
-        fileContent += '\n';
-    }
-
-    fin.close();
-    return fileContent;
-}
-*/
 
 int main()
 {
 	net::Address ad("127.0.0.1", "4445");
 
-	SafeQueue<net::Request> sq(1000);
+	SafeQueue<std::pair<Buffer, net::TCPClientSocket*>> sq(1000);
 
-	net::AppHandler ah(sq);
+	net::RequestHandler ah(sq);
 
 	net::TCPServer server(ad, &ah);
 
 	net::SelectSelector selector(&server);
 
-	server.server_run(&selector);
-	std::map<std::string, cmdFunc> cmdMap;
+	CommandsLibary cmdMap;
+	Protocol protocol(cmdMap, parse_func);
+	Processor processor(Protocol);
 
-	auto threadHandler = [&sq, &server, &cmdMap]()
+	server.server_run(&selector);
+
+
+/*	auto threadHandler = [&sq, &server, &cmdMap]()
 	{
-		net::Request r;
+		std::pair<Buffer, net::TCPClientSocket*> r;
 		sq.dequeue(r);
 
 		auto work = cmd_extractor(r.first, cmdMap);
 		//need to seperate data segment from request vector and pass it to work function
 		auto result = work(r.first);
 
-		net::TCPClientSocket* cs = r.second;
+	//	net::TCPClientSocket* cs = r.second;
 		//send client the reply
-	};
+	};*/
 
 	return 0;
 }

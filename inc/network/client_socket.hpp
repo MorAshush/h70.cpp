@@ -6,7 +6,8 @@
 #include <vector>
 
 #include "address_class.hpp"
-#include "handler.hpp"
+
+class Processor;
 
 namespace net
 {
@@ -29,7 +30,8 @@ private:
 	friend class SelectSelector;
 	friend class TCPServer;
 	friend class TCPServerSocket;
-
+	friend class Processor;
+	
 	explicit TCPClientSocket(int a_socket);
 	int get_client_socket() const;
 	void connect();
